@@ -1,7 +1,7 @@
 image: maven:3.8.4-jdk-11
 
 variables:
-  QT_INSTALL_DIR: "/usr/lib/x86_64-linux-gnu/qt5"
+  QT_INSTALL_DIR: "/usr/lib/x86_64-linux-gnu/qt6"
   JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
 
 stages:
@@ -11,7 +11,8 @@ stages:
 
 before_script:
   # Update package list and install dependencies
-  - apt-get update && apt-get install -y wget unzip gcc g++ make qtbase5-dev qtdeclarative5-dev qt5-qmake qt5-default
+  - apt-get update && apt-get install -y
+  - sudo apt install -y qt6-base qt6-base-dev
   # Set up Qt environment variables
   - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
   - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
