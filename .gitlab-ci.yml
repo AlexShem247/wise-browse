@@ -1,42 +1,61 @@
-image: darkmattercoder/qt-build:5.13.0
-# entrypoint: [""]
+image: maven:3.8.4-jdk-11
 
+variables:
+  QT_VERSION: "6.7.1"
+  QT_INSTALL_DIR: "/opt/Qt"
+  JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 stages:
-   - Build
-   - Run
-   
+  - setup
+  - build
+  - test
+  - release
 
 before_script:
-#   - apt-get update && apt -y install make autoconf
-#   - sudo apt-get update -q -y
-#   - apt-get --yes install libqt5location5 
-# this does not work 
+  # Update package list and install dependencies
+  - apt-get update && apt-get install -y wget unzip gcc g++ make software-properties-common
+  # Add Qt APT repository key and repository
+  - wget -O - https://download.qt.io/debian/qt6.gpg | apt-key add -
+  - add-apt-repository "deb https://download.qt.io/debian/qt6 focal main"
+  - apt-get update
+  # Install Qt6 development tools
+  - apt-get install -y qt6-base-dev qt6-declarative-dev qt6-tools-dev qt6-wayland
+  # Set up environment variables for Qt
+  - export QT_INSTALL_DIR="/usr/lib/qt6"
+  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
+  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH"
+  - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
 
+setup:
+  stage: setup
+  script:
+    - echo "Setting up environment"
 
-Build code:
-   stage: Build
-   script:
-      - apt update && apt -y install make autoconf
-      - qmake src/FineDustMap/FineDustMap.pro -spec linux-g++
-      - make
+build:
+  stage: build
+  script:
+    - mvn clean compile
+    - mvn package
+  artifacts:
+    paths:
+      - target/*.jar
 
-#  artifacts:
-#    paths:
-#      - mybinary
-      # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
-      # cache:
-      #   paths:
-      #     - "*.o"
+test:
+  stage: test
+  script:
+    - java -Djava.library.path=$LD_LIBRARY_PATH -jar target/your-java-app.jar
 
-# run tests using the binary built before
-
-Run:
-   stage: Run
-   script:
-      - ls
-      - cd src/
-      - ls 
-      - cd FineDustMap/
-      - ls 
-      - ./FineDustMap
+release:
+  stage: test
+  script:
+    - echo "Creating GitLab release"
+  release:
+    tag_name: "v${CI_COMMIT_TAG}"
+    description: "Release version ${CI_COMMIT_TAG}"
+    assets:
+      links:
+        - name: "Jar file"
+          url: "${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download"
+  only:
+    - tags
