@@ -45,7 +45,7 @@ test:
     - java -Djava.library.path=$LD_LIBRARY_PATH -jar target/your-java-app.jar
 
 release:
-  stage: release
+  stage: test
   script:
     - echo "Creating GitLab release"
   release:
