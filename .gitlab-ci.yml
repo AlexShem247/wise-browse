@@ -11,6 +11,10 @@ stages:
   - test
 
 before_script:
+  su -
+  apt-get update
+  apt-get install sudo
+
   sudo apt-get install build-essential
   sudo apt-get install qtcreator
   sudo apt-get install qt6-base-dev
