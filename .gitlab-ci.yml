@@ -1,18 +1,25 @@
-image: maven:3.8.4-jdk-11
+image: dseynhae/qt6-ci:latest
 
 variables:
-  QT_VERSION: "6.7.1"
-  QT_INSTALL_DIR: "/opt/Qt"
-  JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
+  JAVA_HOME: "/usr/lib/jvm/java-11-openjdk-amd64"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  QT_INSTALL_DIR: "/opt/Qt/6.7.1/gcc_64"
 
 stages:
   - setup
   - build
   - test
+  - release
 
 before_script:
-  lsb_release -a
-
+  # Set up environment variables for Qt
+  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
+  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH"
+  - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
+  # Display versions for debugging purposes
+  - java -version
+  - mvn -version
+  - qmake -v
 
 setup:
   stage: setup
@@ -22,17 +29,27 @@ setup:
 build:
   stage: build
   script:
-    # Compile the Java project
     - mvn clean compile
-    # Package the project
     - mvn package
+  artifacts:
+    paths:
+      - target/*.jar
 
 test:
   stage: test
   script:
-    # Run the Java application
-    - java -Djava.library.path=$QTJAMBI_LIBS -jar target/your-java-app.jar
+    - java -Djava.library.path=$LD_LIBRARY_PATH -jar target/your-java-app.jar
 
-#artifacts:
- # paths:
-  #  - target/*.jar
+release:
+  stage: test
+  script:
+    - echo "Creating GitLab release"
+  release:
+    tag_name: "v${CI_COMMIT_TAG}"
+    description: "Release version ${CI_COMMIT_TAG}"
+    assets:
+      links:
+        - name: "Jar file"
+          url: "${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download"
+  only:
+    - tags
