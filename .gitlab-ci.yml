@@ -16,11 +16,9 @@ before_script:
   # Update package list and install dependencies
   - apt-get update && apt-get install -y wget unzip gcc g++ make software-properties-common
   # Add Qt APT repository key and repository
-  - wget -O - https://download.qt.io/debian/qt6.gpg | apt-key add -
-  - add-apt-repository "deb https://download.qt.io/debian/qt6 focal main"
-  - apt-get update
+  - apt-get install -y qt6-base qt6-base-dev 
   # Install Qt6 development tools
-  - apt-get install -y qt6-base-dev qt6-declarative-dev qt6-tools-dev qt6-wayland
+  #- apt-get install -y qt6-base-dev qt6-declarative-dev qt6-tools-dev qt6-wayland
   # Set up environment variables for Qt
   - export QT_INSTALL_DIR="/usr/lib/qt6"
   - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
