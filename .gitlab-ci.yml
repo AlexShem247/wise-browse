@@ -1,21 +1,32 @@
-image: oldfrostdragon/qt6-ubuntu
+image: maven:3.8.4-jdk-11
 
 variables:
+  QT_VERSION: "6.7.1"
+  QT_INSTALL_DIR: "/opt/Qt"
   JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  QT_INSTALL_DIR: "/opt/Qt/6.1.0/gcc_64"
 
 stages:
   - setup
   - build
   - test
-  - release
 
 before_script:
-  # Set up environment variables for Qt
-  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
-  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH"
-  - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
+  # Update package list and install dependencies
+  - apt-get update && apt-get install -y wget unzip gcc g++ make
+  # Install Qt
+  - wget https://download.qt.io/official_releases/qt/${QT_VERSION:0:3}/${QT_VERSION}/qt-opensource-linux-x64-${QT_VERSION}.run -O qt-installer.run
+  - chmod +x qt-installer.run
+  - ./qt-installer.run --script qt-noninteractive.qs
+  - export PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/bin:$PATH"
+  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/plugins/platforms"
+  - echo $PATH
+  - echo $QT_QPA_PLATFORM_PLUGIN_PATH
+  # Download and set up QtJambi
+  - wget https://github.com/qtjambi/qtjambi/releases/download/v6.7.1/qtjambi-linux-x64-6.7.1.zip
+  - unzip qtjambi-linux-x64-6.7.1.zip -d /opt/qtjambi
+  - export QTJAMBI_LIBS="/opt/qtjambi/native"
+  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/lib:${QTJAMBI_LIBS}:$LD_LIBRARY_PATH"
+  - echo $LD_LIBRARY_PATH
 
 setup:
   stage: setup
@@ -25,27 +36,17 @@ setup:
 build:
   stage: build
   script:
+    # Compile the Java project
     - mvn clean compile
+    # Package the project
     - mvn package
-  artifacts:
-    paths:
-      - target/*.jar
 
 test:
   stage: test
   script:
-    - java -Djava.library.path=$LD_LIBRARY_PATH -jar target/your-java-app.jar
+    # Run the Java application
+    - java -Djava.library.path=$QTJAMBI_LIBS -jar target/your-java-app.jar
 
-release:
-  stage: test
-  script:
-    - echo "Creating GitLab release"
-  release:
-    tag_name: "v${CI_COMMIT_TAG}"
-    description: "Release version ${CI_COMMIT_TAG}"
-    assets:
-      links:
-        - name: "Jar file"
-          url: "${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download"
-  only:
-    - tags
+#artifacts:
+ # paths:
+  #  - target/*.jar
