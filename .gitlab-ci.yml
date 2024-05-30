@@ -47,6 +47,6 @@ test:
     # Run the Java application
     - java -Djava.library.path=$QTJAMBI_LIBS -jar target/your-java-app.jar
 
-artifacts:
-  paths:
-    - target/*.jar
+#artifacts:
+ # paths:
+  #  - target/*.jar
