@@ -1,8 +1,9 @@
-image: harmon758/qt6:6.1.0
+image: mitchtabian/qt:qt6.1.0
 
 variables:
   JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  QT_INSTALL_DIR: "/opt/Qt/6.1.0/gcc_64"
 
 stages:
   - setup
@@ -11,10 +12,7 @@ stages:
   - release
 
 before_script:
-  # Update package list and install dependencies
-  - apt-get update && apt-get install -y wget unzip gcc g++ make
   # Set up environment variables for Qt
-  - export QT_INSTALL_DIR="/opt/Qt/6.1.0/gcc_64"
   - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
   - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH"
   - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
