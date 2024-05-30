@@ -12,7 +12,7 @@ stages:
 before_script:
   # Update package list and install dependencies
   - apt-get update && apt-get install -y
-  - sudo apt install -y qt6-base qt6-base-dev
+  - apt install -y qt6-base qt6-base-dev
   # Set up Qt environment variables
   - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
   - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
