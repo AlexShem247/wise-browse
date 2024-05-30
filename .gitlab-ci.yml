@@ -14,7 +14,7 @@ before_script:
   # Update package list and install dependencies
   - apt-get update && apt-get install -y wget unzip gcc g++ make
   # Install Qt
-  - wget https://download.qt.io/official_releases/qt/${QT_VERSION:0:3}/${QT_VERSION}/qt-everywhere-src-6.7.1.tar.xz
+  - wget https://download.qt.io/official_releases/qt/${QT_VERSION:0:3}/${QT_VERSION}/single/qt-everywhere-src-6.7.1.tar.xz
   - unzip qt-everywhere-src-6.7.1.tar.xz -d /opt/qt
   - ./qt-installer.run --script qt-noninteractive.qs
   - export PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/bin:$PATH"
