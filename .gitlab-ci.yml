@@ -1,8 +1,10 @@
 image: maven:3.8.4-jdk-11
 
 variables:
-  QT_INSTALL_DIR: "/usr/lib/x86_64-linux-gnu/qt6"
+  QT_VERSION: "6.7.1"
+  QT_INSTALL_DIR: "/opt/Qt"
   JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 stages:
   - setup
@@ -11,19 +13,17 @@ stages:
 
 before_script:
   # Update package list and install dependencies
-  - apt-get update && apt-get install -y
-  - apt install -y qt6-base qt6-base-dev
-  # Set up Qt environment variables
-  - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
+  - apt-get update && apt-get install -y wget unzip gcc g++ make
+  # Add Qt APT repository key and repository
+  - wget -O - https://download.qt.io/debian/qt6.7.gpg | tee /usr/share/keyrings/qt-archive-keyring.gpg
+  - echo 'deb [signed-by=/usr/share/keyrings/qt-archive-keyring.gpg] https://download.qt.io/debian qt6.7 focal main' | tee /etc/apt/sources.list.d/qt6.7.list
+  - apt-get update
+  - apt-get install -y qt6-base-dev qt6-declarative-dev qt6-tools-dev qt6-wayland
+  # Set up environment variables for Qt
+  - export QT_INSTALL_DIR="/usr/lib/qt6"
   - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
-  - echo $PATH
-  - echo $QT_QPA_PLATFORM_PLUGIN_PATH
-  # Download and set up QtJambi
-  - wget https://repo1.maven.org/maven2/io/qtjambi/qtjambi/6.7.1/qtjambi-6.7.1.jar
-  - unzip qtjambi-6.7.1.jar -d /opt/qtjambi
-  - export QTJAMBI_LIBS="/opt/qtjambi/native"
-  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:${QTJAMBI_LIBS}:$LD_LIBRARY_PATH"
-  - echo $LD_LIBRARY_PATH
+  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH"
+  - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
 
 setup:
   stage: setup
@@ -33,17 +33,27 @@ setup:
 build:
   stage: build
   script:
-    # Compile the Java project
     - mvn clean compile
-    # Package the project
     - mvn package
+  artifacts:
+    paths:
+      - target/*.jar
 
 test:
   stage: test
   script:
-    # Run the Java application
-    - java -Djava.library.path=$QTJAMBI_LIBS -jar target/your-java-app.jar
+    - java -Djava.library.path=$LD_LIBRARY_PATH -jar target/your-java-app.jar
 
-#artifacts:
- # paths:
-   # - target/*.jar
+release:
+  stage: release
+  script:
+    - echo "Creating GitLab release"
+  release:
+    tag_name: "v${CI_COMMIT_TAG}"
+    description: "Release version ${CI_COMMIT_TAG}"
+    assets:
+      links:
+        - name: "Jar file"
+          url: "${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download"
+  only:
+    - tags
