@@ -1,4 +1,4 @@
-image: mitchtabian/qt:qt6.1.0
+image: riverbankcomputing/qt6dev
 
 variables:
   JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
