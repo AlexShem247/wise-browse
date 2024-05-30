@@ -1,8 +1,6 @@
-image: maven:3.8.4-jdk-11
+image: harmon758/qt6:6.1.0
 
 variables:
-  QT_VERSION: "6.7.1"
-  QT_INSTALL_DIR: "/opt/Qt"
   JAVA_HOME: "/usr/lib/jvm/java-11-openjdk"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
@@ -14,13 +12,9 @@ stages:
 
 before_script:
   # Update package list and install dependencies
-  - apt-get update && apt-get install -y wget unzip tar gcc g++ make
-  # Download and install Qt6
-  - wget https://download.qt.io/official_releases/qt/6.7/6.7.1/single/qt-everywhere-src-6.7.1.tar.xz -O qt-installer.run
-  - chmod +x qt-installer.run
-  - ./qt-installer.run --platform minimal --script qt-installer-noninteractive.qs
+  - apt-get update && apt-get install -y wget unzip gcc g++ make
   # Set up environment variables for Qt
-  - export QT_INSTALL_DIR="/opt/Qt/6.7.1/gcc_64"
+  - export QT_INSTALL_DIR="/opt/Qt/6.1.0/gcc_64"
   - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
   - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH"
   - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
