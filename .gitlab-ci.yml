@@ -11,22 +11,9 @@ stages:
   - test
 
 before_script:
-  # Update package list and install dependencies
-  - apt-get update && apt-get install -y wget unzip gcc g++ make
-  # Install Qt
-  - wget https://download.qt.io/official_releases/qt/${QT_VERSION:0:3}/${QT_VERSION}/single/qt-everywhere-src-6.7.1.zip
-  - unzip qt-everywhere-src-6.7.1.zip -d /opt/qt
-  - ./qt-installer.run --script qt-noninteractive.qs
-  - export PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/bin:$PATH"
-  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/plugins/platforms"
-  - echo $PATH
-  - echo $QT_QPA_PLATFORM_PLUGIN_PATH
-  # Download and set up QtJambi
-  - wget https://github.com/qtjambi/qtjambi/releases/download/v6.7.1/qtjambi-linux-x64-6.7.1.zip
-  - unzip qtjambi-linux-x64-6.7.1.zip -d /opt/qtjambi
-  - export QTJAMBI_LIBS="/opt/qtjambi/native"
-  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/lib:${QTJAMBI_LIBS}:$LD_LIBRARY_PATH"
-  - echo $LD_LIBRARY_PATH
+  sudo apt-get install build-essential
+  sudo apt-get install qtcreator
+  sudo apt-get install qt6-base-dev
 
 setup:
   stage: setup
