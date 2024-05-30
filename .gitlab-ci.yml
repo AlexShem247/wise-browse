@@ -13,19 +13,19 @@ stages:
 before_script:
   # Update package list and install dependencies
   - apt-get update && apt-get install -y wget unzip gcc g++ make
-  # Install Qt
-  - wget https://download.qt.io/official_releases/qt/${QT_VERSION:0:3}/${QT_VERSION}/single/qt-everywhere-src-${QT_VERSION}.zip
-  - unzip qt-everywhere-src-6.7.1.zip -d /opt/qt
-  #- ./qt-installer.run --script qt-noninteractive.qs
-  - export PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/bin:$PATH"
-  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/plugins/platforms"
-  - echo $PATH
-  - echo $QT_QPA_PLATFORM_PLUGIN_PATH
+  # Install Qt and required packages
+  - apt-get install -y qtbase6-dev qtdeclarative6-dev qt6-qmake qt6-default
   # Download and set up QtJambi
   - wget https://github.com/qtjambi/qtjambi/releases/download/v6.7.1/qtjambi-linux-x64-6.7.1.zip
   - unzip qtjambi-linux-x64-6.7.1.zip -d /opt/qtjambi
+  # Set up environment variables for Qt and QtJambi
+  - export QT_INSTALL_DIR="/usr/lib/x86_64-linux-gnu/qt6"
+  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
   - export QTJAMBI_LIBS="/opt/qtjambi/native"
-  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/${QT_VERSION}/gcc_64/lib:${QTJAMBI_LIBS}:$LD_LIBRARY_PATH"
+  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:${QTJAMBI_LIBS}:$LD_LIBRARY_PATH"
+  - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
+  - echo $PATH
+  - echo $QT_QPA_PLATFORM_PLUGIN_PATH
   - echo $LD_LIBRARY_PATH
 
 setup:
