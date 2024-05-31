@@ -1,55 +1,31 @@
-image: dseynhae/qt6-ci:latest
-
-variables:
-  JAVA_HOME: "/usr/lib/jvm/java-11-openjdk-amd64"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  QT_INSTALL_DIR: "/opt/Qt/6.7.1/gcc_64"
-
-stages:
-  - setup
+stages:          # List of stages for jobs, and their order of execution
   - build
   - test
-  - release
+  - deploy
 
-before_script:
-  # Set up environment variables for Qt
-  - export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_INSTALL_DIR}/plugins/platforms"
-  - export LD_LIBRARY_PATH="${QT_INSTALL_DIR}/lib:$LD_LIBRARY_PATH"
-  - export PATH="${QT_INSTALL_DIR}/bin:$PATH"
-  # Display versions for debugging purposes
-  - java -version
-  - mvn -version
-  - qmake -v
-
-setup:
-  stage: setup
-  script:
-    - echo "Setting up environment"
-
-build:
+build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - mvn clean compile
-    - mvn package
-  artifacts:
-    paths:
-      - target/*.jar
+    - echo "Compiling the code..."
+    - echo "Compile complete."
 
-test:
-  stage: test
+unit-test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
   script:
-    - java -Djava.library.path=$LD_LIBRARY_PATH -jar target/your-java-app.jar
+    - echo "Running unit tests... This will take about 10 seconds."
+    - sleep 10
+    - echo "Code coverage is 100%"
 
-release:
-  stage: test
+lint-test-job:   # This job also runs in the test stage.
+  stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
-    - echo "Creating GitLab release"
-  release:
-    tag_name: "v${CI_COMMIT_TAG}"
-    description: "Release version ${CI_COMMIT_TAG}"
-    assets:
-      links:
-        - name: "Jar file"
-          url: "${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download"
-  only:
-    - tags
+    - echo "Linting code... This will take about 10 seconds."
+    - sleep 10
+    - echo "No lint issues found."
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
