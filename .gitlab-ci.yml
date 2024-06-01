@@ -11,9 +11,7 @@ build-job:
     - python --version
     - pip install --upgrade pip
     - pip install PyQt5
-    - pip install PyQtWebEngine
-    - pip install supabase
-    - python main.py
+    - python main.py test
     - echo "Compile complete."
 
 test-job:  
