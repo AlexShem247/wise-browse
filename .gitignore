@@ -1,2 +1,5 @@
 # JetBrain Files
 .idea/
+
+# Compiled Python Files
+__pycache__/
