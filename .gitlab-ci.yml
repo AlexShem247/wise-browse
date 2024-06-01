@@ -13,6 +13,6 @@ build-job:
 test-job:  
   stage: test  
   script:
-    - echo "Running unit tests...
-    - python URLUtilsTest.py
+    - echo "Running unit tests..."
+    - python ./URLUtilsTest.py
     - echo "All tests passed."
