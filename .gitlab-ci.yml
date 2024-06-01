@@ -14,5 +14,5 @@ test-job:
   stage: test  
   script:
     - echo "Running unit tests...
-    - python .\URLUtilsTest.py
-    - echo "Code coverage is 100%"
+    - python URLUtilsTest.py
+    - echo "All tests passed."
