@@ -48,13 +48,8 @@ class WebBrowser(QMainWindow):
         self.webView = QWebEngineView()
         self.webView.urlChanged.connect(self.onUrlChanged)
         self.webView.load(self.HOME_PAGE)
+        self.webView.setStyleSheet("background-color: white")
         webLayout.addWidget(self.webView)
-
-        # Configure Microphone button
-        microBtn = self.findChild(QPushButton, "microBtn")
-        microBtn.setIcon(QIcon(self.MICROPHONE_IMG.__str__()))
-        microBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
-        microBtn.clicked.connect(self.onMicroBtnClicked)
 
         # Configure Enter button
         self.enterBtn = self.findChild(QPushButton, "enterQueryBtn")
@@ -67,10 +62,23 @@ class WebBrowser(QMainWindow):
         self.keyPressEater = QueryInputKeyEaster(self)
         self.queryInput.installEventFilter(self.keyPressEater)
 
-        internetIcon = self.findChild(QLabel, "inputInternetIcon")
-        pixmap = QPixmap(self.INTERNET_IMG.__str__())
-        pixmap = pixmap.scaled(QSize(*self.INTERNET_SIZE), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        internetIcon.setPixmap(pixmap)
+        # Set icons and buttons
+        self.setIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
+                     self.onMicroBtnClicked)
+        self.setIcon(QLabel, "inputInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
+        self.setIcon(QLabel, "menuInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
+
+    def setIcon(self, QType, name, path, size, action=None):
+        icon = self.findChild(QType, name)
+
+        if action:
+            icon.setIcon(QIcon(path.__str__()))
+            icon.setIconSize(QSize(*size))
+            icon.clicked.connect(action)
+        else:
+            pixmap = QPixmap(path.__str__())
+            pixmap = pixmap.scaled(QSize(*size), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            icon.setPixmap(pixmap)
 
     def onUrlChanged(self, url):
         domain = URLUtils.getDomainName(url.toString().lower())

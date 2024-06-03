@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(255, 220, 220);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -25,7 +28,7 @@
         <item>
          <widget class="QFrame" name="aiMenu">
           <property name="styleSheet">
-           <string notr="true">background-color:rgb(255, 201, 201);
+           <string notr="true">background-color:rgb(255, 190, 190);
 border-radius: 20px;    
 padding:5px;</string>
           </property>
@@ -294,12 +297,47 @@ QPushButton:hover {
         </item>
        </layout>
       </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="menuLayout">
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="menuInternetIcon">
+        <property name="styleSheet">
+         <string notr="true"> border: none;
+  border-radius: 15px; 
+  background-color: transparent;</string>
+        </property>
         <property name="text">
-         <string>PushButton</string>
+         <string/>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
