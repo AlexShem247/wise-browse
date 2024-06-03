@@ -13,4 +13,4 @@ def getDomainName(url):
     if parts[0] == "www" and len(parts) > 1:
         return parts[1]
     else:
-        return None
+        return parts[0]

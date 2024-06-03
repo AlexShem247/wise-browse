@@ -154,6 +154,7 @@ class WebBrowser(QMainWindow):
             self.showText(result)
         else:
             self.queryInput.insertPlainText("\n")
+        self.database.addFAQ(inputText)
 
     def showText(self, text):
         self.clearLayout(self.FAQLayout)
