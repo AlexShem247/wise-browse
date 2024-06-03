@@ -17,7 +17,7 @@ class FAQDatabase:
         dIDresponse = self.supabase.table("Domains").select("dID").eq("domain", self.current_domain_name).execute()
         if dIDresponse.data:
             dID = dIDresponse.data[0]["dID"]
-            qresponse = self.supabase.table("Questions").select("question").eq("dID", dID).execute()
+            qresponse = self.supabase.table("Questions").select("question").eq("dID", dID).order("uses", desc=True).execute()
             return [r["question"] for r in qresponse.data]
         else:
             self.supabase.table("Domains").insert({"domain": self.current_domain_name}).execute()
@@ -26,9 +26,13 @@ class FAQDatabase:
     def addFAQ(self, question):
         dID = self.supabase.table("Domains").select("dID").eq("domain", self.current_domain_name).execute().data[0]["dID"]
         
-        qIDresponse = self.supabase.table("Questions").select("qID").eq("dID", dID).eq("question", question).execute()
+        qIDresponse = self.supabase.table("Questions").select("qID", "uses").eq("dID", dID).eq("question", question).execute()
         
-        if not qIDresponse.data:
-            self.supabase.table("Questions").insert({"dID": dID, "question": question}).execute()
+        if qIDresponse.data:
+            qID = qIDresponse.data[0]["qID"]
+            uses = qIDresponse.data[0]["uses"]
+            self.supabase.table("Questions").update({"uses": uses+1}).eq("qID", qID).execute()
+        else:
+            self.supabase.table("Questions").insert({"dID": dID, "question": question, "uses": 1}).execute()
         
  
