@@ -6,6 +6,7 @@ from PyQt5.QtCore import QSize, QUrl, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit
+from src.Assistant import Assistant, Model
 
 from src import URLUtils
 from src.FAQDatabase import FAQDatabase
@@ -107,5 +108,8 @@ class WebBrowser(QMainWindow):
         inputText = self.queryInput.toPlainText()
         if inputText.replace("\n", ""):
             print(f"Entering query: '{inputText}'")
+            result = Assistant().singleRequest(inputText, Model.dummy)
+            self.queryInput.clear()
+            self.queryInput.setText(result)
         else:
             self.queryInput.insertPlainText("\n")
