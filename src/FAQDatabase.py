@@ -19,4 +19,3 @@ class FAQDatabase:
             return [r["question"] for r in response.data]
         else:
             return []
-

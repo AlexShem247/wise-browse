@@ -24,6 +24,10 @@ class WebBrowser(QMainWindow):
     INTERNET_IMG = Path("assets/img/internet.png")
     INTERNET_SIZE = (30, 30)
 
+    HOME_IMG = Path("assets/img/home.png")
+    ACTION_LOG_IMG = Path("assets/img/clipboard.png")
+    SETTINGS_IMG = Path("assets/img/settings.png")
+
     window = None
     buttonStyle = None
     FAQLayout: QVBoxLayout = None
@@ -63,12 +67,19 @@ class WebBrowser(QMainWindow):
         self.queryInput.installEventFilter(self.keyPressEater)
 
         # Set icons and buttons
-        self.setIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
-                     self.onMicroBtnClicked)
-        self.setIcon(QLabel, "inputInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
-        self.setIcon(QLabel, "menuInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
+        self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
+                            self.onMicroBtnClicked)
+        self.findAndSetIcon(QLabel, "inputInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
+        self.findAndSetIcon(QLabel, "menuInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
 
-    def setIcon(self, QType, name, path, size, action=None):
+        self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.MICROPHONE_SIZE,
+                            self.onHomeBtnClicked)
+        self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.MICROPHONE_SIZE,
+                            self.onActionLogBtnClicked)
+        self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
+                            self.onSettingsBtnClicked)
+
+    def findAndSetIcon(self, QType, name, path, size, action=None):
         icon = self.findChild(QType, name)
 
         if action:
@@ -104,6 +115,18 @@ class WebBrowser(QMainWindow):
     @staticmethod
     def onMicroBtnClicked():
         print("Microphone button clicked")
+
+    @staticmethod
+    def onHomeBtnClicked():
+        print("Home button clicked")
+
+    @staticmethod
+    def onActionLogBtnClicked():
+        print("Action Log button clicked")
+
+    @staticmethod
+    def onSettingsBtnClicked():
+        print("Settings button clicked")
 
     def toggleEnterBtn(self):
         if self.queryInput.toPlainText().strip():
