@@ -2,10 +2,10 @@ import textwrap
 from pathlib import Path
 
 from PyQt5 import uic
-from PyQt5.QtCore import QSize, QUrl
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize, QUrl, Qt
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel
 
 from src import URLUtils
 from src.FAQDatabase import FAQDatabase
@@ -20,8 +20,12 @@ class WebBrowser(QMainWindow):
     MICROPHONE_SIZE = (20, 20)
     BUTTON_TEXT_WIDTH = 30
 
+    INTERNET_IMG = Path("assets/img/internet.png")
+    INTERNET_SIZE = (30, 30)
+
     window = None
     FAQLayout: QVBoxLayout = None
+    buttonStyle = None
 
     database = FAQDatabase()
 
@@ -47,6 +51,12 @@ class WebBrowser(QMainWindow):
         microBtn.clicked.connect(self.onMicroBtnClicked)
 
         self.FAQLayout = self.findChild(QVBoxLayout, "FAQLayout")
+        self.buttonStyle = self.findChild(QPushButton, "sampleQuestionBtn").styleSheet()
+
+        internetIcon = self.findChild(QLabel, "internetIcon")
+        pixmap = QPixmap(self.INTERNET_IMG.__str__())
+        pixmap = pixmap.scaled(QSize(*self.INTERNET_SIZE), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        internetIcon.setPixmap(pixmap)
 
     def onUrlChanged(self, url):
         domain = URLUtils.getDomainName(url.toString().lower())
@@ -65,7 +75,9 @@ class WebBrowser(QMainWindow):
         self.clearLayout(self.FAQLayout)
         qs = self.database.getFAQ(domain)
         for q in qs:
-            self.FAQLayout.addWidget(QPushButton(textwrap.fill(q, self.BUTTON_TEXT_WIDTH)))
+            btn = QPushButton(textwrap.fill(q, self.BUTTON_TEXT_WIDTH))
+            btn.setStyleSheet(self.buttonStyle)
+            self.FAQLayout.addWidget(btn)
 
     @staticmethod
     def onMicroBtnClicked():
