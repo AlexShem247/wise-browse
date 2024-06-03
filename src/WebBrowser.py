@@ -19,7 +19,7 @@ class WebBrowser(QMainWindow):
 
     MICROPHONE_IMG = Path("assets/img/microphone.png")
     MICROPHONE_SIZE = (20, 20)
-    BUTTON_TEXT_WIDTH = 30
+    TEXT_WIDTH = 30
 
     INTERNET_IMG = Path("assets/img/internet.png")
     INTERNET_SIZE = (30, 30)
@@ -30,9 +30,11 @@ class WebBrowser(QMainWindow):
 
     window = None
     buttonStyle = None
-    FAQLayout: QVBoxLayout = None
+
+    FAQLayout: QVBoxLayout
     enterBtn: QPushButton
     queryInput: QTextEdit
+    FAQLabel: QLabel
 
     database = FAQDatabase()
     domain = None
@@ -79,6 +81,9 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
                             self.onSettingsBtnClicked)
 
+        # Find Labels
+        self.FAQLabel = self.findChild(QLabel, "FAQLabel")
+
     def findAndSetIcon(self, QType, name, path, size, action=None):
         icon = self.findChild(QType, name)
 
@@ -96,7 +101,6 @@ class WebBrowser(QMainWindow):
         if changedDomain != self.domain:
             # Website has changed
             self.domain = changedDomain
-            print("Looking up database")
             self.displayFAQs(changedDomain)
 
     @staticmethod
@@ -111,7 +115,7 @@ class WebBrowser(QMainWindow):
         self.clearLayout(self.FAQLayout)
         qs = self.database.getFAQ(domain)
         for q in qs:
-            btn = QPushButton(textwrap.fill(q, self.BUTTON_TEXT_WIDTH))
+            btn = QPushButton(textwrap.fill(q, self.TEXT_WIDTH))
             btn.setStyleSheet(self.buttonStyle)
             self.FAQLayout.addWidget(btn)
 
@@ -140,5 +144,17 @@ class WebBrowser(QMainWindow):
         inputText = self.queryInput.toPlainText()
         if inputText.replace("\n", ""):
             print(f"Entering query: '{inputText}'")
+            self.showText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has "
+                          "been the industry's standard dummy text ever since the 1500s, when an unknown printer took "
+                          "a galley of type and scrambled it to make a type specimen book. It has survived not only "
+                          "five centuries, but also the leap into electronic typesetting, remaining essentially "
+                          "unchanged. It was popularised in the 1960s with the release of Letraset sheets containing "
+                          "Lorem Ipsum passages, and more recently with desktop publishing software like Aldus "
+                          "PageMaker including versions of Lorem Ipsum.")
         else:
             self.queryInput.insertPlainText("\n")
+
+    def showText(self, text):
+        self.clearLayout(self.FAQLayout)
+        self.FAQLabel.hide()
+        self.FAQLayout.addWidget(QLabel(textwrap.fill(text, self.TEXT_WIDTH)))
