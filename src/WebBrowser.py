@@ -35,6 +35,7 @@ class WebBrowser(QMainWindow):
     queryInput: QTextEdit
 
     database = FAQDatabase()
+    domain = None
 
     def __init__(self):
         super().__init__()
@@ -48,7 +49,6 @@ class WebBrowser(QMainWindow):
 
         # Add WebView
         webLayout = self.findChild(QVBoxLayout, "webLayout")
-
         self.webView = QWebEngineView()
         self.webView.urlChanged.connect(self.onUrlChanged)
         self.webView.load(self.HOME_PAGE)
@@ -92,9 +92,12 @@ class WebBrowser(QMainWindow):
             icon.setPixmap(pixmap)
 
     def onUrlChanged(self, url):
-        domain = URLUtils.getDomainName(url.toString().lower())
-        print(f"URL changed: {url.toString()}")
-        self.displayFAQs(domain)
+        changedDomain = URLUtils.getDomainName(url.toString().lower())
+        if changedDomain != self.domain:
+            # Website has changed
+            self.domain = changedDomain
+            print("Looking up database")
+            self.displayFAQs(changedDomain)
 
     @staticmethod
     def clearLayout(layout):
@@ -116,9 +119,8 @@ class WebBrowser(QMainWindow):
     def onMicroBtnClicked():
         print("Microphone button clicked")
 
-    @staticmethod
-    def onHomeBtnClicked():
-        print("Home button clicked")
+    def onHomeBtnClicked(self):
+        self.webView.load(self.HOME_PAGE)
 
     @staticmethod
     def onActionLogBtnClicked():
