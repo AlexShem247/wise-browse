@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QText
 from src import URLUtils
 from src.FAQDatabase import FAQDatabase
 from src.QueryInputKeyEater import QueryInputKeyEaster
+from src.Assistant import Assistant, Model
 
 
 class WebBrowser(QMainWindow):
@@ -35,6 +36,8 @@ class WebBrowser(QMainWindow):
     enterBtn: QPushButton
     queryInput: QTextEdit
     FAQLabel: QLabel
+
+    aiAssistant = Assistant()
 
     database = FAQDatabase()
     domain = None
@@ -142,15 +145,13 @@ class WebBrowser(QMainWindow):
 
     def enterQuery(self):
         inputText = self.queryInput.toPlainText()
+        self.webView.grab().save("screenshot.jpeg", b'JPEG')
         if inputText.replace("\n", ""):
             print(f"Entering query: '{inputText}'")
-            self.showText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has "
-                          "been the industry's standard dummy text ever since the 1500s, when an unknown printer took "
-                          "a galley of type and scrambled it to make a type specimen book. It has survived not only "
-                          "five centuries, but also the leap into electronic typesetting, remaining essentially "
-                          "unchanged. It was popularised in the 1960s with the release of Letraset sheets containing "
-                          "Lorem Ipsum passages, and more recently with desktop publishing software like Aldus "
-                          "PageMaker including versions of Lorem Ipsum.")
+            result = self.aiAssistant.singleRequest(inputText, Model.dummy)  # dummy to not use up tokens
+            # result = self.aiAssistant.singleRequest(inputText, Model.budget) # only plaint text as input
+            # result = self.aiAssistant.singleImageRequest(inputText, Model.full, "screenshot.jpeg") # with image
+            self.showText(result)
         else:
             self.queryInput.insertPlainText("\n")
 
