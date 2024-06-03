@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WebBrowser</class>
- <widget class="QMainWindow" name="WebBrowser">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,118 +13,140 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: white; </string>
-  </property>
-  <widget class="QWidget" name="mainLayout">
-   <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="5,1">
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QVBoxLayout" name="webLayout"/>
-    </item>
-    <item>
-     <widget class="QFrame" name="aiMenu">
-      <property name="styleSheet">
-       <string notr="true">background-color:rgb(255, 201, 201);
+     <layout class="QVBoxLayout" name="windowLayout">
+      <item>
+       <layout class="QHBoxLayout" name="mainLayout" stretch="10,1">
+        <item>
+         <layout class="QVBoxLayout" name="webLayout"/>
+        </item>
+        <item>
+         <widget class="QFrame" name="aiMenu">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(255, 201, 201);
 border-radius: 20px;    
 padding:5px;</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1">
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,4">
-         <item>
-          <widget class="QFrame" name="inputFrame">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(85, 85, 85);
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1">
+           <item>
+            <layout class="QVBoxLayout" name="aiMenuLayout" stretch="1,4">
+             <item>
+              <widget class="QFrame" name="inputFrame">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(85, 85, 85);
 padding: 5px;
 </string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_7">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <widget class="QFrame" name="frame">
-                <property name="styleSheet">
-                 <string notr="true">background-color:rgb(154, 153, 150);</string>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <item>
-                  <widget class="QLabel" name="internetIcon">
-                   <property name="styleSheet">
-                    <string notr="true"> border: none;
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_10">
+                <item>
+                 <layout class="QHBoxLayout" name="inputLayout">
+                  <item>
+                   <widget class="QFrame" name="inputEntryFrame">
+                    <property name="styleSheet">
+                     <string notr="true">background-color:rgb(154, 153, 150);</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_6">
+                     <item>
+                      <widget class="QLabel" name="inputInternetIcon">
+                       <property name="styleSheet">
+                        <string notr="true"> border: none;
   border-radius: 15px; 
   background-color: transparent;</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QTextEdit" name="textEdit">
-                   <property name="styleSheet">
-                    <string notr="true">color:white;
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QTextEdit" name="AI_InputEdit">
+                       <property name="styleSheet">
+                        <string notr="true">color:white;
 font-size: 14px;
 padding: 10px;</string>
-                   </property>
-                   <property name="html">
-                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                       </property>
+                       <property name="html">
+                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                   </property>
-                   <property name="overwriteMode">
-                    <bool>false</bool>
-                   </property>
-                   <property name="placeholderText">
-                    <string>Ask me anything...</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QPushButton" name="microBtn">
-                <property name="minimumSize">
-                 <size>
-                  <width>30</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>30</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+                       </property>
+                       <property name="overwriteMode">
+                        <bool>false</bool>
+                       </property>
+                       <property name="placeholderText">
+                        <string>Ask me anything...</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="inputMenuLayout">
+                  <item>
+                   <widget class="QPushButton" name="enterQueryBtn">
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton{
+	background-color: rgb(242, 120, 120); 
+ border-radius: 10px;    
+color:white;
+font-size: 14px;   
+ font-weight: bold; 
+padding: 5px
+}
+
+QPushButton:hover {
+    background-color: rgb(222, 100, 100); 
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>ASK QUESTION</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="microBtn">
+                    <property name="minimumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::LeftToRight</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
     border: none;
     border-radius: 15px; /* Half of the button's size to make it circular */
     background-color: transparent;
@@ -137,21 +159,21 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(60, 60, 60); /* Background color when hovered */
 }</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="FAQFrame">
-           <property name="styleSheet">
-            <string notr="true">QFrame {background-color: rgb(240, 240, 240); 
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="FAQFrame">
+               <property name="styleSheet">
+                <string notr="true">QFrame {background-color: rgb(240, 240, 240); 
  border-radius: 20px;  
 }  
 
@@ -167,68 +189,68 @@ QFrame#frame QPushButton {
 QFrame#frame QPushButton:hover {
     background-color: lightcoral;
 }</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_6" stretch="4">
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <item>
-               <widget class="QLabel" name="FAQLabel">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(242, 120, 120); 
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_11" stretch="4">
+                <item>
+                 <layout class="QVBoxLayout" name="FAQLayout">
+                  <item>
+                   <widget class="QLabel" name="FAQLabel">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>25</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(242, 120, 120); 
  border-radius: 10px;    
 color:white;
 font-size: 12px;   
  font-weight: bold; 
 padding: 5px</string>
-                </property>
-                <property name="text">
-                 <string>FREQUENTLY ASKED QUESTIONS</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>5</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="FAQLayout">
-                <item>
-                 <widget class="QPushButton" name="sampleQuestionBtn">
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton{
+                    </property>
+                    <property name="text">
+                     <string>FREQUENTLY ASKED QUESTIONS</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="FAQverticalSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>5</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="FAQBtnLayout">
+                    <item>
+                     <widget class="QPushButton" name="sampleQuestionBtn">
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton{
 	background-color: rgb(200, 200, 200); 
 	border-radius: 10px;    
 font-size: 14px;   
@@ -239,36 +261,47 @@ font-size: 14px;
 QPushButton:hover {
     background-color: rgb(180, 180, 180); 
 }</string>
-                  </property>
-                  <property name="text">
-                   <string>Sample Question</string>
-                  </property>
-                 </widget>
+                      </property>
+                      <property name="text">
+                       <string>Sample Question</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <spacer name="FAQverticalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
                 </item>
                </layout>
-              </item>
-              <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>PushButton</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
