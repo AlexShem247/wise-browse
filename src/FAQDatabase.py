@@ -6,19 +6,30 @@ class FAQDatabase:
     DATABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZi" + \
                    "I6InB0d2xodnl2dnVrZnZ1Y2pxZm9rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc0M" + \
                    "jQxNTUsImV4cCI6MjAzMzAwMDE1NX0.PqzDZk2H_YlNrkQ5c2FkDjIq7bEBtN2JIE0gfASzKUE"
+    current_domain_name = ""
 
     def __init__(self):
         self.supabase = supabase.create_client(self.DATABASE_URL, self.DATABASE_KEY)
 
     def getFAQ(self, domainName):
-        response = self.supabase.table("Domains").select("dID").eq("domain", domainName).execute()
+        self.current_domain_name = domainName
 
-        if response.data:
+        dIDresponse = self.supabase.table("Domains").select("dID").eq("domain", self.current_domain_name).execute()
+        if dIDresponse.data:
             return []
             # dID = response.data[0]["dID"]
             # response = self.supabase.table("Questions").select("question").eq("dID", dID).order("references").execute()
             # return [r["question"] for r in response.data]
         else:
-            self.supabase.table("Domains").insert({"domain": domainName}).execute()
+            self.supabase.table("Domains").insert({"domain": self.current_domain_name}).execute()
             return []
+        
+    def addFAQ(self, question):
+        dID = self.supabase.table("Domains").select("dID").eq("domain", self.current_domain_name).execute().data[0]["dID"]
+        
+        qIDresponse = self.supabase.table("Questions").select("qID").eq("dID", dID).eq("question", question).execute()
+        
+        if not qIDresponse.data:
+            self.supabase.table("Questions").insert({"dID": dID, "question": question}).execute()
+        
  

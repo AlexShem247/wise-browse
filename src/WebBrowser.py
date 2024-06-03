@@ -116,3 +116,4 @@ class WebBrowser(QMainWindow):
             self.queryInput.setText(result)
         else:
             self.queryInput.insertPlainText("\n")
+        self.database.addFAQ(inputText)
