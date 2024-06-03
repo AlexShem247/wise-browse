@@ -106,9 +106,12 @@ class WebBrowser(QMainWindow):
 
     def enterQuery(self):
         inputText = self.queryInput.toPlainText()
+        self.webView.grab().save("screenshot.jpeg", b'JPEG')
         if inputText.replace("\n", ""):
             print(f"Entering query: '{inputText}'")
-            result = Assistant().singleRequest(inputText, Model.dummy)
+            result = Assistant().singleRequest(inputText, Model.dummy) # dummy to not use up tokens
+            # result = Assistant().singleRequest(inputText, Model.budget) # only plaint text as input
+            # result = Assistant().singleImageRequest(inputText, Model.full, "screenshot.jpeg") # with image
             self.queryInput.clear()
             self.queryInput.setText(result)
         else:

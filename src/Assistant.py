@@ -17,14 +17,14 @@ class Assistant:
     def __init__(self):
         pass
     
-    def __encode_image(image_path):
+    def __encode_image(self,image_path):
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')
 
     def singleImageRequest(self, message, mode, image_path):
         if mode == Model.dummy: 
             return "HMMM...Give me a second to think!"
-            
+
         response = self.client.chat.completions.create(
             model = "gpt-3.5-turbo" if mode == Model.budget else "gpt-4o" ,
             messages = [{
@@ -44,7 +44,7 @@ class Assistant:
             }],
             max_tokens = 300
         )
-        return response.choices[0]
+        return response.choices[0].message.content
 
     def singleRequest(self, message, mode):
         if mode == Model.dummy: 
