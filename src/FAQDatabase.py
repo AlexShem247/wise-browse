@@ -16,10 +16,9 @@ class FAQDatabase:
 
         dIDresponse = self.supabase.table("Domains").select("dID").eq("domain", self.current_domain_name).execute()
         if dIDresponse.data:
-            return []
-            # dID = response.data[0]["dID"]
-            # response = self.supabase.table("Questions").select("question").eq("dID", dID).order("references").execute()
-            # return [r["question"] for r in response.data]
+            dID = dIDresponse.data[0]["dID"]
+            qresponse = self.supabase.table("Questions").select("question").eq("dID", dID).execute()
+            return [r["question"] for r in qresponse.data]
         else:
             self.supabase.table("Domains").insert({"domain": self.current_domain_name}).execute()
             return []
