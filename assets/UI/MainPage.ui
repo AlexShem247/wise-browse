@@ -175,6 +175,12 @@ QPushButton:hover {
              </item>
              <item>
               <widget class="QFrame" name="FAQFrame">
+               <property name="minimumSize">
+                <size>
+                 <width>230</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="styleSheet">
                 <string notr="true">QFrame {background-color: rgb(240, 240, 240); 
  border-radius: 20px;  
@@ -231,6 +237,22 @@ padding: 5px</string>
                      <set>Qt::AlignCenter</set>
                     </property>
                    </widget>
+                  </item>
+                  <item>
+                   <spacer name="FAQVerticalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>5</height>
+                     </size>
+                    </property>
+                   </spacer>
                   </item>
                   <item>
                    <layout class="QVBoxLayout" name="FAQBtnLayout">
@@ -493,6 +515,43 @@ QPushButton:hover {
                      </spacer>
                     </item>
                    </layout>
+                  </item>
+                  <item>
+                   <spacer name="FAQVerticalSpacer_3">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>5</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="backBtn">
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton{
+	background-color: rgb(242, 120, 120); 
+ border-radius: 10px;    
+color:white;
+font-size: 14px;   
+ font-weight: bold; 
+padding: 5px
+}
+
+QPushButton:hover {
+    background-color: rgb(222, 100, 100); 
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Go Back</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>

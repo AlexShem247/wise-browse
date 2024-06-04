@@ -6,7 +6,7 @@ from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy
 
 from src import URLUtils
 from src.FAQDatabase import FAQDatabase
@@ -38,7 +38,9 @@ class WebBrowser(QMainWindow):
     buttonStyle = None
 
     FAQLayout: QVBoxLayout
+    FAQBtnLayout: QVBoxLayout
     enterBtn: QPushButton
+    backBtn: QPushButton
     queryInput: QTextEdit
     FAQLabel: QLabel
     helpfulLabel: QLabel
@@ -56,8 +58,9 @@ class WebBrowser(QMainWindow):
         # Configure Window
         self.setWindowTitle(self.WINDOW_TITLE)
         self.buttonStyle = self.findChild(QPushButton, "sampleQuestionBtn").styleSheet()
-        self.FAQLayout = self.findChild(QVBoxLayout, "FAQBtnLayout")
-        self.clearLayout(self.FAQLayout)
+        self.FAQLayout = self.findChild(QVBoxLayout, "FAQLayout")
+        self.FAQBtnLayout = self.findChild(QVBoxLayout, "FAQBtnLayout")
+        self.clearLayout(self.FAQBtnLayout)
 
         # Add WebView
         webLayout = self.findChild(QVBoxLayout, "webLayout")
@@ -71,6 +74,9 @@ class WebBrowser(QMainWindow):
         self.enterBtn = self.findChild(QPushButton, "enterQueryBtn")
         self.enterBtn.clicked.connect(self.enterQuery)
         self.enterBtn.hide()
+        self.backBtn = self.findChild(QPushButton, "backBtn")
+        self.backBtn.clicked.connect(self.goBack)
+        self.backBtn.hide()
 
         # Configure Textedit
         self.queryInput = self.findChild(QTextEdit, "AI_InputEdit")
@@ -93,7 +99,7 @@ class WebBrowser(QMainWindow):
 
         for i in range(1, self.NO_STARS + 1):
             btn = self.findAndSetIcon(
-                QPushButton, f"starBtn{i}", self.STAR_EMPTY_IMG, self.STAR_SIZE, partial(self.starBtnPressed, i)
+                QPushButton, f"starBtn{i}", self.STAR_FILLED_IMG, self.STAR_SIZE, partial(self.starBtnPressed, i)
             )
             btn.installEventFilter(ButtonHoverHandler(self))
             self.starBtns.append(btn)
@@ -103,6 +109,22 @@ class WebBrowser(QMainWindow):
         self.helpfulLabel = self.findChild(QLabel, "helpfulLabel")
 
         self.showRating(False)
+
+    def deleteSpacer(self, no):
+        count = 0
+        for i in range(self.FAQLayout.count()):
+            item = self.FAQLayout.itemAt(i)
+            if isinstance(item, QSpacerItem):
+                if count == no:
+                    self.FAQLayout.takeAt(i)
+                    del item
+                    break
+                count += 1
+
+    def goBack(self):
+        self.queryInput.clear()
+        self.displayFAQs(self.domain)
+        self.FAQLayout.insertStretch(3)
 
     def showRating(self, show):
         if show:
@@ -147,6 +169,7 @@ class WebBrowser(QMainWindow):
             self.domain = changedDomain
             self.displayFAQs(changedDomain)
             self.showRating(False)
+            self.backBtn.hide()
 
     @staticmethod
     def clearLayout(layout):
@@ -157,12 +180,16 @@ class WebBrowser(QMainWindow):
                 widget.deleteLater()
 
     def displayFAQs(self, domain):
-        self.clearLayout(self.FAQLayout)
+        self.clearLayout(self.FAQBtnLayout)
+        self.backBtn.hide()
+        self.showRating(False)
+        self.FAQLabel.show()
         qs = self.database.getFAQ(domain)
         for q in qs:
             btn = QPushButton(textwrap.fill(q, self.TEXT_WIDTH))
             btn.setStyleSheet(self.buttonStyle)
-            self.FAQLayout.addWidget(btn)
+            self.FAQBtnLayout.addWidget(btn)
+
 
     @staticmethod
     def onMicroBtnClicked():
@@ -171,9 +198,8 @@ class WebBrowser(QMainWindow):
     def onHomeBtnClicked(self):
         self.webView.load(self.HOME_PAGE)
 
-    @staticmethod
-    def onActionLogBtnClicked():
-        print("Action Log button clicked")
+    def onActionLogBtnClicked(self):
+        self.addSpacer()
 
     @staticmethod
     def onSettingsBtnClicked():
@@ -195,14 +221,16 @@ class WebBrowser(QMainWindow):
             # result = self.aiAssistant.singleImageRequest(inputText, Model.full, "screenshot.jpeg") # with image
             self.showText(result)
             self.showRating(True)
+            self.deleteSpacer(1)
+            self.backBtn.show()
         else:
             self.queryInput.insertPlainText("\n")
         self.database.addFAQ(inputText)
 
     def showText(self, text):
-        self.clearLayout(self.FAQLayout)
+        self.clearLayout(self.FAQBtnLayout)
         self.FAQLabel.hide()
         textEdit = QTextEdit()
         textEdit.insertPlainText(text)
         textEdit.moveCursor(textEdit.textCursor().Start)
-        self.FAQLayout.addWidget(textEdit)
+        self.FAQBtnLayout.addWidget(textEdit)
