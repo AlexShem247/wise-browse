@@ -1,8 +1,9 @@
-import sys
-import re
 import base64
+import re
+import tempfile
+import os
+from pathlib import Path
 
-from PyQt5.QtWidgets import QApplication
 from PyQt5.uic import compileUi
 
 
@@ -63,34 +64,34 @@ def writeImg(file):
 
 
 def getVarName(file):
-    return file.split("/")[-1].split(".")[0].upper() + "_PNG_CONTENTS"
+    return os.path.splitext(os.path.basename(file))[0].upper() + "_PNG_CONTENTS"
 
 
 IF_MAIN = 'if __name__ == "__main__":'
 
-IMG_FILES = ["assets/img/clipboard.png"
-    , "assets/img/home.png"
-    , "assets/img/internet.png"
-    , "assets/img/microphone.png"
-    , "assets/img/settings.png"
-    , "assets/img/star_empty.png"
-    , "assets/img/star_filled.png"]
+IMG_FILES = [str(Path("assets") / "img" / f) for f in os.listdir("assets/img") if f.endswith(".png")]
+SRC_FILES = [str(Path("src") / f) for f in os.listdir("src") if f.endswith(".py")]
 
 if __name__ == "__main__":
-    convert_ui_to_py("assets/UI/MainPage.ui", "temp/MainPage.py")
-    with open("output.py", "w") as f:
+    with open("output.pyw", "w") as f:
+        # Add Images
         f.write(blockComment("Writing Image Files"))
         for img in IMG_FILES:
             f.write(writeImg(img))
         f.write("\n")
 
-        f.write(contents("temp/MainPage.py"))
-        f.write(contents("src/Assistant.py"))
-        f.write(contents("src/EventFilters.py"))
-        f.write(contents("src/FAQDatabase.py"))
-        f.write(contents("src/URLUtils.py"))
-        f.write(contents("src/WebBrowser.py"))
+        # Add UI File
+        convertedUi = tempfile.TemporaryFile()
+        uiFile, uiFilename = tempfile.mkstemp()
+        convert_ui_to_py("assets/UI/MainPage.ui", uiFilename)
+        f.write(contents(uiFilename))
+        os.close(uiFile)
 
+        # Add src .py files
+        for file in SRC_FILES:
+            f.write(contents(file))
+
+        # Add main.py
         f.write(DECODE_FUNC)
         steps = [f"decode_base64_to_png({getVarName(file)}, '{file}')" for file in IMG_FILES]
         main = contents("main.py")

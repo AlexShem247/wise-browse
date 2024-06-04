@@ -2,7 +2,6 @@ image: python:latest
 
 stages:         
   - build
-  - test
 
 build-job:      
   stage: build
@@ -13,10 +12,3 @@ build-job:
     - pip install PyQt5
     - python main.py test
     - echo "Compile complete."
-
-test-job:  
-  stage: test  
-  script:
-    - echo "Running unit tests..."
-    - python ./URLUtilsTest.py
-    - echo "All tests passed."

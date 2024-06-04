@@ -6,7 +6,8 @@ from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
+    QMessageBox
 
 from src.URLUtils import getDomainName
 from src.FAQDatabase import FAQDatabase
@@ -32,6 +33,7 @@ class WebBrowser(QMainWindow):
     STAR_SIZE = (15, 15)
 
     TEXT_WIDTH = 30
+    FONT_SIZE = 11
     NO_STARS = 5
     MAX_QUESTIONS = 8
 
@@ -52,6 +54,9 @@ class WebBrowser(QMainWindow):
     database = FAQDatabase()
     domain = None
     currentQs = []
+
+    INPUT_INFO = ("Inputting Information", "Someone write something here.")
+    GENERAL_INFO = (WINDOW_TITLE, "Someone write something here.")
 
     def __init__(self):
         super().__init__()
@@ -89,8 +94,10 @@ class WebBrowser(QMainWindow):
         # Set icons and buttons
         self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
                             self.onMicroBtnClicked)
-        self.findAndSetIcon(QLabel, "inputInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
-        self.findAndSetIcon(QLabel, "menuInternetIcon", self.INTERNET_IMG, self.INTERNET_SIZE)
+        self.findAndSetIcon(QPushButton, "inputInternetBtn", self.INTERNET_IMG, self.INTERNET_SIZE,
+                            lambda: self.createAPopup(*self.INPUT_INFO))
+        self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, (40, 40),
+                            lambda: self.createAPopup(*self.GENERAL_INFO))
 
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.MICROPHONE_SIZE,
                             self.onHomeBtnClicked)
@@ -111,6 +118,14 @@ class WebBrowser(QMainWindow):
         self.helpfulLabel = self.findChild(QLabel, "helpfulLabel")
 
         self.showRating(False)
+
+    @staticmethod
+    def createAPopup(title, body):
+        msg = QMessageBox()
+        msg.setText(body)
+        msg.setWindowTitle(title)
+        msg.setIcon(QMessageBox.Information)
+        msg.exec_()
 
     def deleteSpacer(self, no):
         count = 0
@@ -235,4 +250,10 @@ class WebBrowser(QMainWindow):
         textEdit = QTextEdit()
         textEdit.insertPlainText(text)
         textEdit.moveCursor(textEdit.textCursor().Start)
+        textEdit.setReadOnly(True)
+
+        font = textEdit.font()
+        font.setPointSize(self.FONT_SIZE)
+        textEdit.setFont(font)
+
         self.FAQBtnLayout.addWidget(textEdit)

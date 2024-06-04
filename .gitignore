@@ -4,4 +4,8 @@
 # Compiled Python Files
 __pycache__/
 temp/
-output.py
+output.*
+build/
+dist/
+*.spec
+desktop.ini
