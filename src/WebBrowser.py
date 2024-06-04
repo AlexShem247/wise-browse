@@ -14,6 +14,10 @@ from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler
 from src.Assistant import Assistant, Model
 
 
+def onActionLogBtnClicked():
+    print("Action Log button clicked")
+
+
 class WebBrowser(QMainWindow):
     UI_FILE = Path("assets/UI/MainPage.ui")
     WINDOW_TITLE = "Wise Browse"
@@ -33,6 +37,7 @@ class WebBrowser(QMainWindow):
 
     TEXT_WIDTH = 30
     NO_STARS = 5
+    MAX_QUESTIONS = 8
 
     window = None
     buttonStyle = None
@@ -93,7 +98,7 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.MICROPHONE_SIZE,
                             self.onHomeBtnClicked)
         self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.MICROPHONE_SIZE,
-                            self.onActionLogBtnClicked)
+                            onActionLogBtnClicked)
         self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
                             self.onSettingsBtnClicked)
 
@@ -127,14 +132,9 @@ class WebBrowser(QMainWindow):
         self.FAQLayout.insertStretch(3)
 
     def showRating(self, show):
-        if show:
-            self.helpfulLabel.show()
-            for btn in self.starBtns:
-                btn.show()
-        else:
-            self.helpfulLabel.hide()
-            for btn in self.starBtns:
-                btn.hide()
+        self.helpfulLabel.setVisible(show)
+        for btn in self.starBtns:
+            btn.setVisible(show)
 
     def starBtnPressed(self, val):
         print(f"Rated {val}/{self.NO_STARS}")
@@ -185,11 +185,15 @@ class WebBrowser(QMainWindow):
         self.showRating(False)
         self.FAQLabel.show()
         qs = self.database.getFAQ(domain)
-        for q in qs:
+        for q in qs[:self.MAX_QUESTIONS]:
             btn = QPushButton(textwrap.fill(q, self.TEXT_WIDTH))
             btn.setStyleSheet(self.buttonStyle)
+            btn.clicked.connect(partial(self.insertQuestion, q))
             self.FAQBtnLayout.addWidget(btn)
 
+    def insertQuestion(self, question):
+        self.queryInput.clear()
+        self.queryInput.insertPlainText(question)
 
     @staticmethod
     def onMicroBtnClicked():
@@ -197,9 +201,6 @@ class WebBrowser(QMainWindow):
 
     def onHomeBtnClicked(self):
         self.webView.load(self.HOME_PAGE)
-
-    def onActionLogBtnClicked(self):
-        self.addSpacer()
 
     @staticmethod
     def onSettingsBtnClicked():
