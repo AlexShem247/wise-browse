@@ -3,3 +3,5 @@
 
 # Compiled Python Files
 __pycache__/
+temp/
+output.py

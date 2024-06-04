@@ -8,7 +8,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy
 
-from src import URLUtils
+from src.URLUtils import getDomainName
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler
 from src.Assistant import Assistant, Model
@@ -160,7 +160,7 @@ class WebBrowser(QMainWindow):
         return icon
 
     def onUrlChanged(self, url):
-        changedDomain = URLUtils.getDomainName(url.toString().lower())
+        changedDomain = getDomainName(url.toString().lower())
         if changedDomain != self.domain:
             # Website has changed
             self.domain = changedDomain
@@ -216,7 +216,7 @@ class WebBrowser(QMainWindow):
 
     def enterQuery(self):
         inputText = self.queryInput.toPlainText()
-        self.webView.grab().save("screenshot.jpeg", b'JPEG')
+        self.webView.grab().save("temp/screenshot.jpeg", b'JPEG')
         if inputText.replace("\n", ""):
             result = self.aiAssistant.singleRequest(inputText, Model.dummy)  # dummy to not use up tokens
             # result = self.aiAssistant.singleRequest(inputText, Model.budget) # only plaint text as input
