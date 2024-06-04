@@ -1,5 +1,6 @@
 import textwrap
 from pathlib import Path
+from functools import partial
 
 from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt
@@ -9,25 +10,29 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QText
 
 from src import URLUtils
 from src.FAQDatabase import FAQDatabase
-from src.QueryInputKeyEater import QueryInputKeyEaster
+from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler
 from src.Assistant import Assistant, Model
 
 
 class WebBrowser(QMainWindow):
     UI_FILE = Path("assets/UI/MainPage.ui")
-    WINDOW_TITLE = "Web Browser"
+    WINDOW_TITLE = "Wise Browse"
     HOME_PAGE = QUrl("https://www.google.com")
 
     MICROPHONE_IMG = Path("assets/img/microphone.png")
-    MICROPHONE_SIZE = (20, 20)
-    TEXT_WIDTH = 30
-
     INTERNET_IMG = Path("assets/img/internet.png")
-    INTERNET_SIZE = (30, 30)
-
     HOME_IMG = Path("assets/img/home.png")
     ACTION_LOG_IMG = Path("assets/img/clipboard.png")
     SETTINGS_IMG = Path("assets/img/settings.png")
+    STAR_EMPTY_IMG = Path("assets/img/star_empty.png")
+    STAR_FILLED_IMG = Path("assets/img/star_filled.png")
+
+    INTERNET_SIZE = (30, 30)
+    MICROPHONE_SIZE = (20, 20)
+    STAR_SIZE = (15, 15)
+
+    TEXT_WIDTH = 30
+    NO_STARS = 5
 
     window = None
     buttonStyle = None
@@ -36,6 +41,8 @@ class WebBrowser(QMainWindow):
     enterBtn: QPushButton
     queryInput: QTextEdit
     FAQLabel: QLabel
+    helpfulLabel: QLabel
+    starBtns = []
 
     aiAssistant = Assistant()
 
@@ -84,8 +91,40 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
                             self.onSettingsBtnClicked)
 
+        for i in range(1, self.NO_STARS + 1):
+            btn = self.findAndSetIcon(
+                QPushButton, f"starBtn{i}", self.STAR_EMPTY_IMG, self.STAR_SIZE, partial(self.starBtnPressed, i)
+            )
+            btn.installEventFilter(ButtonHoverHandler(self))
+            self.starBtns.append(btn)
+
         # Find Labels
         self.FAQLabel = self.findChild(QLabel, "FAQLabel")
+        self.helpfulLabel = self.findChild(QLabel, "helpfulLabel")
+
+        self.showRating(False)
+
+    def showRating(self, show):
+        if show:
+            self.helpfulLabel.show()
+            for btn in self.starBtns:
+                btn.show()
+        else:
+            self.helpfulLabel.hide()
+            for btn in self.starBtns:
+                btn.hide()
+
+    def starBtnPressed(self, val):
+        print(f"Rated {val}/{self.NO_STARS}")
+
+    def onHovered(self, val):
+        for i, btn in enumerate(self.starBtns):
+            if i < val:
+                # Set filled
+                btn.setIcon(QIcon(self.STAR_FILLED_IMG.__str__()))
+            else:
+                # Set empty
+                btn.setIcon(QIcon(self.STAR_EMPTY_IMG.__str__()))
 
     def findAndSetIcon(self, QType, name, path, size, action=None):
         icon = self.findChild(QType, name)
@@ -99,12 +138,15 @@ class WebBrowser(QMainWindow):
             pixmap = pixmap.scaled(QSize(*size), Qt.KeepAspectRatio, Qt.SmoothTransformation)
             icon.setPixmap(pixmap)
 
+        return icon
+
     def onUrlChanged(self, url):
         changedDomain = URLUtils.getDomainName(url.toString().lower())
         if changedDomain != self.domain:
             # Website has changed
             self.domain = changedDomain
             self.displayFAQs(changedDomain)
+            self.showRating(False)
 
     @staticmethod
     def clearLayout(layout):
@@ -152,10 +194,14 @@ class WebBrowser(QMainWindow):
             # result = self.aiAssistant.singleRequest(inputText, Model.budget) # only plaint text as input
             # result = self.aiAssistant.singleImageRequest(inputText, Model.full, "screenshot.jpeg") # with image
             self.showText(result)
+            self.showRating(True)
         else:
             self.queryInput.insertPlainText("\n")
 
     def showText(self, text):
         self.clearLayout(self.FAQLayout)
         self.FAQLabel.hide()
-        self.FAQLayout.addWidget(QLabel(textwrap.fill(text, self.TEXT_WIDTH)))
+        textEdit = QTextEdit()
+        textEdit.insertPlainText(text)
+        textEdit.moveCursor(textEdit.textCursor().Start)
+        self.FAQLayout.addWidget(textEdit)

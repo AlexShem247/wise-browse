@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject, Qt
+from PyQt5.QtCore import QObject, Qt, QEvent
 
 
 class QueryInputKeyEaster(QObject):
@@ -15,3 +15,14 @@ class QueryInputKeyEaster(QObject):
                 self.parent.queryInput.insertPlainText("\n")
                 return True
         return False
+
+
+class ButtonHoverHandler(QObject):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+
+    def eventFilter(self, obj, event):
+        if obj in self.parent.starBtns and event.type() == QEvent.HoverEnter:
+            self.parent.onHovered(self.parent.starBtns.index(obj) + 1)
+        return super().eventFilter(obj, event)
