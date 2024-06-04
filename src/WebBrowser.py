@@ -14,10 +14,6 @@ from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler
 from src.Assistant import Assistant, Model
 
 
-def onActionLogBtnClicked():
-    print("Action Log button clicked")
-
-
 class WebBrowser(QMainWindow):
     UI_FILE = Path("assets/UI/MainPage.ui")
     WINDOW_TITLE = "Wise Browse"
@@ -55,6 +51,7 @@ class WebBrowser(QMainWindow):
 
     database = FAQDatabase()
     domain = None
+    currentQs = []
 
     def __init__(self):
         super().__init__()
@@ -98,7 +95,7 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.MICROPHONE_SIZE,
                             self.onHomeBtnClicked)
         self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.MICROPHONE_SIZE,
-                            onActionLogBtnClicked)
+                            self.onActionLogBtnClicked)
         self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
                             self.onSettingsBtnClicked)
 
@@ -128,7 +125,7 @@ class WebBrowser(QMainWindow):
 
     def goBack(self):
         self.queryInput.clear()
-        self.displayFAQs(self.domain)
+        self.displayFAQs(self.domain, False)
         self.FAQLayout.insertStretch(3)
 
     def showRating(self, show):
@@ -179,13 +176,14 @@ class WebBrowser(QMainWindow):
             if widget is not None:
                 widget.deleteLater()
 
-    def displayFAQs(self, domain):
+    def displayFAQs(self, domain, fetch=True):
         self.clearLayout(self.FAQBtnLayout)
         self.backBtn.hide()
         self.showRating(False)
         self.FAQLabel.show()
-        qs = self.database.getFAQ(domain)
-        for q in qs[:self.MAX_QUESTIONS]:
+        if fetch:
+            self.currentQs = self.database.getFAQ(domain)[:self.MAX_QUESTIONS]
+        for q in self.currentQs:
             btn = QPushButton(textwrap.fill(q, self.TEXT_WIDTH))
             btn.setStyleSheet(self.buttonStyle)
             btn.clicked.connect(partial(self.insertQuestion, q))
@@ -206,6 +204,10 @@ class WebBrowser(QMainWindow):
     def onSettingsBtnClicked():
         print("Settings button clicked")
 
+    @staticmethod
+    def onActionLogBtnClicked():
+        print("Action Log button clicked")
+
     def toggleEnterBtn(self):
         if self.queryInput.toPlainText().strip():
             self.enterBtn.show()
@@ -216,7 +218,6 @@ class WebBrowser(QMainWindow):
         inputText = self.queryInput.toPlainText()
         self.webView.grab().save("screenshot.jpeg", b'JPEG')
         if inputText.replace("\n", ""):
-            print(f"Entering query: '{inputText}'")
             result = self.aiAssistant.singleRequest(inputText, Model.dummy)  # dummy to not use up tokens
             # result = self.aiAssistant.singleRequest(inputText, Model.budget) # only plaint text as input
             # result = self.aiAssistant.singleImageRequest(inputText, Model.full, "screenshot.jpeg") # with image
