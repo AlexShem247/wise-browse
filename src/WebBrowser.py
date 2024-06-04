@@ -197,6 +197,7 @@ class WebBrowser(QMainWindow):
             self.showRating(True)
         else:
             self.queryInput.insertPlainText("\n")
+        self.database.addFAQ(inputText)
 
     def showText(self, text):
         self.clearLayout(self.FAQLayout)
