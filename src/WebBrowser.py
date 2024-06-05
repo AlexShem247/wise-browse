@@ -29,6 +29,7 @@ class WebBrowser(QMainWindow):
     SETTINGS_IMG = Path("assets/img/settings.png")
     STAR_EMPTY_IMG = Path("assets/img/star_empty.png")
     STAR_FILLED_IMG = Path("assets/img/star_filled.png")
+    STOP_IMG = Path("assets/img/stop.png")
 
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
@@ -49,6 +50,7 @@ class WebBrowser(QMainWindow):
     queryInput: QTextEdit
     FAQLabel: QLabel
     helpfulLabel: QLabel
+    microphoneBtn: QPushButton
     starBtns = []
 
     AI_MODEL_TYPE = Model.full
@@ -61,6 +63,8 @@ class WebBrowser(QMainWindow):
 
     INPUT_INFO = ("Inputting Information", "Someone write something here.")
     GENERAL_INFO = (WINDOW_TITLE, "Someone write something here.")
+
+    isRecording = False
 
     def __init__(self):
         super().__init__()
@@ -96,8 +100,8 @@ class WebBrowser(QMainWindow):
         self.queryInput.installEventFilter(self.keyPressEater)
 
         # Set icons and buttons
-        self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
-                            self.onMicroBtnClicked)
+        self.microphoneBtn = self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
+                                                  self.onMicroBtnClicked)
         self.findAndSetIcon(QPushButton, "inputInternetBtn", self.INTERNET_IMG, self.INTERNET_SIZE,
                             lambda: self.createAPopup(*self.INPUT_INFO))
         self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, (40, 40),
@@ -212,9 +216,17 @@ class WebBrowser(QMainWindow):
         self.queryInput.clear()
         self.queryInput.insertPlainText(question)
 
-    @staticmethod
-    def onMicroBtnClicked():
-        print("Microphone button clicked")
+    def onMicroBtnClicked(self):
+        if self.isRecording:
+            path = self.MICROPHONE_IMG
+            print("Stop Recording")
+        else:
+            path = self.STOP_IMG
+            print("Start Recording")
+
+        self.microphoneBtn.setIcon(QIcon(path.__str__()))
+        self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
+        self.isRecording = not self.isRecording
 
     def onHomeBtnClicked(self):
         self.webView.load(self.HOME_PAGE)
