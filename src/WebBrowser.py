@@ -22,8 +22,6 @@ class WebBrowser(QMainWindow):
     WINDOW_TITLE = "Wise Browse"
     HOME_PAGE = QUrl("https://www.google.com")
 
-    AI_MODEL_TYPE = Model.budget
-
     MICROPHONE_IMG = Path("assets/img/microphone.png")
     INTERNET_IMG = Path("assets/img/internet.png")
     HOME_IMG = Path("assets/img/home.png")
@@ -64,9 +62,11 @@ class WebBrowser(QMainWindow):
     homeActionLogBtn = QPushButton
     homeSettingsBtn = QPushButton
 
-    aiAssistant = Assistant()
+    AI_MODEL_TYPE = Model.full
+    _, screenshotPath = tempfile.mkstemp()
+    aiAssistant = Assistant(AI_MODEL_TYPE, screenshotPath)
 
-    database = FAQDatabase()
+    database = FAQDatabase(aiAssistant)
     domain = None
     currentQs = []
 
@@ -267,20 +267,15 @@ class WebBrowser(QMainWindow):
     def enterQuery(self):
         inputText = self.queryInput.toPlainText()
         if inputText.replace("\n", ""):
-            if self.AI_MODEL_TYPE == Model.full:
-                imgFile, imgFileName = tempfile.mkstemp()
-                self.webView.grab().save(imgFileName, b'JPEG')
-                result = self.aiAssistant.singleImageRequest(inputText, Model.full, imgFileName)
-                os.close(imgFile)
-            else:
-                result = self.aiAssistant.singleRequest(inputText, self.AI_MODEL_TYPE)
+            self.webView.grab().save(self.screenshotPath, b'JPEG')
+            result = self.aiAssistant.singleRequest(inputText)
             self.showText(result)
             self.showRating(True)
             self.deleteSpacer(1)
             self.backBtn.show()
         else:
             self.queryInput.insertPlainText("\n")
-        self.database.addFAQ(inputText)
+        self.database.addFAQ(inputText, self.domain)
 
     def showText(self, text):
         self.clearLayout(self.FAQBtnLayout)

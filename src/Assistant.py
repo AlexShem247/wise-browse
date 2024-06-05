@@ -5,8 +5,8 @@ from openai import OpenAI
 
 class Model(Enum):
     dummy = 0
-    budget = 1  # Runs on GPT3.5 and does NOT have image comprehension
-    full = 2  # Runs on GPT4 turbo and can comprehend images
+    budget = 1
+    full = 2
 
 
 class Assistant:
@@ -16,20 +16,18 @@ class Assistant:
         project='proj_lI6Wlpb9Cl2kgL2L9OON5c59'
     )
 
-    def __init__(self):
-        pass
+    def __init__(self, modelType, screenshotPath):
+        self.modelType = modelType
+        self.screenshotPath = screenshotPath
 
     @staticmethod
     def __encode_image(image_path):
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')
 
-    def singleImageRequest(self, message, mode, image_path):
-        if mode == Model.dummy:
-            return "HMMM...Give me a second to think!"
-
+    def singleImageRequest(self, message):
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo" if mode == Model.budget else "gpt-4o",
+            model="gpt-3.5-turbo" if self.modelType == Model.budget else "gpt-4o",
             messages=[{
                 "role": "user",
                 "content": [
@@ -40,7 +38,7 @@ class Assistant:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/jpeg;base64,{self.__encode_image(image_path)}"
+                            "url": f"data:image/jpeg;base64,{self.__encode_image(self.screenshotPath)}"
                         }
                     }
                 ]
@@ -49,8 +47,11 @@ class Assistant:
         )
         return response.choices[0].message.content
 
-    def singleRequest(self, message, mode):
-        if mode == Model.dummy:
+    def singleRequest(self, message):
+        if self.modelType == Model.full:
+            return self.singleImageRequest(message)
+
+        elif self.modelType == Model.dummy:
             # return "HMMM...Give me a second to think!"
             return ("What is Lorem Ipsum?\n\nLorem Ipsum is simply dummy text of the printing and typesetting "
                     "industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, "
@@ -86,13 +87,13 @@ class Assistant:
                     "200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum "
                     "which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, "
                     "injected humour, or non-characteristic words etc.")
-
-        response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo" if mode == Model.budget else "gpt-4o",
-            messages=[{
-                "role": "user",
-                "content": message
-            }],
-            max_tokens=300
-        )
-        return response.choices[0].message.content
+        else:
+            response = self.client.chat.completions.create(
+                model="gpt-3.5-turbo" if mode == Model.budget else "gpt-4o",
+                messages=[{
+                    "role": "user",
+                    "content": message
+                }],
+                max_tokens=300
+            )
+            return response.choices[0].message.content

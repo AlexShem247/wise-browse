@@ -2,4 +2,5 @@ PyQt5
 PyQtWebEngine
 supabase
 openai
+tldextract
 pyinstaller
