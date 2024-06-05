@@ -301,22 +301,22 @@ class WebBrowser(QMainWindow):
     def record_audio(self):
         self.recognizer = sr.Recognizer()
         with sr.Microphone() as source:
+            self.update_text_signal.emit("Recording audio...")
             while self.isRecording:
                 try:
                     print("Starting voice recognition...")
                     audio_data = self.recognizer.listen(source, timeout=10, phrase_time_limit=5)
                     print("Recognizer stopped listening...")
+                    self.update_text_signal.emit("Converting audio to text...")
                     text = self.recognizer.recognize_google(audio_data)
                     print("Google translation is done...")
-                    #self.insertQuestion(text)
                     self.update_text_signal.emit(text)
-                    #self.update_label(f"Recognized Text: {text}")
                 except sr.UnknownValueError:
-                    #self.update_label("Could not understand the audio")
-                    self.insertQuestion("Could not understand the audio. Please try again.")
+                    self.update_text_signal.emit("Could not understand the audio. Please try again.")
+                    self.onMicroBtnClicked()
                 except sr.RequestError as e:
-                    self.insertQuestion("Could not request results. Please try again.")
-                    #self.update_label(f"Could not request results; {e}")
+                    self.update_text_signal.emit("Could not request results. Please try again.")
+                    self.onMicroBtnClicked()
                 except sr.WaitTimeoutError:
                     pass
 
