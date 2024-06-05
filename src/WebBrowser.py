@@ -9,22 +9,20 @@ from PyQt5.QtCore import QSize, QUrl, Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
-    QMessageBox, QFrame
+    QMessageBox, QFrame, QLineEdit
 
 from src.URLUtils import getDomainName
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
 
-import threading
-import speech_recognition as sr
-from PyQt5.QtCore import pyqtSignal
-
 
 class WebBrowser(QMainWindow):
     UI_FILE = Path("assets/UI/MainPage.ui")
     WINDOW_TITLE = "Wise Browse"
+    PLACEHOLDER_TEXT = "Ask me anything..."
     HOME_PAGE = QUrl("https://www.google.com")
+    currentWebpage = None
 
     MICROPHONE_IMG = Path("assets/img/microphone.png")
     INTERNET_IMG = Path("assets/img/internet.png")
@@ -40,11 +38,16 @@ class WebBrowser(QMainWindow):
     HOME_HEART_IMG = Path("assets/img/heart.png")
     HOME_HISTORY_IMG = Path("assets/img/history.png")
     HOME_SETTINGS_IMG = Path("assets/img/setting.png")
+    REDO_IMG = Path("assets/img/redo.png")
+    REFRESH_IMG = Path("assets/img/refresh.png")
+    UNDO_IMG = Path("assets/img/undo.png")
 
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
     STAR_SIZE = (15, 15)
     HOME_BUTTONS_SIZE = (60, 60)
+    LOGO_SIZE = (40, 40)
+    TOOLBAR_ICON_SIZE = (20, 20)
 
     TEXT_WIDTH = 30
     FONT_SIZE = 11
@@ -83,8 +86,14 @@ class WebBrowser(QMainWindow):
     GENERAL_INFO = (WINDOW_TITLE, "Someone write something here.")
 
     isRecording = False
-    update_text_signal = pyqtSignal(str)
+    MICROPHONE_TIME_DELAY = 1000
+    INPUT_TIME_DELAY = 500
+    currentNoDots = 0
+    NO_DOTS = 3
 
+    previousWebpages = []
+    nextWebpages = []
+    switchingPages = False
 
     def __init__(self):
         super().__init__()
@@ -119,7 +128,6 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
                             self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
-        self.findAndSetIcon(QLabel, "browserLogoIcon", self.INTERNET_IMG, (60,60))
 
         # Configure Enter button
         self.enterBtn = self.findChild(QPushButton, "enterQueryBtn")
@@ -140,7 +148,7 @@ class WebBrowser(QMainWindow):
                                                  self.onMicroBtnClicked)
         self.findAndSetIcon(QPushButton, "inputInternetBtn", self.INTERNET_IMG, self.INTERNET_SIZE,
                             lambda: self.createAPopup(*self.INPUT_INFO))
-        self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, (40, 40),
+        self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, self.LOGO_SIZE,
                             lambda: self.createAPopup(*self.GENERAL_INFO))
 
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.MICROPHONE_SIZE,
@@ -149,6 +157,20 @@ class WebBrowser(QMainWindow):
                             self.onActionLogBtnClicked)
         self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
                             self.onSettingsBtnClicked)
+
+        self.previousPageBtn = self.findAndSetIcon(QPushButton, "previousPageBtn", self.UNDO_IMG,
+                                                   self.TOOLBAR_ICON_SIZE, self.previousPage)
+        self.previousPageBtn.setEnabled(False)
+
+        self.nextPageBtn = self.findAndSetIcon(QPushButton, "nextPageBtn", self.REDO_IMG, self.TOOLBAR_ICON_SIZE,
+                                               self.nextPage)
+        self.nextPageBtn.setEnabled(False)
+
+        self.findAndSetIcon(QPushButton, "refreshBtn", self.REFRESH_IMG, self.TOOLBAR_ICON_SIZE,
+                            lambda: self.webView.load(self.currentWebpage))
+
+        self.urlEdit = self.findChild(QLineEdit, "urlEdit")
+        self.urlEdit.installEventFilter(SearchInputKeyEater(self))
 
         for i in range(1, self.NO_STARS + 1):
             btn = self.findAndSetIcon(
@@ -164,18 +186,23 @@ class WebBrowser(QMainWindow):
         # Configure Microphone
         self.microphoneTimer = QTimer()
         self.microphoneTimer.timeout.connect(self.toggleMicrophoneVisibility)
+        self.inputTimer = QTimer()
+        self.inputTimer.timeout.connect(self.toggleInputText)
 
         self.showRating(False)
-
-        self.update_text_signal.connect(self.insertQuestion)
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
             self.microphoneBtn.setIcon(QIcon(self.STOP_IMG.__str__()))
             self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
+            self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY)
         else:
             self.microphoneBtn.setIcon(QIcon())
+            self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY // 2)
 
+    def toggleInputText(self):
+        self.currentNoDots = (self.currentNoDots + 1) % (self.NO_DOTS + 1)
+        self.queryInput.setPlaceholderText("Recording" + "." * self.currentNoDots)
 
     @staticmethod
     def createAPopup(title, body):
@@ -232,14 +259,42 @@ class WebBrowser(QMainWindow):
 
         return icon
 
+    def nextPage(self):
+        self.switchingPages = True
+        self.previousWebpages.append(self.previousWebpages.pop())
+        self.previousPageBtn.setEnabled(True)
+        self.nextPageBtn.setEnabled(len(self.nextWebpages) > 1)
+        self.webView.load(self.nextWebpages.pop())
+
+    def previousPage(self):
+        self.switchingPages = True
+        self.nextWebpages.append(self.previousWebpages.pop())
+        self.nextPageBtn.setEnabled(True)
+        self.previousPageBtn.setEnabled(len(self.previousWebpages) > 1)
+        self.webView.load(self.previousWebpages[-1])
+
     def onUrlChanged(self, url):
         changedDomain = getDomainName(url.toString().lower())
+        self.currentWebpage = url
+        if not self.previousWebpages or self.previousWebpages[-1] != url:
+            self.previousWebpages.append(url)
+
+        if len(self.previousWebpages) > 1:
+            self.previousPageBtn.setEnabled(True)
+
+        self.urlEdit.setText(url.toString())
+        self.urlEdit.setCursorPosition(0)
         if changedDomain != self.domain:
             # Website has changed
             self.domain = changedDomain
             self.displayFAQs(changedDomain)
             self.showRating(False)
             self.backBtn.hide()
+
+        if not self.switchingPages:
+            self.nextWebpages = []
+            self.nextPageBtn.setEnabled(False)
+        self.switchingPages = False
 
     @staticmethod
     def clearLayout(layout):
@@ -266,69 +321,33 @@ class WebBrowser(QMainWindow):
         self.queryInput.clear()
         self.queryInput.insertPlainText(question)
 
+    def addInputText(self, word):
+        self.queryInput.setText(self.queryInput.toPlainText() + word + " ")
+        self.inputTimer.stop()
+
     def onMicroBtnClicked(self):
-    
-        if  self.isRecording:
+        if self.isRecording:
             path = self.MICROPHONE_IMG
             print("Stop Recording")
             self.microphoneTimer.stop()
+            self.inputTimer.stop()
+            self.queryInput.setPlaceholderText(self.PLACEHOLDER_TEXT)
         else:
             path = self.STOP_IMG
-            self.microphoneTimer.start(1000)
+            self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY)
+            self.inputTimer.start(self.INPUT_TIME_DELAY)
+            self.queryInput.setPlaceholderText("Recording")
             print("Start Recording")
 
         self.microphoneBtn.setIcon(QIcon(path.__str__()))
         self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
         self.isRecording = not self.isRecording
 
-        if not self.isRecording:
-            self.stop_recording()
-        else:
-            self.start_recording()
-
-
-
-
-    def start_recording(self):
-        self.isRecording = True
-        print("Listening...")
-        threading.Thread(target=self.record_audio).start()
-
-    def stop_recording(self):
-        self.isRecording = False
-        print("Processing audio...")
-
-    def record_audio(self):
-        self.recognizer = sr.Recognizer()
-        with sr.Microphone() as source:
-            while self.isRecording:
-                try:
-                    print("Starting voice recognition...")
-                    audio_data = self.recognizer.listen(source, timeout=10, phrase_time_limit=5)
-                    print("Recognizer stopped listening...")
-                    text = self.recognizer.recognize_google(audio_data)
-                    print("Google translation is done...")
-                    #self.insertQuestion(text)
-                    self.update_text_signal.emit(text)
-                    #self.update_label(f"Recognized Text: {text}")
-                except sr.UnknownValueError:
-                    #self.update_label("Could not understand the audio")
-                    self.insertQuestion("Could not understand the audio. Please try again.")
-                except sr.RequestError as e:
-                    self.insertQuestion("Could not request results. Please try again.")
-                    #self.update_label(f"Could not request results; {e}")
-                except sr.WaitTimeoutError:
-                    pass
-
     def onHomeBtnClicked(self):
         self.webView.load(self.HOME_PAGE)
-        self.homeFrame.show()
-        self.webView.hide()
-        #hide all other pages
 
-    @staticmethod
-    def onSettingsBtnClicked():
-        print("Settings button clicked")
+    def onSettingsBtnClicked(self):
+        self.addInputText("Settings")
 
     @staticmethod
     def onActionLogBtnClicked():
@@ -349,7 +368,10 @@ class WebBrowser(QMainWindow):
             self.enterBtn.hide()
 
     def enterQuery(self):
+        if self.isRecording:
+            self.onMicroBtnClicked()
         inputText = self.queryInput.toPlainText()
+
         if inputText.replace("\n", ""):
             self.webView.grab().save(self.screenshotPath, b'JPEG')
             result = self.aiAssistant.singleRequest(inputText)
@@ -397,6 +419,5 @@ class WebBrowser(QMainWindow):
             self.webView.load(QUrl("https://www.google.co.uk/search?q=" + inputText))
             self.homeFrame.hide()
             self.webView.show()
-            self.webSearchInput.clear()
         else:
             self.queryInput.insertPlainText("\n")
