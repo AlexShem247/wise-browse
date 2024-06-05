@@ -16,6 +16,10 @@ from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
 
+import threading
+import speech_recognition as sr
+from PyQt5.QtCore import pyqtSignal
+
 
 class WebBrowser(QMainWindow):
     UI_FILE = Path("assets/UI/MainPage.ui")
@@ -86,14 +90,8 @@ class WebBrowser(QMainWindow):
     GENERAL_INFO = (WINDOW_TITLE, "Someone write something here.")
 
     isRecording = False
-    MICROPHONE_TIME_DELAY = 1000
-    INPUT_TIME_DELAY = 500
-    currentNoDots = 0
-    NO_DOTS = 3
+    update_text_signal = pyqtSignal(str)
 
-    previousWebpages = []
-    nextWebpages = []
-    switchingPages = False
 
     def __init__(self):
         super().__init__()
@@ -128,6 +126,7 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
                             self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
+        self.findAndSetIcon(QLabel, "browserLogoIcon", self.INTERNET_IMG, (60,60))
 
         # Configure Enter button
         self.enterBtn = self.findChild(QPushButton, "enterQueryBtn")
@@ -190,6 +189,8 @@ class WebBrowser(QMainWindow):
         self.inputTimer.timeout.connect(self.toggleInputText)
 
         self.showRating(False)
+
+        self.update_text_signal.connect(self.insertQuestion)
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
@@ -326,7 +327,8 @@ class WebBrowser(QMainWindow):
         self.inputTimer.stop()
 
     def onMicroBtnClicked(self):
-        if self.isRecording:
+    
+        if  self.isRecording:
             path = self.MICROPHONE_IMG
             print("Stop Recording")
             self.microphoneTimer.stop()
@@ -343,8 +345,50 @@ class WebBrowser(QMainWindow):
         self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
         self.isRecording = not self.isRecording
 
+        if not self.isRecording:
+            self.stop_recording()
+        else:
+            self.start_recording()
+
+
+
+
+    def start_recording(self):
+        self.isRecording = True
+        print("Listening...")
+        threading.Thread(target=self.record_audio).start()
+
+    def stop_recording(self):
+        self.isRecording = False
+        print("Processing audio...")
+
+    def record_audio(self):
+        self.recognizer = sr.Recognizer()
+        with sr.Microphone() as source:
+            while self.isRecording:
+                try:
+                    print("Starting voice recognition...")
+                    audio_data = self.recognizer.listen(source, timeout=10, phrase_time_limit=5)
+                    print("Recognizer stopped listening...")
+                    text = self.recognizer.recognize_google(audio_data)
+                    print("Google translation is done...")
+                    #self.insertQuestion(text)
+                    self.update_text_signal.emit(text)
+                    #self.update_label(f"Recognized Text: {text}")
+                except sr.UnknownValueError:
+                    #self.update_label("Could not understand the audio")
+                    self.insertQuestion("Could not understand the audio. Please try again.")
+                except sr.RequestError as e:
+                    self.insertQuestion("Could not request results. Please try again.")
+                    #self.update_label(f"Could not request results; {e}")
+                except sr.WaitTimeoutError:
+                    pass
+
     def onHomeBtnClicked(self):
         self.webView.load(self.HOME_PAGE)
+        self.homeFrame.show()
+        self.webView.hide()
+        #hide all other pages
 
     def onSettingsBtnClicked(self):
         self.addInputText("Settings")
@@ -419,5 +463,6 @@ class WebBrowser(QMainWindow):
             self.webView.load(QUrl("https://www.google.co.uk/search?q=" + inputText))
             self.homeFrame.hide()
             self.webView.show()
+            self.webSearchInput.clear()
         else:
             self.queryInput.insertPlainText("\n")
