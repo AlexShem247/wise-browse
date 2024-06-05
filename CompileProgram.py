@@ -4,6 +4,7 @@ import tempfile
 import os
 import subprocess
 import shutil
+import threading
 from pathlib import Path
 
 from PyQt5.uic import compileUi
@@ -79,21 +80,34 @@ def getVarName(file):
     return os.path.splitext(os.path.basename(file))[0].upper() + "_PNG_CONTENTS"
 
 
+def stream_output(pipe, display):
+    for line in iter(pipe.readline, ''):
+        display(line.strip())
+    pipe.close()
+
+
 def execute_command(*command):
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1,
+                               universal_newlines=True)
 
-    # Read and print the output in real-time
-    for line in process.stdout:
-        print(line, end='')
+    stdout_thread = threading.Thread(target=stream_output, args=(process.stdout, print))
+    stderr_thread = threading.Thread(target=stream_output, args=(process.stderr, print))
 
-    # Wait for the process to complete and get the return code
-    return_code = process.wait()
+    stdout_thread.start()
+    stderr_thread.start()
 
-    # Read and print any remaining output from stderr
-    for line in process.stderr:
-        print(line, end='')
+    stdout_thread.join()
+    stderr_thread.join()
 
-    return return_code
+    return process.returncode
+
+
+def get_single_file_name(folder):
+    # List all files in the folder
+    files = [f for f in folder.iterdir() if f.is_file()]
+
+    # Return the name of the single file
+    return files[0].name
 
 
 IF_MAIN = 'if __name__ == "__main__":'
@@ -104,7 +118,7 @@ IMG_FILES = [str(Path("assets") / "img" / f) for f in os.listdir("assets/img") i
 SRC_FILES = [str(Path("src") / f) for f in os.listdir("src") if f.endswith(".py")]
 
 if __name__ == "__main__":
-    outputFile, outputFilename = tempfile.mkstemp()
+    outputFileObj, outputFilename = tempfile.mkstemp()
     with open(outputFilename, "w") as f:
         # Add Images
         f.write(blockComment("Writing Image Files"))
@@ -133,13 +147,16 @@ if __name__ == "__main__":
 
         # Compile Program
         print("Compiling Program, please wait.")
-        exit_code = execute_command("pyinstaller", "--noconfirm", "--onefile", "--windowed", "--icon",
-                                    "assets/icons/logo.ico", outputFilename)
+        exit_code = execute_command("python",  "-m", "PyInstaller", "--noconfirm", "--onefile", "--windowed",
+                                    "--icon", "assets/icons/logo.ico", outputFilename)
 
-        if exit_code == 0:
-            shutil.move(Path("dist/output.exe"), f"{PROGRAM_NAME}.exe")
-            shutil.rmtree(Path("build"))
-            shutil.rmtree(Path("dist"))
-            print(f"Compilation was successful: {PROGRAM_NAME}.exe generated")
+        outputFile = get_single_file_name(Path("dist"))
+        finalName = PROGRAM_NAME + Path(outputFile).suffix
+        shutil.move(Path("dist") / outputFile, finalName)
+        shutil.rmtree(Path("build"))
+        shutil.rmtree(Path("dist"))
+        os.remove(Path(outputFile).stem + ".spec")
 
-    os.close(outputFile)
+        print(f"Compilation was successful: {finalName} generated")
+
+    os.close(outputFileObj)
