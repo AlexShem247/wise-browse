@@ -119,6 +119,7 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
                             self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
+        self.findAndSetIcon(QLabel, "browserLogoIcon", self.INTERNET_IMG, (60,60))
 
         # Configure Enter button
         self.enterBtn = self.findChild(QPushButton, "enterQueryBtn")
@@ -321,6 +322,9 @@ class WebBrowser(QMainWindow):
 
     def onHomeBtnClicked(self):
         self.webView.load(self.HOME_PAGE)
+        self.homeFrame.show()
+        self.webView.hide()
+        #hide all other pages
 
     @staticmethod
     def onSettingsBtnClicked():
@@ -393,5 +397,6 @@ class WebBrowser(QMainWindow):
             self.webView.load(QUrl("https://www.google.co.uk/search?q=" + inputText))
             self.homeFrame.hide()
             self.webView.show()
+            self.webSearchInput.clear()
         else:
             self.queryInput.insertPlainText("\n")
