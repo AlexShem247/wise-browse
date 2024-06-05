@@ -9,11 +9,11 @@ from PyQt5.QtCore import QSize, QUrl, Qt
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
-    QMessageBox
+    QMessageBox, QFrame
 
 from src.URLUtils import getDomainName
 from src.FAQDatabase import FAQDatabase
-from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler
+from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
 
 
@@ -29,11 +29,19 @@ class WebBrowser(QMainWindow):
     SETTINGS_IMG = Path("assets/img/settings.png")
     STAR_EMPTY_IMG = Path("assets/img/star_empty.png")
     STAR_FILLED_IMG = Path("assets/img/star_filled.png")
+
     STOP_IMG = Path("assets/img/stop.png")
+
+    SEARCH_IMG = Path("assets/img/search.png")
+    HOME_HEART_IMG = Path("assets/img/heart.png")
+    HOME_HISTORY_IMG = Path("assets/img/history.png")
+    HOME_SETTINGS_IMG = Path("assets/img/setting.png")
+
 
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
     STAR_SIZE = (15, 15)
+    HOME_BUTTONS_SIZE = (60,60)
 
     TEXT_WIDTH = 30
     FONT_SIZE = 11
@@ -52,6 +60,12 @@ class WebBrowser(QMainWindow):
     helpfulLabel: QLabel
     microphoneBtn: QPushButton
     starBtns = []
+        
+    homeFrame: QFrame
+    webSearchInput: QTextEdit
+    homeFavouritesBtn = QPushButton
+    homeActionLogBtn = QPushButton
+    homeSettingsBtn = QPushButton
 
     AI_MODEL_TYPE = Model.full
     _, screenshotPath = tempfile.mkstemp()
@@ -84,6 +98,18 @@ class WebBrowser(QMainWindow):
         self.webView.load(self.HOME_PAGE)
         self.webView.setStyleSheet("background-color: white")
         webLayout.addWidget(self.webView)
+        self.webView.hide()
+        
+        # Add Home view
+        self.homeFrame = self.findChild(QFrame, "homeFrame")
+        self.webSearchInput = self.findChild(QTextEdit, "webSearchTxt")
+        self.webSearchInput.textChanged.connect(self.toggleEnterBtn)
+        self.searchKeyPressEater = SearchInputKeyEater(self)
+        self.webSearchInput.installEventFilter(self.searchKeyPressEater)
+        self.findAndSetIcon(QPushButton, "homeFavouritesBtn", self.HOME_HEART_IMG, self.HOME_BUTTONS_SIZE, self.onFavouritesBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE, self.onActionLogBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE, self.onSettingsBtnClicked)
+        self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
 
         # Configure Enter button
         self.enterBtn = self.findChild(QPushButton, "enterQueryBtn")
@@ -238,6 +264,14 @@ class WebBrowser(QMainWindow):
     @staticmethod
     def onActionLogBtnClicked():
         print("Action Log button clicked")
+    
+    @staticmethod
+    def onFavouritesBtnClicked():
+        print("Favourites button clicked")
+    
+    @staticmethod
+    def onActionLogBtnClicked():
+        print("Action Log button clicked")
 
     def toggleEnterBtn(self):
         if self.queryInput.toPlainText().strip():
@@ -271,3 +305,13 @@ class WebBrowser(QMainWindow):
         textEdit.setFont(font)
 
         self.FAQBtnLayout.addWidget(textEdit)
+        
+    def search(self):
+        inputText = self.webSearchInput.toPlainText()
+        if inputText.replace("\n", ""):
+            print(f"Searching Web: '{inputText}'")
+            self.webView.load(QUrl("https://www.google.co.uk/search?q=" + inputText))
+            self.homeFrame.hide()
+            self.webView.show()
+        else:
+            self.queryInput.insertPlainText("\n")
