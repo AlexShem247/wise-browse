@@ -26,3 +26,18 @@ class ButtonHoverHandler(QObject):
         if obj in self.parent.starBtns and event.type() == QEvent.HoverEnter:
             self.parent.onHovered(self.parent.starBtns.index(obj) + 1)
         return super().eventFilter(obj, event)
+    
+class SearchInputKeyEater(QObject):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+
+    def eventFilter(self, obj, event):
+        if event.type() == event.KeyPress:
+            if event.key() == Qt.Key_Return and not event.modifiers() & Qt.ShiftModifier:
+                self.parent.search()
+                return True
+            elif event.key() == Qt.Key_Return and event.modifiers() & Qt.ShiftModifier:
+                self.parent.webSearchInput.insertPlainText("\n")
+                return True
+        return False
