@@ -5,7 +5,7 @@ from pathlib import Path
 from functools import partial
 
 from PyQt5 import uic
-from PyQt5.QtCore import QSize, QUrl, Qt
+from PyQt5.QtCore import QSize, QUrl, Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
@@ -40,16 +40,16 @@ class WebBrowser(QMainWindow):
     HOME_HISTORY_IMG = Path("assets/img/history.png")
     HOME_SETTINGS_IMG = Path("assets/img/setting.png")
 
-
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
     STAR_SIZE = (15, 15)
-    HOME_BUTTONS_SIZE = (60,60)
+    HOME_BUTTONS_SIZE = (60, 60)
 
     TEXT_WIDTH = 30
     FONT_SIZE = 11
     NO_STARS = 5
     MAX_QUESTIONS = 8
+    TEXT_DELAY_MS = 20
 
     window = None
     buttonStyle = None
@@ -63,14 +63,14 @@ class WebBrowser(QMainWindow):
     helpfulLabel: QLabel
     microphoneBtn: QPushButton
     starBtns = []
-        
+
     homeFrame: QFrame
     webSearchInput: QTextEdit
     homeFavouritesBtn = QPushButton
     homeActionLogBtn = QPushButton
     homeSettingsBtn = QPushButton
 
-    AI_MODEL_TYPE = Model.full
+    AI_MODEL_TYPE = Model.dummy
     _, screenshotPath = tempfile.mkstemp()
     aiAssistant = Assistant(AI_MODEL_TYPE, screenshotPath)
 
@@ -102,16 +102,19 @@ class WebBrowser(QMainWindow):
         self.webView.setStyleSheet("background-color: white")
         webLayout.addWidget(self.webView)
         self.webView.hide()
-        
+
         # Add Home view
         self.homeFrame = self.findChild(QFrame, "homeFrame")
         self.webSearchInput = self.findChild(QTextEdit, "webSearchTxt")
         self.webSearchInput.textChanged.connect(self.toggleEnterBtn)
         self.searchKeyPressEater = SearchInputKeyEater(self)
         self.webSearchInput.installEventFilter(self.searchKeyPressEater)
-        self.findAndSetIcon(QPushButton, "homeFavouritesBtn", self.HOME_HEART_IMG, self.HOME_BUTTONS_SIZE, self.onFavouritesBtnClicked)
-        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE, self.onActionLogBtnClicked)
-        self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE, self.onSettingsBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeFavouritesBtn", self.HOME_HEART_IMG, self.HOME_BUTTONS_SIZE,
+                            self.onFavouritesBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE,
+                            self.onActionLogBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
+                            self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
 
         # Configure Enter button
@@ -130,7 +133,7 @@ class WebBrowser(QMainWindow):
 
         # Set icons and buttons
         self.microphoneBtn = self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
-                                                  self.onMicroBtnClicked)
+                                                 self.onMicroBtnClicked)
         self.findAndSetIcon(QPushButton, "inputInternetBtn", self.INTERNET_IMG, self.INTERNET_SIZE,
                             lambda: self.createAPopup(*self.INPUT_INFO))
         self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, (40, 40),
@@ -154,7 +157,19 @@ class WebBrowser(QMainWindow):
         self.FAQLabel = self.findChild(QLabel, "FAQLabel")
         self.helpfulLabel = self.findChild(QLabel, "helpfulLabel")
 
+        # Configure Microphone
+        self.microphoneTimer = QTimer()
+        self.microphoneTimer.timeout.connect(self.toggleMicrophoneVisibility)
+
         self.showRating(False)
+
+    def toggleMicrophoneVisibility(self):
+        if self.microphoneBtn.icon().isNull():
+            self.microphoneBtn.setIcon(QIcon(self.STOP_IMG.__str__()))
+            self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
+        else:
+            self.microphoneBtn.setIcon(QIcon())
+
 
     @staticmethod
     def createAPopup(title, body):
@@ -249,9 +264,11 @@ class WebBrowser(QMainWindow):
         if self.isRecording:
             path = self.MICROPHONE_IMG
             print("Stop Recording")
+            self.microphoneTimer.stop()
             self.stop_recording()
         else:
             path = self.STOP_IMG
+            self.microphoneTimer.start(1000)
             print("Start Recording")
             self.start_recording()
 
@@ -299,11 +316,11 @@ class WebBrowser(QMainWindow):
     @staticmethod
     def onActionLogBtnClicked():
         print("Action Log button clicked")
-    
+
     @staticmethod
     def onFavouritesBtnClicked():
         print("Favourites button clicked")
-    
+
     @staticmethod
     def onActionLogBtnClicked():
         print("Action Log button clicked")
@@ -331,7 +348,6 @@ class WebBrowser(QMainWindow):
         self.clearLayout(self.FAQBtnLayout)
         self.FAQLabel.hide()
         textEdit = QTextEdit()
-        textEdit.insertPlainText(text)
         textEdit.moveCursor(textEdit.textCursor().Start)
         textEdit.setReadOnly(True)
 
@@ -340,7 +356,23 @@ class WebBrowser(QMainWindow):
         textEdit.setFont(font)
 
         self.FAQBtnLayout.addWidget(textEdit)
-        
+        self.slowlyTypeText(textEdit, text)
+
+    def slowlyTypeText(self, textEdit, text):
+        index = 0
+
+        def insertCharacter():
+            nonlocal index
+            if index < len(text):
+                textEdit.insertPlainText(text[index])
+                index += 1
+            else:
+                timer.stop()
+
+        timer = QTimer()
+        timer.timeout.connect(insertCharacter)
+        timer.start(self.TEXT_DELAY_MS)
+
     def search(self):
         inputText = self.webSearchInput.toPlainText()
         if inputText.replace("\n", ""):
