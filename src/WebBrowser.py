@@ -18,6 +18,7 @@ from src.Assistant import Assistant, Model
 
 import threading
 import speech_recognition as sr
+from PyQt5.QtCore import pyqtSignal
 
 
 class WebBrowser(QMainWindow):
@@ -82,6 +83,8 @@ class WebBrowser(QMainWindow):
     GENERAL_INFO = (WINDOW_TITLE, "Someone write something here.")
 
     isRecording = False
+    update_text_signal = pyqtSignal(str)
+
 
     def __init__(self):
         super().__init__()
@@ -162,6 +165,8 @@ class WebBrowser(QMainWindow):
         self.microphoneTimer.timeout.connect(self.toggleMicrophoneVisibility)
 
         self.showRating(False)
+
+        self.update_text_signal.connect(self.insertQuestion)
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
@@ -261,47 +266,55 @@ class WebBrowser(QMainWindow):
         self.queryInput.insertPlainText(question)
 
     def onMicroBtnClicked(self):
-        if self.isRecording:
+    
+        if  self.isRecording:
             path = self.MICROPHONE_IMG
             print("Stop Recording")
             self.microphoneTimer.stop()
-            self.stop_recording()
         else:
             path = self.STOP_IMG
             self.microphoneTimer.start(1000)
             print("Start Recording")
-            self.start_recording()
 
         self.microphoneBtn.setIcon(QIcon(path.__str__()))
         self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
         self.isRecording = not self.isRecording
 
+        if not self.isRecording:
+            self.stop_recording()
+        else:
+            self.start_recording()
+
+
+
+
     def start_recording(self):
-        self.recording = True
+        self.isRecording = True
         print("Listening...")
         threading.Thread(target=self.record_audio).start()
 
     def stop_recording(self):
-        self.recording = False
+        self.isRecording = False
         print("Processing audio...")
 
     def record_audio(self):
         self.recognizer = sr.Recognizer()
         with sr.Microphone() as source:
-            while self.recording:
+            while self.isRecording:
                 try:
                     print("Starting voice recognition...")
                     audio_data = self.recognizer.listen(source, timeout=10, phrase_time_limit=5)
                     print("Recognizer stopped listening...")
                     text = self.recognizer.recognize_google(audio_data)
                     print("Google translation is done...")
-                    self.insertQuestion(self, text)
+                    #self.insertQuestion(text)
+                    self.update_text_signal.emit(text)
                     #self.update_label(f"Recognized Text: {text}")
                 except sr.UnknownValueError:
                     #self.update_label("Could not understand the audio")
-                    self.insertQuestion(self, "Could not understand the audio. Please try again.")
+                    self.insertQuestion("Could not understand the audio. Please try again.")
                 except sr.RequestError as e:
-                    self.insertQuestion(self, "Could not request results. Please try again.")
+                    self.insertQuestion("Could not request results. Please try again.")
                     #self.update_label(f"Could not request results; {e}")
                 except sr.WaitTimeoutError:
                     pass
