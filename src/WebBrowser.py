@@ -1,3 +1,5 @@
+import os
+import tempfile
 import textwrap
 from pathlib import Path
 from functools import partial
@@ -19,6 +21,8 @@ class WebBrowser(QMainWindow):
     UI_FILE = Path("assets/UI/MainPage.ui")
     WINDOW_TITLE = "Wise Browse"
     HOME_PAGE = QUrl("https://www.google.com")
+
+    AI_MODEL_TYPE = Model.budget
 
     MICROPHONE_IMG = Path("assets/img/microphone.png")
     INTERNET_IMG = Path("assets/img/internet.png")
@@ -231,11 +235,14 @@ class WebBrowser(QMainWindow):
 
     def enterQuery(self):
         inputText = self.queryInput.toPlainText()
-        self.webView.grab().save("temp/screenshot.jpeg", b'JPEG')
         if inputText.replace("\n", ""):
-            result = self.aiAssistant.singleRequest(inputText, Model.dummy)  # dummy to not use up tokens
-            # result = self.aiAssistant.singleRequest(inputText, Model.budget) # only plaint text as input
-            # result = self.aiAssistant.singleImageRequest(inputText, Model.full, "screenshot.jpeg") # with image
+            if self.AI_MODEL_TYPE == Model.full:
+                imgFile, imgFileName = tempfile.mkstemp()
+                self.webView.grab().save(imgFileName, b'JPEG')
+                result = self.aiAssistant.singleImageRequest(inputText, Model.full, imgFileName)
+                os.close(imgFile)
+            else:
+                result = self.aiAssistant.singleRequest(inputText, self.AI_MODEL_TYPE)
             self.showText(result)
             self.showRating(True)
             self.deleteSpacer(1)

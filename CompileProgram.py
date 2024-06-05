@@ -2,6 +2,8 @@ import base64
 import re
 import tempfile
 import os
+import subprocess
+import shutil
 from pathlib import Path
 
 from PyQt5.uic import compileUi
@@ -31,12 +33,22 @@ def blockComment(text):
     return f"{'#' * 80}\n# {text}\n{'#' * 80}\n"
 
 
+def replaceImageReferences(fileContents):
+    pattern = r'Path\("assets/img/([a-zA-Z0-9_]+)\.png"\)'
+
+    def replacement_function(match):
+        img_name = match.group(1).upper()
+        return f'Path({img_name}_PNG)'
+
+    return re.sub(pattern, replacement_function, fileContents)
+
+
 def contents(file):
     with (open(file) as g):
         fileContents = removeLocalImports(g.read()
                                           ).replace("uic.loadUi(self.UI_FILE, self)",
                                                     "self.ui = Ui_MainWindow()\n        self.ui.setupUi(self)\n")
-        return f"{blockComment(file)}{fileContents}\n"
+        return f"{blockComment(file)}{replaceImageReferences(fileContents)}\n"
 
 
 def encode_png_to_base64(png_file_path):
@@ -67,21 +79,42 @@ def getVarName(file):
     return os.path.splitext(os.path.basename(file))[0].upper() + "_PNG_CONTENTS"
 
 
+def execute_command(*command):
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    # Read and print the output in real-time
+    for line in process.stdout:
+        print(line, end='')
+
+    # Wait for the process to complete and get the return code
+    return_code = process.wait()
+
+    # Read and print any remaining output from stderr
+    for line in process.stderr:
+        print(line, end='')
+
+    return return_code
+
+
 IF_MAIN = 'if __name__ == "__main__":'
+
+PROGRAM_NAME = "Wise Browse"
 
 IMG_FILES = [str(Path("assets") / "img" / f) for f in os.listdir("assets/img") if f.endswith(".png")]
 SRC_FILES = [str(Path("src") / f) for f in os.listdir("src") if f.endswith(".py")]
 
 if __name__ == "__main__":
-    with open("output.pyw", "w") as f:
+    outputFile, outputFilename = tempfile.mkstemp()
+    with open(outputFilename, "w") as f:
         # Add Images
         f.write(blockComment("Writing Image Files"))
+        f.write("import tempfile\n\n")
         for img in IMG_FILES:
             f.write(writeImg(img))
+            f.write(f"_, {getVarName(img).replace('_CONTENTS', '')} = tempfile.mkstemp()\n")
         f.write("\n")
 
         # Add UI File
-        convertedUi = tempfile.TemporaryFile()
         uiFile, uiFilename = tempfile.mkstemp()
         convert_ui_to_py("assets/UI/MainPage.ui", uiFilename)
         f.write(contents(uiFilename))
@@ -93,6 +126,20 @@ if __name__ == "__main__":
 
         # Add main.py
         f.write(DECODE_FUNC)
-        steps = [f"decode_base64_to_png({getVarName(file)}, '{file}')" for file in IMG_FILES]
+        steps = [f"decode_base64_to_png({getVarName(file)}, {getVarName(file).replace('_CONTENTS', '')})"
+                 for file in IMG_FILES]
         main = contents("main.py")
         f.write(main.replace(IF_MAIN, IF_MAIN + "\n    " + "\n    ".join(steps)))
+
+        # Compile Program
+        print("Compiling Program, please wait.")
+        exit_code = execute_command("pyinstaller", "--noconfirm", "--onefile", "--windowed", "--icon",
+                                    "assets/icons/logo.ico", outputFilename)
+
+        if exit_code == 0:
+            shutil.move(Path("dist/output.exe"), f"{PROGRAM_NAME}.exe")
+            shutil.rmtree(Path("build"))
+            shutil.rmtree(Path("dist"))
+            print(f"Compilation was successful: {PROGRAM_NAME}.exe generated")
+
+    os.close(outputFile)
