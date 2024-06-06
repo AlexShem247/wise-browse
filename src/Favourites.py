@@ -19,8 +19,7 @@ class Favourites:
             with open(self.LIKED_FILENAME, 'rb') as file:
                 self.likedSet = pickle.load(file)
             with open(self.MOST_USED_FILENAME, 'rb') as file:
-                tempMap = pickle.load(file)
-                self.mostUsedMap = OrderedDict(sorted(tempMap.items(), key=lambda item: item[1]))
+                self.mostUsedMap = pickle.load(file)
         except (EOFError, FileNotFoundError):
             pass
                 
@@ -43,8 +42,10 @@ class Favourites:
             pickle.dump(self.mostUsedMap, file)
 
     def displayFavourites(self, browser):
+        self.clearFavourites(browser)
         base = 2*self.likedRightShift
         i = 1
+        self.mostUsedMap = OrderedDict(sorted(self.mostUsedMap.items(), key=lambda item: item[1], reverse=True))
         for key, value in islice(self.mostUsedMap.items(), base, base + 12):
             url = key
             domain = url.removeprefix("https://").split('/', 1)[0]
@@ -52,7 +53,10 @@ class Favourites:
             location = f"assets/favicons/{domain}.png"
             urllib.request.urlretrieve(faviconUrl, location)
             print(url)
-            browser.findAndSetIcon(QPushButton, f"liked{i}", location, (90,90), partial(browser.gotoURL, url))
+            browser.findAndSetIcon(QPushButton, f"mostVisited{i}", location, (90,90), partial(browser.gotoURL, url))
             i = i + 1
             
-        
+    def clearFavourites(self, browser):
+        for i in range (1,13):
+            browser.clearIcon(QPushButton, f"liked{i}")
+            browser.clearIcon(QPushButton, f"mostVisited{i}")

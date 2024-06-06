@@ -755,8 +755,364 @@ QPushButton:hover {
                     </rect>
                    </property>
                    <property name="text">
-                    <string>Most Viewed Sites</string>
+                    <string>Most Visited Sites</string>
                    </property>
+                  </widget>
+                  <widget class="QFrame" name="mostVisitedSites">
+                   <property name="geometry">
+                    <rect>
+                     <x>70</x>
+                     <y>310</y>
+                     <width>790</width>
+                     <height>230</height>
+                    </rect>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(165, 165, 165);
+border-radius: 20px; </string>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <widget class="QPushButton" name="mostVisited1">
+                    <property name="geometry">
+                     <rect>
+                      <x>70</x>
+                      <y>10</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited2">
+                    <property name="geometry">
+                     <rect>
+                      <x>70</x>
+                      <y>120</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited3">
+                    <property name="geometry">
+                     <rect>
+                      <x>180</x>
+                      <y>10</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited4">
+                    <property name="geometry">
+                     <rect>
+                      <x>180</x>
+                      <y>120</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited5">
+                    <property name="geometry">
+                     <rect>
+                      <x>290</x>
+                      <y>10</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited6">
+                    <property name="geometry">
+                     <rect>
+                      <x>290</x>
+                      <y>120</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited7">
+                    <property name="geometry">
+                     <rect>
+                      <x>400</x>
+                      <y>10</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited8">
+                    <property name="geometry">
+                     <rect>
+                      <x>400</x>
+                      <y>120</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited9">
+                    <property name="geometry">
+                     <rect>
+                      <x>510</x>
+                      <y>10</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited10">
+                    <property name="geometry">
+                     <rect>
+                      <x>510</x>
+                      <y>120</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited11">
+                    <property name="geometry">
+                     <rect>
+                      <x>620</x>
+                      <y>10</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisited12">
+                    <property name="geometry">
+                     <rect>
+                      <x>620</x>
+                      <y>120</y>
+                      <width>100</width>
+                      <height>100</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
                   </widget>
                  </widget>
                 </widget>

@@ -284,6 +284,15 @@ class WebBrowser(QMainWindow):
             icon.setPixmap(pixmap)
 
         return icon
+    
+    def clearIcon(self, QType, name):
+        icon = self.findChild(QType, name)
+        icon.setIcon(QIcon())
+        try:
+            icon.clicked.disconnect()
+        except TypeError:
+            pass
+        return icon
 
     def nextPage(self):
         self.switchingPages = True
