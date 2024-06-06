@@ -209,6 +209,9 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE, self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
         
+    # def initFavouritesPage(self):
+        
+        
         
 
 
@@ -383,6 +386,7 @@ class WebBrowser(QMainWindow):
 
     def onFavouritesBtnClicked(self):
         self.pages.setCurrentWidget(self.favouritesPage)
+        self.favourites.displayFavourites(self)
         print("Favourites button clicked")
         
     def search(self):
@@ -393,6 +397,12 @@ class WebBrowser(QMainWindow):
             print(f"Searching Web: '{inputText}'")
         else:
             self.queryInput.insertPlainText("\n")
+    
+    def gotoURL(self, url):
+        print(url)
+        self.webView.load(QUrl(url))
+        self.pages.setCurrentWidget(self.web)
+        print(f"Go to: '{url}'")
 
 
     def toggleEnterBtn(self):
