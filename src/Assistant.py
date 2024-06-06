@@ -1,4 +1,5 @@
 import base64
+import time
 from enum import Enum
 from openai import OpenAI
 
@@ -52,7 +53,7 @@ class Assistant:
             return self.singleImageRequest(message)
 
         elif self.modelType == Model.dummy:
-            # return "HMMM...Give me a second to think!"
+            time.sleep(0.5)
             return ("What is Lorem Ipsum?\n\nLorem Ipsum is simply dummy text of the printing and typesetting "
                     "industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, "
                     "when an unknown printer took a galley of type and scrambled it to make a type specimen book. It "
@@ -97,3 +98,40 @@ class Assistant:
                 max_tokens=300
             )
             return response.choices[0].message.content
+
+    def validateQuestion(self, message, url):
+        q = f"""
+        Your job is to look at the following question inputted by a user regarding a website and 
+        determine whether the question is relevant (an appropriate question that other people may have) 
+        or irrelevant (something inappropriate or some random gibberish). 
+
+        The question is regarding the website: {url}
+        Answer with one word: either 'RELEVANT' or 'IRRELEVANT'
+        Input: '{message}'
+        """
+
+        self.singleRequest(q)
+        if self.modelType == Model.dummy:
+            return None
+
+        response = self.singleRequest(q)
+        isRelevant = "IRRELEVANT" not in response.upper()
+        if isRelevant:
+            print(f"The AI thinks the question: '{message}' is RELEVANT")
+            response = self.client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{
+                    "role": "user",
+                    "content": "Rewrite the following question using correct grammar, spelling, capitalisation, "
+                               "punctuation so that it may be"
+                               f"displayed in a FAQ: '{message}'"
+                }],
+                max_tokens=300
+            )
+            return response.choices[0].message.content
+        else:
+            print(f"The AI thinks the question: '{message}' is IRRELEVANT")
+            return None
+
+
+
