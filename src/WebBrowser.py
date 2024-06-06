@@ -42,6 +42,8 @@ class WebBrowser(QMainWindow):
     REDO_IMG = Path("assets/img/redo.png")
     REFRESH_IMG = Path("assets/img/refresh.png")
     UNDO_IMG = Path("assets/img/undo.png")
+    HEART_NO_FILL_IMG = Path("assets/img/heartNoFill.png")
+    HEART_FILL_IMG = Path("assets/img/heartFill.png")
 
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
@@ -135,6 +137,7 @@ class WebBrowser(QMainWindow):
         self.nextPageBtn = self.findAndSetIcon(QPushButton, "nextPageBtn", self.REDO_IMG, self.TOOLBAR_ICON_SIZE, self.nextPage)
         self.nextPageBtn.setEnabled(False)
         self.findAndSetIcon(QPushButton, "refreshBtn", self.REFRESH_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.webView.load(self.currentWebpage))
+        self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.favouritePage(self.currentWebpage))
         self.urlEdit = self.findChild(QLineEdit, "urlEdit")
         self.urlEdit.installEventFilter(SearchInputKeyEater(self))
         
@@ -307,6 +310,12 @@ class WebBrowser(QMainWindow):
         self.nextPageBtn.setEnabled(True)
         self.previousPageBtn.setEnabled(len(self.previousWebpages) > 1)
         self.webView.load(self.previousWebpages[-1])
+    
+    def favouritePage(self, url):
+        self.favourites.addLikedSite(url)
+        
+    def unfavouritePage(self, url):
+        self.favourites.removeLikedSite(url)
 
     def onUrlChanged(self, url):
         changedDomain = getDomainName(url.toString().lower())

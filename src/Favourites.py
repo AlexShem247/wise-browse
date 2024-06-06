@@ -8,8 +8,8 @@ from functools import partial
 class Favourites:
     LIKED_FILENAME = "likedsites.txt"
     MOST_USED_FILENAME = "mostusedsites.txt"
-    likedSet = {}
-    mostUsedMap = {}
+    likedSet = set()
+    mostUsedMap = dict()
     likedRightShift = 0
     mostUsedRightShift = 0
     FAVICON_SIZE = 64
@@ -43,7 +43,25 @@ class Favourites:
 
     def displayFavourites(self, browser):
         self.clearFavourites(browser)
+        self.displayLiked(browser)
+        self.displayMostUsed(browser)
+            
+    def displayLiked(self, browser):
         base = 2*self.likedRightShift
+        i = 1
+        print(self.likedSet)
+        print(list(self.likedSet)[base:base + 12])
+        for item in list(self.likedSet)[base:base + 12]:
+            url = item
+            domain = url.removeprefix("https://").split('/', 1)[0]
+            faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
+            location = f"assets/favicons/{domain}.png"
+            urllib.request.urlretrieve(faviconUrl, location)
+            browser.findAndSetIcon(QPushButton, f"liked{i}", location, (90,90), partial(browser.gotoURL, url))
+            i = i + 1
+        
+    def displayMostUsed(self, browser):
+        base = 2*self.mostUsedRightShift
         i = 1
         self.mostUsedMap = OrderedDict(sorted(self.mostUsedMap.items(), key=lambda item: item[1], reverse=True))
         for key, value in islice(self.mostUsedMap.items(), base, base + 12):
@@ -52,10 +70,9 @@ class Favourites:
             faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
             location = f"assets/favicons/{domain}.png"
             urllib.request.urlretrieve(faviconUrl, location)
-            print(url)
             browser.findAndSetIcon(QPushButton, f"mostVisited{i}", location, (90,90), partial(browser.gotoURL, url))
             i = i + 1
-            
+        
     def clearFavourites(self, browser):
         for i in range (1,13):
             browser.clearIcon(QPushButton, f"liked{i}")

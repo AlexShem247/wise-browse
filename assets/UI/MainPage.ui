@@ -179,6 +179,40 @@ QPushButton:hover {
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QPushButton" name="favSiteBtn">
+                   <property name="minimumSize">
+                    <size>
+                     <width>25</width>
+                     <height>25</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>25</width>
+                     <height>25</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    border: none;
+    border-radius: 10px; 
+    background-color: transparent;
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(220, 190, 190);
+}</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </item>
               </layout>
