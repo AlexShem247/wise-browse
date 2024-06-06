@@ -15,6 +15,7 @@ from src.URLUtils import getDomainName, isUrl
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
+from src.FeedbackPopup import FeedbackPopup
 
 import threading
 import speech_recognition as sr
@@ -116,6 +117,7 @@ class WebBrowser(QMainWindow):
     inputTimer = None
     thinkingTimer = None
     searchKeyPressEater = None
+    popUp = None
 
     update_text_signal = pyqtSignal(str)
     recognizer = None
@@ -294,7 +296,8 @@ class WebBrowser(QMainWindow):
             btn.setVisible(show)
 
     def starBtnPressed(self, val):
-        print(f"Rated {val}/{self.NO_STARS}")
+        self.popUp = FeedbackPopup(val, self.NO_STARS)
+        self.popUp.show()
 
     def onHovered(self, val):
         for i, btn in enumerate(self.starBtns):
