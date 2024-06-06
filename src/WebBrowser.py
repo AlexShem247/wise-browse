@@ -57,7 +57,7 @@ class WebBrowser(QMainWindow):
     FONT_SIZE = 11
     NO_STARS = 5
     MAX_QUESTIONS = 8
-    TEXT_DELAY_MS = 20
+    TEXT_DELAY_MS = 0
 
     window = None
     buttonStyle = None
@@ -463,7 +463,14 @@ class WebBrowser(QMainWindow):
             self.backBtn.show()
         else:
             self.queryInput.insertPlainText("\n")
-        self.database.addFAQ(inputText, self.domain)
+
+        threading.Thread(target=self.checkQuestionForFAQ, args=(inputText, )).start()
+
+    def checkQuestionForFAQ(self, inputText):
+        question = self.aiAssistant.validateQuestion(inputText, self.currentWebpage)
+        if question:
+            print("Question formatted: " + question)
+            self.database.addFAQ(question, self.domain)
 
     def showText(self, text):
         self.clearLayout(self.FAQBtnLayout)
@@ -477,7 +484,10 @@ class WebBrowser(QMainWindow):
         textEdit.setFont(font)
 
         self.FAQBtnLayout.addWidget(textEdit)
-        self.slowlyTypeText(textEdit, text)
+        if self.TEXT_DELAY_MS == 0:
+            textEdit.setText(text)
+        else:
+            self.slowlyTypeText(textEdit, text)
 
     def slowlyTypeText(self, textEdit, text):
         index = 0
@@ -486,6 +496,7 @@ class WebBrowser(QMainWindow):
             nonlocal index
             if index < len(text):
                 textEdit.insertPlainText(text[index])
+                print(text[index])
                 index += 1
             else:
                 timer.stop()
