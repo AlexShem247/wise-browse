@@ -3,4 +3,5 @@ PyQtWebEngine
 supabase
 openai
 tldextract
+SpeechRecognition
 pyinstaller

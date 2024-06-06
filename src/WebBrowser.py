@@ -5,7 +5,7 @@ from pathlib import Path
 from functools import partial
 
 from PyQt5 import uic
-from PyQt5.QtCore import QSize, QUrl, Qt, QTimer
+from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
@@ -15,6 +15,9 @@ from src.URLUtils import getDomainName, isUrl
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
+
+import threading
+import speech_recognition as sr
 
 
 class WebBrowser(QMainWindow):
@@ -105,6 +108,17 @@ class WebBrowser(QMainWindow):
     web: QWidget
     webView: QWebEngineView
 
+    previousPageBtn = None
+    nextPageBtn = None
+    urlEdit = None
+    keyPressEater = None
+    microphoneTimer = None
+    inputTimer = None
+    searchKeyPressEater = None
+
+    update_text_signal = pyqtSignal(str)
+    recognizer = None
+
     def __init__(self):
         super().__init__()
         uic.loadUi(self.UI_FILE, self)
@@ -143,14 +157,11 @@ class WebBrowser(QMainWindow):
         self.urlEdit.returnPressed.connect(self.doManualSearch)
 
     def doManualSearch(self):
-        url = self.urlEdit.text()
-        check = isUrl(url)
-        if not check:
-            check = "https://www.google.com/search?q=" + url
+        url = isUrl(self.urlEdit.text())
 
-        self.urlEdit.setText(check)
+        self.urlEdit.setText(url)
         self.manualSearch = True
-        self.webView.load(QUrl(check))
+        self.webView.load(QUrl(url))
 
     def initAISideBar(self):
         self.buttonStyle = self.findChild(QPushButton, "sampleQuestionBtn").styleSheet()
@@ -195,6 +206,8 @@ class WebBrowser(QMainWindow):
         self.inputTimer.timeout.connect(self.toggleInputText)
 
         self.showRating(False)
+
+        self.update_text_signal.connect(self.addInputText)
 
     def initWeb(self):
         # Add WebView
@@ -362,8 +375,9 @@ class WebBrowser(QMainWindow):
         self.queryInput.clear()
         self.queryInput.insertPlainText(question)
 
-    def addInputText(self, word):
-        self.queryInput.setText(self.queryInput.toPlainText() + word + " ")
+    def addInputText(self, text):
+        # TODO: Write to queryInput
+        print(text)
         self.inputTimer.stop()
 
     def onMicroBtnClicked(self):
@@ -379,10 +393,29 @@ class WebBrowser(QMainWindow):
             self.inputTimer.start(self.INPUT_TIME_DELAY)
             self.queryInput.setPlaceholderText("Recording")
             print("Start Recording")
+            threading.Thread(target=self.record_audio).start()
 
         self.microphoneBtn.setIcon(QIcon(path.__str__()))
         self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
         self.isRecording = not self.isRecording
+
+    def record_audio(self):
+        self.recognizer = sr.Recognizer()
+        with sr.Microphone() as source:
+            while self.isRecording:
+                try:
+                    print("Starting voice recognition...")
+                    audio_data = self.recognizer.listen(source, timeout=10, phrase_time_limit=5)
+                    print("Recognizer stopped listening...")
+                    text = self.recognizer.recognize_google(audio_data)
+                    print("Google translation is done...")
+                    self.update_text_signal.emit(text)
+                except sr.UnknownValueError:
+                    self.addInputText("Could not understand the audio. Please try again.")
+                except sr.RequestError as _:
+                    self.addInputText("Could not request results. Please try again.")
+                except sr.WaitTimeoutError:
+                    pass
 
     def onHomeBtnClicked(self):
         self.pages.setCurrentWidget(self.homePage)
