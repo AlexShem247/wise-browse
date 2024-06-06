@@ -93,6 +93,12 @@ class WebBrowser(QMainWindow):
     update_text_signal = pyqtSignal(str)
 
 
+    previousWebpages = []
+    switchingPages = False
+
+    searchingHistory = set()
+
+
     def __init__(self):
         super().__init__()
         uic.loadUi(self.UI_FILE, self)
@@ -331,13 +337,13 @@ class WebBrowser(QMainWindow):
         if  self.isRecording:
             path = self.MICROPHONE_IMG
             print("Stop Recording")
-            self.microphoneTimer.stop()
-            self.inputTimer.stop()
+            #self.microphoneTimer.stop()
+            #self.inputTimer.stop()
             self.queryInput.setPlaceholderText(self.PLACEHOLDER_TEXT)
         else:
             path = self.STOP_IMG
-            self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY)
-            self.inputTimer.start(self.INPUT_TIME_DELAY)
+            #self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY)
+            #self.inputTimer.start(self.INPUT_TIME_DELAY)
             self.queryInput.setPlaceholderText("Recording")
             print("Start Recording")
 
@@ -393,17 +399,13 @@ class WebBrowser(QMainWindow):
     def onSettingsBtnClicked(self):
         self.addInputText("Settings")
 
-    @staticmethod
-    def onActionLogBtnClicked():
+    def onActionLogBtnClicked(self):
         print("Action Log button clicked")
+        print(self.searchingHistory)
 
     @staticmethod
     def onFavouritesBtnClicked():
         print("Favourites button clicked")
-
-    @staticmethod
-    def onActionLogBtnClicked():
-        print("Action Log button clicked")
 
     def toggleEnterBtn(self):
         if self.queryInput.toPlainText().strip():
@@ -464,5 +466,7 @@ class WebBrowser(QMainWindow):
             self.homeFrame.hide()
             self.webView.show()
             self.webSearchInput.clear()
+            self.searchingHistory.add((inputText, "https://www.google.co.uk/search?q=" + inputText))
+
         else:
             self.queryInput.insertPlainText("\n")
