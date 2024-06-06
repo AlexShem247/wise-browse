@@ -363,7 +363,7 @@ font-size: 30px;
                             </spacer>
                            </item>
                            <item>
-                            <widget class="QPushButton" name="homeSettingsBtn">
+                            <widget class="QPushButton" name="homeFavouritesBtn">
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                                <horstretch>0</horstretch>
@@ -431,7 +431,7 @@ QPushButton:hover {
                             </widget>
                            </item>
                            <item>
-                            <widget class="QPushButton" name="homeFavouritesBtn">
+                            <widget class="QPushButton" name="homeSettingsBtn">
                              <property name="sizePolicy">
                               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                                <horstretch>0</horstretch>
