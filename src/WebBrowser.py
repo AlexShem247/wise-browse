@@ -11,7 +11,7 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
     QMessageBox, QFrame, QLineEdit, QStackedWidget, QWidget
 
-from src.URLUtils import getDomainName
+from src.URLUtils import getDomainName, isUrl
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
@@ -48,6 +48,7 @@ class WebBrowser(QMainWindow):
     HOME_BUTTONS_SIZE = (60, 60)
     LOGO_SIZE = (40, 40)
     TOOLBAR_ICON_SIZE = (20, 20)
+    MAIN_LOGO_SIZE = (100, 100)
 
     TEXT_WIDTH = 30
     FONT_SIZE = 11
@@ -94,53 +95,69 @@ class WebBrowser(QMainWindow):
     previousWebpages = []
     nextWebpages = []
     switchingPages = False
-    
+    manualSearch = False
+
     pages: QStackedWidget
     homePage: QWidget
     favouritesPage: QWidget
     actionLogPage: QWidget
     settingsPage: QWidget
     web: QWidget
-    
+    webView: QWebEngineView
+
     def __init__(self):
         super().__init__()
         uic.loadUi(self.UI_FILE, self)
-        
+
         self.setWindowTitle(self.WINDOW_TITLE)
         self.initLowerBar()
         self.initUpperSearchBar()
         self.initAISideBar()
         self.initWeb()
-        
+
         self.initPages()
         self.initHomePage()
         # self.initFavouritesPage()
         # self.initActionLogPage()
         # self.initSettingsPage()
-        
-
 
     def initLowerBar(self):
-        self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, self.LOGO_SIZE, lambda: self.createAPopup(*self.GENERAL_INFO))
+        self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, self.LOGO_SIZE,
+                            lambda: self.createAPopup(*self.GENERAL_INFO))
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.MICROPHONE_SIZE, self.onHomeBtnClicked)
-        self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.MICROPHONE_SIZE, self.onActionLogBtnClicked)
-        self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE, self.onSettingsBtnClicked)        
-        
+        self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.MICROPHONE_SIZE,
+                            self.onActionLogBtnClicked)
+        self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
+                            self.onSettingsBtnClicked)
+
     def initUpperSearchBar(self):
-        self.previousPageBtn = self.findAndSetIcon(QPushButton, "previousPageBtn", self.UNDO_IMG, self.TOOLBAR_ICON_SIZE, self.previousPage)
+        self.previousPageBtn = self.findAndSetIcon(QPushButton, "previousPageBtn", self.UNDO_IMG,
+                                                   self.TOOLBAR_ICON_SIZE, self.previousPage)
         self.previousPageBtn.setEnabled(False)
-        self.nextPageBtn = self.findAndSetIcon(QPushButton, "nextPageBtn", self.REDO_IMG, self.TOOLBAR_ICON_SIZE, self.nextPage)
+        self.nextPageBtn = self.findAndSetIcon(QPushButton, "nextPageBtn", self.REDO_IMG, self.TOOLBAR_ICON_SIZE,
+                                               self.nextPage)
         self.nextPageBtn.setEnabled(False)
-        self.findAndSetIcon(QPushButton, "refreshBtn", self.REFRESH_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.webView.load(self.currentWebpage))
+        self.findAndSetIcon(QPushButton, "refreshBtn", self.REFRESH_IMG, self.TOOLBAR_ICON_SIZE,
+                            lambda: self.webView.load(self.currentWebpage))
         self.urlEdit = self.findChild(QLineEdit, "urlEdit")
-        self.urlEdit.installEventFilter(SearchInputKeyEater(self))
-        
+        self.urlEdit.returnPressed.connect(self.doManualSearch)
+
+    def doManualSearch(self):
+        url = self.urlEdit.text()
+        check = isUrl(url)
+        if not check:
+            check = "https://www.google.com/search?q=" + url
+
+        self.urlEdit.setText(check)
+        self.manualSearch = True
+        self.webView.load(QUrl(check))
+
     def initAISideBar(self):
         self.buttonStyle = self.findChild(QPushButton, "sampleQuestionBtn").styleSheet()
         self.FAQLayout = self.findChild(QVBoxLayout, "FAQLayout")
         self.FAQBtnLayout = self.findChild(QVBoxLayout, "FAQBtnLayout")
         self.clearLayout(self.FAQBtnLayout)
-        
+
         # Configure Enter button
         self.enterBtn = self.findChild(QPushButton, "enterQueryBtn")
         self.enterBtn.clicked.connect(self.enterQuery)
@@ -154,9 +171,11 @@ class WebBrowser(QMainWindow):
         self.queryInput.textChanged.connect(self.toggleEnterBtn)
         self.keyPressEater = QueryInputKeyEaster(self)
         self.queryInput.installEventFilter(self.keyPressEater)
-        self.microphoneBtn = self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE, self.onMicroBtnClicked)
-        self.findAndSetIcon(QPushButton, "inputInternetBtn", self.INTERNET_IMG, self.INTERNET_SIZE, lambda: self.createAPopup(*self.INPUT_INFO))
-        
+        self.microphoneBtn = self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
+                                                 self.onMicroBtnClicked)
+        self.findAndSetIcon(QPushButton, "inputInternetBtn", self.INTERNET_IMG, self.INTERNET_SIZE,
+                            lambda: self.createAPopup(*self.INPUT_INFO))
+
         # Configure stars
         for i in range(1, self.NO_STARS + 1):
             btn = self.findAndSetIcon(
@@ -176,7 +195,7 @@ class WebBrowser(QMainWindow):
         self.inputTimer.timeout.connect(self.toggleInputText)
 
         self.showRating(False)
-        
+
     def initWeb(self):
         # Add WebView
         webLayout = self.findChild(QVBoxLayout, "google")
@@ -185,7 +204,7 @@ class WebBrowser(QMainWindow):
         self.webView.load(self.HOME_PAGE)
         self.webView.setStyleSheet("background-color: white")
         webLayout.addWidget(self.webView)
-        
+
     def initPages(self):
         self.pages = self.findChild(QStackedWidget, "pages")
         self.homePage = self.findChild(QWidget, "homePage")
@@ -194,22 +213,21 @@ class WebBrowser(QMainWindow):
         self.settingsPage = self.findChild(QWidget, "settingsPage")
         self.web = self.findChild(QWidget, "web")
         self.pages.setCurrentWidget(self.homePage)
-    
+
     def initHomePage(self):
         self.homeFrame = self.findChild(QFrame, "homeFrame")
         self.webSearchInput = self.findChild(QTextEdit, "webSearchTxt")
         self.webSearchInput.textChanged.connect(self.toggleEnterBtn)
         self.searchKeyPressEater = SearchInputKeyEater(self)
         self.webSearchInput.installEventFilter(self.searchKeyPressEater)
-        self.findAndSetIcon(QPushButton, "homeFavouritesBtn", self.HOME_HEART_IMG, self.HOME_BUTTONS_SIZE, self.onFavouritesBtnClicked)
-        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE, self.onActionLogBtnClicked)
-        self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE, self.onSettingsBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeFavouritesBtn", self.HOME_HEART_IMG, self.HOME_BUTTONS_SIZE,
+                            self.onFavouritesBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE,
+                            self.onActionLogBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
+                            self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
-        
-        
-
-
-
+        self.findAndSetIcon(QLabel, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE)
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
@@ -302,8 +320,10 @@ class WebBrowser(QMainWindow):
         if len(self.previousWebpages) > 1:
             self.previousPageBtn.setEnabled(True)
 
-        self.urlEdit.setText(url.toString())
-        self.urlEdit.setCursorPosition(0)
+        if not self.manualSearch:
+            self.urlEdit.setText(url.toString())
+            self.urlEdit.setCursorPosition(0)
+
         if changedDomain != self.domain:
             # Website has changed
             self.domain = changedDomain
@@ -315,6 +335,7 @@ class WebBrowser(QMainWindow):
             self.nextWebpages = []
             self.nextPageBtn.setEnabled(False)
         self.switchingPages = False
+        self.manualSearch = False
 
     @staticmethod
     def clearLayout(layout):
@@ -379,7 +400,7 @@ class WebBrowser(QMainWindow):
     def onFavouritesBtnClicked(self):
         self.pages.setCurrentWidget(self.favouritesPage)
         print("Favourites button clicked")
-        
+
     def search(self):
         inputText = self.webSearchInput.toPlainText()
         if inputText.replace("\n", ""):
@@ -388,7 +409,6 @@ class WebBrowser(QMainWindow):
             print(f"Searching Web: '{inputText}'")
         else:
             self.queryInput.insertPlainText("\n")
-
 
     def toggleEnterBtn(self):
         if self.queryInput.toPlainText().strip():
@@ -440,4 +460,3 @@ class WebBrowser(QMainWindow):
         timer = QTimer()
         timer.timeout.connect(insertCharacter)
         timer.start(self.TEXT_DELAY_MS)
-
