@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QPushButton
 from collections import OrderedDict
 from itertools import islice
 from functools import partial
+import os
 
 class Favourites:
     LIKED_FILENAME = "likedsites.txt"
@@ -33,9 +34,8 @@ class Favourites:
         self.likedSet.remove(site.toString())
         
     def incrementSiteUses(self, site):
-        print(site.toString())
-        self.mostUsedMap[site.toString()] = self.mostUsedMap.get(site.toString(), 0) + 1
-        print(self.mostUsedMap[site.toString()])
+        if not site.toString().removeprefix("https://").split('/', 1)[0][:len("www.google.")] == "www.google.":
+            self.mostUsedMap[site.toString()] = self.mostUsedMap.get(site.toString(), 0) + 1
         
     def writeFavourites(self):
         with open(self.LIKED_FILENAME, 'wb') as file:
@@ -45,10 +45,6 @@ class Favourites:
             pickle.dump(self.mostUsedMap, file)
 
     def displayFavourites(self, browser):
-        likedRightShift = 0
-        mostUsedRightShift = 0
-        browser.likedLeftArrow.hide()
-        browser.mostUsedLeftArrow.hide()
         self.clearFavourites(browser)
         self.displayLiked(browser)
         self.displayMostUsed(browser)
@@ -61,10 +57,13 @@ class Favourites:
         for item in list(self.likedSet)[base:base + 12]:
             url = item
             domain = url.removeprefix("https://").split('/', 1)[0]
-            faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
-            location = f"assets/favicons/{domain}.png"
-            urllib.request.urlretrieve(faviconUrl, location)
-            browser.findAndSetIcon(QPushButton, f"liked{i}", location, (90,90), partial(browser.gotoURL, url))
+            path = f"assets/favicons/{domain}.png"
+
+            if not os.path.exists(path):
+                faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
+                urllib.request.urlretrieve(faviconUrl, path)
+            
+            browser.findAndSetIcon(QPushButton, f"liked{i}", path, (90,90), partial(browser.gotoURL, url))
             i = i + 1
         
     def displayMostUsed(self, browser):
@@ -74,10 +73,13 @@ class Favourites:
         for key, value in islice(self.mostUsedMap.items(), base, base + 12):
             url = key
             domain = url.removeprefix("https://").split('/', 1)[0]
-            faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
-            location = f"assets/favicons/{domain}.png"
-            urllib.request.urlretrieve(faviconUrl, location)
-            browser.findAndSetIcon(QPushButton, f"mostVisited{i}", location, (90,90), partial(browser.gotoURL, url))
+            path = f"assets/favicons/{domain}.png"
+            
+            if not os.path.exists(path):
+                faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
+                urllib.request.urlretrieve(faviconUrl, path)
+                
+            browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, (90,90), partial(browser.gotoURL, url))
             i = i + 1
         
     def clearFavourites(self, browser):

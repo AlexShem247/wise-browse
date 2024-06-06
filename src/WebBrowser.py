@@ -114,12 +114,6 @@ class WebBrowser(QMainWindow):
     settingsPage: QWidget
     web: QWidget
     
-    def initFavouritesPage(self):
-        self.likedLeftArrow = self.findAndSetIcon(QPushButton, "likedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedLeftArrow(self))
-        self.findAndSetIcon(QPushButton, "likedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedRightArrow(self))
-        self.mostUsedLeftArrow = self.findAndSetIcon(QPushButton, "mostVisitedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedLeftArrow(self))
-        self.findAndSetIcon(QPushButton, "mostVisitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedRightArrow(self))        
-    
     def __init__(self):
         super().__init__()
         uic.loadUi(self.UI_FILE, self)
@@ -225,7 +219,14 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE, self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
         
-    # def initFavouritesPage(self):
+    def initFavouritesPage(self):
+        self.likedLeftArrow = self.findAndSetIcon(QPushButton, "likedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedLeftArrow(self))
+        self.likedLeftArrow.hide()
+        self.findAndSetIcon(QPushButton, "likedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedRightArrow(self))
+        self.mostUsedLeftArrow = self.findAndSetIcon(QPushButton, "mostVisitedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedLeftArrow(self))
+        self.mostUsedLeftArrow.hide()
+        self.findAndSetIcon(QPushButton, "mostVisitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedRightArrow(self))        
+    
         
         
         
@@ -360,6 +361,7 @@ class WebBrowser(QMainWindow):
         self.switchingPages = False
         
         self.favourites.incrementSiteUses(url)
+        self.clearIcon(QPushButton, "favSiteBtn")
         if (self.favourites.isLikedSite(url)):
             self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.unfavouritePage(self.currentWebpage))
         else:
