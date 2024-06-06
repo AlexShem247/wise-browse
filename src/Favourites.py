@@ -63,7 +63,12 @@ class Favourites:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            browser.findAndSetIcon(QPushButton, f"liked{i}", path, (90,90), partial(browser.gotoURL, url))
+            button = browser.findAndSetIcon(QPushButton, f"liked{i}", path, (90,90), partial(browser.gotoURL, url))
+            if domain.startswith("www."): domain = domain[4:]
+            text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
+                f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
+            button.setToolTip(text)
+            
             i = i + 1
         
     def displayMostUsed(self, browser):
@@ -78,6 +83,12 @@ class Favourites:
             if not os.path.exists(path):
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
+            
+            button = browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, (90,90), partial(browser.gotoURL, url))
+            if domain.startswith("www."): domain = domain[4:]
+            text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
+                f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
+            button.setToolTip(text)
                 
             browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, (90,90), partial(browser.gotoURL, url))
             i = i + 1
@@ -85,7 +96,9 @@ class Favourites:
     def clearFavourites(self, browser):
         for i in range (1,13):
             browser.clearIcon(QPushButton, f"liked{i}")
+            browser.findChild(QPushButton, f"liked{i}").setToolTip(None)            
             browser.clearIcon(QPushButton, f"mostVisited{i}")
+            browser.findChild(QPushButton, f"mostVisited{i}").setToolTip(None)
             
     def clickLikedRightArrow(self, browser):
         if self.likedRightShift == 0: browser.likedLeftArrow.show()

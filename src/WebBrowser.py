@@ -6,10 +6,10 @@ from functools import partial
 
 from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt, QTimer
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
-    QMessageBox, QFrame, QLineEdit, QStackedWidget, QWidget
+    QMessageBox, QFrame, QLineEdit, QStackedWidget, QWidget, QToolTip
 
 from src.URLUtils import getDomainName
 from src.FAQDatabase import FAQDatabase
@@ -226,9 +226,6 @@ class WebBrowser(QMainWindow):
         self.mostUsedLeftArrow = self.findAndSetIcon(QPushButton, "mostVisitedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedLeftArrow(self))
         self.mostUsedLeftArrow.hide()
         self.findAndSetIcon(QPushButton, "mostVisitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedRightArrow(self))        
-    
-        
-        
         
 
 
