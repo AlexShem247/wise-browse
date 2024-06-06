@@ -6,15 +6,16 @@ from functools import partial
 
 from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
-    QMessageBox, QFrame, QLineEdit, QStackedWidget, QWidget
+    QMessageBox, QFrame, QLineEdit, QStackedWidget, QWidget, QToolTip
 
 from src.URLUtils import getDomainName, isUrl
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
+from src.Favourites import Favourites
 from src.FeedbackPopup import FeedbackPopup
 
 import threading
@@ -45,13 +46,19 @@ class WebBrowser(QMainWindow):
     REDO_IMG = Path("assets/img/redo.png")
     REFRESH_IMG = Path("assets/img/refresh.png")
     UNDO_IMG = Path("assets/img/undo.png")
-
+    HEART_NO_FILL_IMG = Path("assets/img/heartNoFill.png")
+    HEART_FILL_IMG = Path("assets/img/heartFill.png")
+    
+    LEFT_ARROW_IMG = Path("assets/img/leftArrow.png")
+    RIGHT_ARROW_IMG = Path("assets/img/rightArrow.png")
+    
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
     STAR_SIZE = (15, 15)
     HOME_BUTTONS_SIZE = (60, 60)
     LOGO_SIZE = (40, 40)
     TOOLBAR_ICON_SIZE = (20, 20)
+    ARROW_SIZE = (50,50)
     MAIN_LOGO_SIZE = (100, 100)
 
     TEXT_WIDTH = 30
@@ -78,6 +85,9 @@ class WebBrowser(QMainWindow):
     homeFavouritesBtn = QPushButton
     homeActionLogBtn = QPushButton
     homeSettingsBtn = QPushButton
+    
+    likedLeftArrow = QPushButton
+    mostUsedLeftArrow = QPushButton
 
     AI_MODEL_TYPE = Model.dummy
     _, screenshotPath = tempfile.mkstemp()
@@ -99,6 +109,9 @@ class WebBrowser(QMainWindow):
     previousWebpages = []
     nextWebpages = []
     switchingPages = False
+    
+    favourites = Favourites()
+    
     manualSearch = False
 
     pages: QStackedWidget
@@ -144,7 +157,7 @@ class WebBrowser(QMainWindow):
 
         self.initPages()
         self.initHomePage()
-        # self.initFavouritesPage()
+        self.initFavouritesPage()
         # self.initActionLogPage()
         # self.initSettingsPage()
 
@@ -164,8 +177,12 @@ class WebBrowser(QMainWindow):
         self.nextPageBtn = self.findAndSetIcon(QPushButton, "nextPageBtn", self.REDO_IMG, self.TOOLBAR_ICON_SIZE,
                                                self.nextPage)
         self.nextPageBtn.setEnabled(False)
-        self.findAndSetIcon(QPushButton, "refreshBtn", self.REFRESH_IMG, self.TOOLBAR_ICON_SIZE,
+
+        self.findAndSetIcon(QPushButton, "refreshBtn", self.REFRESH_IMG, self.TOOLBAR_ICON_SIZE, 
                             lambda: self.webView.load(self.currentWebpage))
+        self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE, 
+                            lambda: self.favouritePage(self.currentWebpage))
+
         self.urlEdit = self.findChild(QLineEdit, "urlEdit")
         self.urlEdit.returnPressed.connect(self.doManualSearch)
 
@@ -259,6 +276,18 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
                             self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
+        
+    def initFavouritesPage(self):
+        self.likedLeftArrow = self.findAndSetIcon(QPushButton, "likedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedLeftArrow(self))
+        self.likedLeftArrow.hide()
+        self.findAndSetIcon(QPushButton, "likedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedRightArrow(self))
+        self.mostUsedLeftArrow = self.findAndSetIcon(QPushButton, "mostVisitedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedLeftArrow(self))
+        self.mostUsedLeftArrow.hide()
+        self.findAndSetIcon(QPushButton, "mostVisitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedRightArrow(self))        
+        
+
+
+
         self.findAndSetIcon(QLabel, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE)
 
     def toggleMicrophoneVisibility(self):
@@ -329,6 +358,15 @@ class WebBrowser(QMainWindow):
             icon.setPixmap(pixmap)
 
         return icon
+    
+    def clearIcon(self, QType, name):
+        icon = self.findChild(QType, name)
+        icon.setIcon(QIcon())
+        try:
+            icon.clicked.disconnect()
+        except TypeError:
+            pass
+        return icon
 
     def nextPage(self):
         self.switchingPages = True
@@ -343,6 +381,18 @@ class WebBrowser(QMainWindow):
         self.nextPageBtn.setEnabled(True)
         self.previousPageBtn.setEnabled(len(self.previousWebpages) > 1)
         self.webView.load(self.previousWebpages[-1])
+    
+    def favouritePage(self, url):
+        self.favourites.addLikedSite(url)
+        self.clearIcon(QPushButton, "favSiteBtn")
+        self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.unfavouritePage(self.currentWebpage))
+        
+    def unfavouritePage(self, url):
+        self.favourites.removeLikedSite(url)
+        self.clearIcon(QPushButton, "favSiteBtn")
+        self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.favouritePage(self.currentWebpage))
+        
+    
 
     def onUrlChanged(self, url):
         changedDomain = getDomainName(url.toString().lower())
@@ -368,7 +418,16 @@ class WebBrowser(QMainWindow):
             self.nextWebpages = []
             self.nextPageBtn.setEnabled(False)
         self.switchingPages = False
+        
+        self.favourites.incrementSiteUses(url)
+        self.clearIcon(QPushButton, "favSiteBtn")
+        if (self.favourites.isLikedSite(url)):
+            self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.unfavouritePage(self.currentWebpage))
+        else:
+            self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.favouritePage(self.currentWebpage))
+
         self.manualSearch = False
+
 
     @staticmethod
     def clearLayout(layout):
@@ -473,6 +532,7 @@ class WebBrowser(QMainWindow):
 
     def onFavouritesBtnClicked(self):
         self.pages.setCurrentWidget(self.favouritesPage)
+        self.favourites.displayFavourites(self)
         print("Favourites button clicked")
 
     def search(self):
@@ -483,6 +543,12 @@ class WebBrowser(QMainWindow):
             print(f"Searching Web: '{inputText}'")
         else:
             self.queryInput.insertPlainText("\n")
+    
+    def gotoURL(self, url):
+        print(url)
+        self.webView.load(QUrl(url))
+        self.pages.setCurrentWidget(self.web)
+        print(f"Go to: '{url}'")
 
     def toggleEnterBtn(self):
         if self.queryInput.toPlainText().strip():
@@ -558,3 +624,7 @@ class WebBrowser(QMainWindow):
         timer = QTimer()
         timer.timeout.connect(insertCharacter)
         timer.start(self.TEXT_DELAY_MS)
+    
+    def closeEvent(self, event):
+        self.favourites.writeFavourites()
+
