@@ -15,6 +15,7 @@ from src.URLUtils import getDomainName
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
+from src.Favourites import Favourites
 
 
 class WebBrowser(QMainWindow):
@@ -94,6 +95,8 @@ class WebBrowser(QMainWindow):
     previousWebpages = []
     nextWebpages = []
     switchingPages = False
+    
+    favourites = Favourites()
     
     pages: QStackedWidget
     homePage: QWidget
@@ -315,6 +318,8 @@ class WebBrowser(QMainWindow):
             self.nextWebpages = []
             self.nextPageBtn.setEnabled(False)
         self.switchingPages = False
+        
+        self.favourites.incrementSiteUses(url)
 
     @staticmethod
     def clearLayout(layout):
@@ -440,4 +445,6 @@ class WebBrowser(QMainWindow):
         timer = QTimer()
         timer.timeout.connect(insertCharacter)
         timer.start(self.TEXT_DELAY_MS)
-
+    
+    def closeEvent(self, event):
+        self.favourites.writeFavourites()
