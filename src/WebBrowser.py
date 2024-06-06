@@ -313,9 +313,13 @@ class WebBrowser(QMainWindow):
     
     def favouritePage(self, url):
         self.favourites.addLikedSite(url)
+        self.clearIcon(QPushButton, "favSiteBtn")
+        self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.unfavouritePage(self.currentWebpage))
         
     def unfavouritePage(self, url):
         self.favourites.removeLikedSite(url)
+        self.clearIcon(QPushButton, "favSiteBtn")
+        self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.favouritePage(self.currentWebpage))
 
     def onUrlChanged(self, url):
         changedDomain = getDomainName(url.toString().lower())
@@ -341,6 +345,10 @@ class WebBrowser(QMainWindow):
         self.switchingPages = False
         
         self.favourites.incrementSiteUses(url)
+        if (self.favourites.isLikedSite(url)):
+            self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.unfavouritePage(self.currentWebpage))
+        else:
+            self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.favouritePage(self.currentWebpage))
 
     @staticmethod
     def clearLayout(layout):

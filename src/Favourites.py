@@ -22,6 +22,9 @@ class Favourites:
                 self.mostUsedMap = pickle.load(file)
         except (EOFError, FileNotFoundError):
             pass
+    
+    def isLikedSite(self, site):
+        return site.toString() in self.likedSet
                 
     def addLikedSite(self, site):
         self.likedSet.add(site.toString())
