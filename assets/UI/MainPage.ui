@@ -765,6 +765,62 @@ QPushButton:hover {
                      <string/>
                     </property>
                    </widget>
+                   <widget class="QPushButton" name="likedLeftArrow">
+                    <property name="geometry">
+                     <rect>
+                      <x>10</x>
+                      <y>90</y>
+                      <width>50</width>
+                      <height>50</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: none;
+    border-radius: 10px; 
+    background-color: transparent;
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(220, 190, 190);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="likedRightArrow">
+                    <property name="geometry">
+                     <rect>
+                      <x>730</x>
+                      <y>90</y>
+                      <width>50</width>
+                      <height>50</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: none;
+    border-radius: 10px; 
+    background-color: transparent;
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(220, 190, 190);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
                   </widget>
                   <widget class="QLabel" name="label">
                    <property name="geometry">
@@ -1141,6 +1197,62 @@ QPushButton::icon {
 
 QPushButton:hover {
     background-color: rgb(154, 153, 150);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisitedLeftArrow">
+                    <property name="geometry">
+                     <rect>
+                      <x>10</x>
+                      <y>90</y>
+                      <width>50</width>
+                      <height>50</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: none;
+    border-radius: 10px; 
+    background-color: transparent;
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(220, 190, 190);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                   <widget class="QPushButton" name="mostVisitedRightArrow">
+                    <property name="geometry">
+                     <rect>
+                      <x>730</x>
+                      <y>90</y>
+                      <width>50</width>
+                      <height>50</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    border: none;
+    border-radius: 10px; 
+    background-color: transparent;
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(220, 190, 190);
 }</string>
                     </property>
                     <property name="text">

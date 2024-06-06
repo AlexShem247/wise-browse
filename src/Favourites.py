@@ -45,6 +45,10 @@ class Favourites:
             pickle.dump(self.mostUsedMap, file)
 
     def displayFavourites(self, browser):
+        likedRightShift = 0
+        mostUsedRightShift = 0
+        browser.likedLeftArrow.hide()
+        browser.mostUsedLeftArrow.hide()
         self.clearFavourites(browser)
         self.displayLiked(browser)
         self.displayMostUsed(browser)
@@ -80,3 +84,29 @@ class Favourites:
         for i in range (1,13):
             browser.clearIcon(QPushButton, f"liked{i}")
             browser.clearIcon(QPushButton, f"mostVisited{i}")
+            
+    def clickLikedRightArrow(self, browser):
+        if self.likedRightShift == 0: browser.likedLeftArrow.show()
+        self.likedRightShift += 1
+        for i in range (1,13): browser.clearIcon(QPushButton, f"liked{i}")
+        self.displayLiked(browser)
+    
+    def clickLikedLeftArrow(self, browser):
+        if self.likedRightShift == 1: browser.likedLeftArrow.hide()
+        self.likedRightShift -= 1
+        for i in range (1,13): browser.clearIcon(QPushButton, f"liked{i}")
+        self.displayLiked(browser)
+    
+    def clickMostUsedRightArrow(self, browser):
+        if self.mostUsedRightShift == 0: browser.mostUsedLeftArrow.show()
+        self.mostUsedRightShift += 1
+        for i in range (1,13): browser.clearIcon(QPushButton, f"mostVisited{i}")
+        self.displayMostUsed(browser)
+    
+    def clickMostUsedLeftArrow(self, browser):
+        if self.mostUsedRightShift == 1: browser.mostUsedLeftArrow.hide()
+        self.mostUsedRightShift -= 1
+        for i in range (1,13): browser.clearIcon(QPushButton, f"mostVisited{i}")
+        self.displayMostUsed(browser)
+    
+    

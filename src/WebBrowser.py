@@ -44,13 +44,17 @@ class WebBrowser(QMainWindow):
     UNDO_IMG = Path("assets/img/undo.png")
     HEART_NO_FILL_IMG = Path("assets/img/heartNoFill.png")
     HEART_FILL_IMG = Path("assets/img/heartFill.png")
-
+    
+    LEFT_ARROW_IMG = Path("assets/img/leftArrow.png")
+    RIGHT_ARROW_IMG = Path("assets/img/rightArrow.png")
+    
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
     STAR_SIZE = (15, 15)
     HOME_BUTTONS_SIZE = (60, 60)
     LOGO_SIZE = (40, 40)
     TOOLBAR_ICON_SIZE = (20, 20)
+    ARROW_SIZE = (50,50)
 
     TEXT_WIDTH = 30
     FONT_SIZE = 11
@@ -76,6 +80,9 @@ class WebBrowser(QMainWindow):
     homeFavouritesBtn = QPushButton
     homeActionLogBtn = QPushButton
     homeSettingsBtn = QPushButton
+    
+    likedLeftArrow = QPushButton
+    mostUsedLeftArrow = QPushButton
 
     AI_MODEL_TYPE = Model.dummy
     _, screenshotPath = tempfile.mkstemp()
@@ -107,6 +114,12 @@ class WebBrowser(QMainWindow):
     settingsPage: QWidget
     web: QWidget
     
+    def initFavouritesPage(self):
+        self.likedLeftArrow = self.findAndSetIcon(QPushButton, "likedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedLeftArrow(self))
+        self.findAndSetIcon(QPushButton, "likedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickLikedRightArrow(self))
+        self.mostUsedLeftArrow = self.findAndSetIcon(QPushButton, "mostVisitedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedLeftArrow(self))
+        self.findAndSetIcon(QPushButton, "mostVisitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.favourites.clickMostUsedRightArrow(self))        
+    
     def __init__(self):
         super().__init__()
         uic.loadUi(self.UI_FILE, self)
@@ -119,7 +132,7 @@ class WebBrowser(QMainWindow):
         
         self.initPages()
         self.initHomePage()
-        # self.initFavouritesPage()
+        self.initFavouritesPage()
         # self.initActionLogPage()
         # self.initSettingsPage()
         
@@ -320,6 +333,8 @@ class WebBrowser(QMainWindow):
         self.favourites.removeLikedSite(url)
         self.clearIcon(QPushButton, "favSiteBtn")
         self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE, lambda: self.favouritePage(self.currentWebpage))
+        
+    
 
     def onUrlChanged(self, url):
         changedDomain = getDomainName(url.toString().lower())
