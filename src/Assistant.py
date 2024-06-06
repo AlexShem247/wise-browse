@@ -1,4 +1,5 @@
 import base64
+import time
 from enum import Enum
 from openai import OpenAI
 
@@ -52,8 +53,7 @@ class Assistant:
             return self.singleImageRequest(message)
 
         elif self.modelType == Model.dummy:
-            import time
-            time.sleep(5)
+            time.sleep(0.5)
             return ("What is Lorem Ipsum?\n\nLorem Ipsum is simply dummy text of the printing and typesetting "
                     "industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, "
                     "when an unknown printer took a galley of type and scrambled it to make a type specimen book. It "

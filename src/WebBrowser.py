@@ -5,7 +5,7 @@ from pathlib import Path
 from functools import partial
 
 from PyQt5 import uic
-from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal
+from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
@@ -15,6 +15,7 @@ from src.URLUtils import getDomainName, isUrl
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
+from src.FeedbackPopup import FeedbackPopup
 
 import threading
 import speech_recognition as sr
@@ -114,7 +115,9 @@ class WebBrowser(QMainWindow):
     keyPressEater = None
     microphoneTimer = None
     inputTimer = None
+    thinkingTimer = None
     searchKeyPressEater = None
+    popUp = None
 
     update_text_signal = pyqtSignal(str)
     AudioError = False
@@ -126,6 +129,8 @@ class WebBrowser(QMainWindow):
 
     searchingHistory = set()
 
+
+    update_result = pyqtSignal(str)
 
     def __init__(self):
         super().__init__()
@@ -212,10 +217,16 @@ class WebBrowser(QMainWindow):
         self.microphoneTimer.timeout.connect(self.toggleMicrophoneVisibility)
         self.inputTimer = QTimer()
         self.inputTimer.timeout.connect(self.toggleInputText)
+        self.thinkingTimer = QTimer()
+        self.thinkingTimer.timeout.connect(self.toggleEnterBtnText)
 
         self.showRating(False)
 
         self.update_text_signal.connect(self.addInputText)
+
+    def toggleEnterBtnText(self):
+        self.currentNoDots = (self.currentNoDots + 1) % (self.NO_DOTS + 1)
+        self.enterBtn.setText("The AI is thinking" + "." * self.currentNoDots)
 
     def initWeb(self):
         # Add WebView
@@ -293,7 +304,8 @@ class WebBrowser(QMainWindow):
             btn.setVisible(show)
 
     def starBtnPressed(self, val):
-        print(f"Rated {val}/{self.NO_STARS}")
+        self.popUp = FeedbackPopup(val, self.NO_STARS)
+        self.popUp.show()
 
     def onHovered(self, val):
         for i, btn in enumerate(self.starBtns):
@@ -478,6 +490,15 @@ class WebBrowser(QMainWindow):
         else:
             self.enterBtn.hide()
 
+    def runAIRequest(self, inputText):
+        result = self.aiAssistant.singleRequest(inputText)
+        self.update_result.emit(result)  # Emit signal with the result
+
+        question = self.aiAssistant.validateQuestion(inputText, self.currentWebpage)
+        if question:
+            print("Question formatted: " + question)
+            self.database.addFAQ(question, self.domain)
+
     def enterQuery(self):
         if self.isRecording:
             self.onMicroBtnClicked()
@@ -485,23 +506,27 @@ class WebBrowser(QMainWindow):
 
         if inputText.replace("\n", ""):
             self.webView.grab().save(self.screenshotPath, b'JPEG')
-            result = self.aiAssistant.singleRequest(inputText)
-            self.showText(result)
-            self.showRating(True)
-            self.deleteSpacer(1)
-            self.backBtn.show()
+            self.queryInput.setEnabled(False)
+            self.enterBtn.setEnabled(False)
+            self.enterBtn.setText("The AI is thinking" + "." * self.currentNoDots)
+            self.thinkingTimer.start(self.MICROPHONE_TIME_DELAY)
+            thread = threading.Thread(target=self.runAIRequest, args=(inputText,))
+            thread.start()
+            # Connect the signal to the slot for updating the UI
+            self.update_result.connect(self.showText)
         else:
             self.queryInput.insertPlainText("\n")
 
-        threading.Thread(target=self.checkQuestionForFAQ, args=(inputText, )).start()
-
-    def checkQuestionForFAQ(self, inputText):
-        question = self.aiAssistant.validateQuestion(inputText, self.currentWebpage)
-        if question:
-            print("Question formatted: " + question)
-            self.database.addFAQ(question, self.domain)
-
+    @pyqtSlot(str)
     def showText(self, text):
+        self.showRating(True)
+        self.deleteSpacer(1)
+        self.backBtn.show()
+        self.queryInput.setEnabled(True)
+        self.enterBtn.setEnabled(True)
+        self.enterBtn.setText("ASK QUESTION")
+        self.thinkingTimer.stop()
+
         self.clearLayout(self.FAQBtnLayout)
         self.FAQLabel.hide()
         textEdit = QTextEdit()
