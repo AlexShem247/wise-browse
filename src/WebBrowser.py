@@ -117,6 +117,8 @@ class WebBrowser(QMainWindow):
     searchKeyPressEater = None
 
     update_text_signal = pyqtSignal(str)
+    AudioError = False
+    recordingNotStopped = False
 
 
     previousWebpages = []
@@ -382,34 +384,47 @@ class WebBrowser(QMainWindow):
         self.queryInput.insertPlainText(question)
 
     def addInputText(self, text):
-        # TODO: Write to queryInput
         print(text)
-        self.inputTimer.stop()
+        self.queryInput.clear()
+        self.queryInput.insertPlainText(text)
+        if (self.AudioError or self.recordingNotStopped):
+            print("Inside if")
+            path = self.MICROPHONE_IMG
+            self.microphoneBtn.setIcon(QIcon(path.__str__()))
+            self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
+            self.isRecording = not self.isRecording
+            self.microphoneTimer.stop()
+            #self.inputTimer.stop()
+        self.AudioError = False
+        self.recordingNotStopped = False
 
     def onMicroBtnClicked(self):
         if self.isRecording:
             path = self.MICROPHONE_IMG
             print("Stop Recording")
-            #self.microphoneTimer.stop()
+            self.microphoneTimer.stop()
             #self.inputTimer.stop()
-            self.queryInput.setPlaceholderText(self.PLACEHOLDER_TEXT)
+            #self.queryInput.setPlaceholderText(self.PLACEHOLDER_TEXT)
         else:
             path = self.STOP_IMG
-            #self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY)
+            self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY)
             #self.inputTimer.start(self.INPUT_TIME_DELAY)
-            self.queryInput.setPlaceholderText("Recording")
+            #self.queryInput.setPlaceholderText("Recording")
             print("Start Recording")
-            threading.Thread(target=self.record_audio).start()
 
         self.microphoneBtn.setIcon(QIcon(path.__str__()))
         self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
         self.isRecording = not self.isRecording
 
+        if self.isRecording:
+            print("yeah")
+            threading.Thread(target=self.record_audio).start()
+
     def record_audio(self):
         self.recognizer = sr.Recognizer()
         with sr.Microphone() as source:
             self.update_text_signal.emit("Recording audio...")
-            while self.isRecording:
+            if self.isRecording:
                 try:
                     print("Starting voice recognition...")
                     audio_data = self.recognizer.listen(source, timeout=10, phrase_time_limit=5)
@@ -417,10 +432,13 @@ class WebBrowser(QMainWindow):
                     self.update_text_signal.emit("Converting audio to text...")
                     text = self.recognizer.recognize_google(audio_data)
                     print("Google translation is done...")
+                    if self.isRecording:
+                        self.recordingNotStopped = True
                     self.update_text_signal.emit(text)
                 except sr.UnknownValueError:
+                    self.AudioError = True
                     self.update_text_signal.emit("Could not understand the audio. Please try again.")
-                    self.onMicroBtnClicked()
+                    #break
                 except sr.RequestError as e:
                     self.update_text_signal.emit("Could not request results. Please try again.")
                     self.onMicroBtnClicked()
