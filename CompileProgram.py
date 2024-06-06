@@ -117,8 +117,13 @@ PROGRAM_NAME = "Wise Browse"
 IMG_FILES = [str(Path("assets") / "img" / f) for f in os.listdir("assets/img") if f.endswith(".png")]
 SRC_FILES = [str(Path("src") / f) for f in os.listdir("src") if f.endswith(".py")]
 
+GENERATE_OUTPUT_PY = False
+
 if __name__ == "__main__":
-    outputFileObj, outputFilename = tempfile.mkstemp()
+    if GENERATE_OUTPUT_PY:
+        outputFilename = "output.py"
+    else:
+        outputFileObj, outputFilename = tempfile.mkstemp()
     with open(outputFilename, "w") as f:
         # Add Images
         f.write(blockComment("Writing Image Files"))
@@ -159,4 +164,5 @@ if __name__ == "__main__":
 
         print(f"Compilation was successful: {finalName} generated")
 
-    os.close(outputFileObj)
+    if not GENERATE_OUTPUT_PY:
+        os.close(outputFileObj)
