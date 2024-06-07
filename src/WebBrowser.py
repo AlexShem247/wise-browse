@@ -17,6 +17,8 @@ from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInpu
 from src.Assistant import Assistant, Model
 from src.Favourites import Favourites
 from src.FeedbackPopup import FeedbackPopup
+from src.SearchHistory import SearchHistory
+
 
 import threading
 import speech_recognition as sr
@@ -111,6 +113,8 @@ class WebBrowser(QMainWindow):
     switchingPages = False
     
     favourites = Favourites()
+
+    searchHistory = SearchHistory()
     
     manualSearch = False
 
@@ -140,9 +144,6 @@ class WebBrowser(QMainWindow):
     previousWebpages = []
     switchingPages = False
 
-    searchingHistory = set()
-
-
     update_result = pyqtSignal(str)
 
     def __init__(self):
@@ -158,7 +159,7 @@ class WebBrowser(QMainWindow):
         self.initPages()
         self.initHomePage()
         self.initFavouritesPage()
-        # self.initActionLogPage()
+        self.initActionLogPage()
         # self.initSettingsPage()
 
     def initLowerBar(self):
@@ -290,6 +291,19 @@ class WebBrowser(QMainWindow):
 
         self.findAndSetIcon(QLabel, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE)
 
+
+    def initActionLogPage(self):
+        self.visitedLeftArrow = self.findAndSetIcon(QPushButton, "visitedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow(self))
+        self.visitedLeftArrow.hide()
+        self.findAndSetIcon(QPushButton, "visitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow(self))
+        self.visitedLeftArrow_2 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_2", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow_2(self))
+        self.visitedLeftArrow_2.hide()
+        self.findAndSetIcon(QPushButton, "visitedRightArrow_2", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_2(self))
+        self.visitedLeftArrow_3 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_3", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow_3(self))
+        self.visitedLeftArrow_3.hide()
+        self.findAndSetIcon(QPushButton, "visitedRightArrow_3", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_3(self))
+
+
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
             self.microphoneBtn.setIcon(QIcon(self.STOP_IMG.__str__()))
@@ -395,6 +409,7 @@ class WebBrowser(QMainWindow):
     
 
     def onUrlChanged(self, url):
+        self.searchHistory.todaySet.add(url.toString())
         changedDomain = getDomainName(url.toString().lower())
         self.currentWebpage = url
         if not self.previousWebpages or self.previousWebpages[-1] != url:
@@ -526,9 +541,10 @@ class WebBrowser(QMainWindow):
         print("Settings button clicked")
 
     def onActionLogBtnClicked(self):
-        self.pages.setCurrentWidget(self.actionLogPage)
+        self.pages.setCurrentWidget(self.activityLogPage)
+        self.searchHistory.displayVisited(self)
         print("Action Log button clicked")
-        print(self.searchingHistory)
+        print(self.searchHistory.todaySet)
 
     def onFavouritesBtnClicked(self):
         self.pages.setCurrentWidget(self.favouritesPage)
