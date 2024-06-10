@@ -50,7 +50,7 @@ class SearchHistory:
                     self.Set_2.add(line)
                 for line in rest_of_line_2:
                     self.Set_3.add(line)
-                self.date_1 = current_date
+                self.date_1 = str(current_date)
                 self.date_2 = first_line_1
                 print(self.date_1, current_date)
                 self.date_3 = first_line_2
@@ -93,9 +93,16 @@ class SearchHistory:
 
     def displayVisited(self, browser):
         self.clearVisited(browser)
+        self.setHistoryDates(browser)
         self.displaySet_1(browser)
         self.displaySet_2(browser)
         self.displaySet_3(browser)
+
+    def setHistoryDates(self, browser):
+        browser.historydate_1.setText(self.date_1)
+        browser.historydate_2.setText(self.date_2)
+        browser.historydate_3.setText(self.date_3)
+
             
     def displaySet_1(self, browser):
         if ((self.Shift_1 + 1) * self.VISITED_SIZE >= len(self.Set_1)): 

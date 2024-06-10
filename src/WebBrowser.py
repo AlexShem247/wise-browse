@@ -307,6 +307,11 @@ class WebBrowser(QMainWindow):
         self.visitedRightArrow_3 = self.findAndSetIcon(QPushButton, "visitedRightArrow_3", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_3(self))
         self.visitedRightArrow_3.hide()
 
+        self.historydate_1 = self.findChild(QLineEdit, "historydate_1")
+        self.historydate_2 = self.findChild(QLineEdit, "historydate_2")
+        self.historydate_3 = self.findChild(QLineEdit, "historydate_3")
+
+
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
