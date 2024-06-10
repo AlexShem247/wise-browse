@@ -295,13 +295,16 @@ class WebBrowser(QMainWindow):
     def initActionLogPage(self):
         self.visitedLeftArrow = self.findAndSetIcon(QPushButton, "visitedLeftArrow", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow(self))
         self.visitedLeftArrow.hide()
-        self.findAndSetIcon(QPushButton, "visitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow(self))
+        self.visitedRightArrow = self.findAndSetIcon(QPushButton, "visitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow(self))
+        self.visitedRightArrow.hide()
         self.visitedLeftArrow_2 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_2", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow_2(self))
         self.visitedLeftArrow_2.hide()
-        self.findAndSetIcon(QPushButton, "visitedRightArrow_2", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_2(self))
+        self.visitedRightArrow_2 = self.findAndSetIcon(QPushButton, "visitedRightArrow_2", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_2(self))
+        self.visitedRightArrow_2.hide()
         self.visitedLeftArrow_3 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_3", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow_3(self))
         self.visitedLeftArrow_3.hide()
-        self.findAndSetIcon(QPushButton, "visitedRightArrow_3", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_3(self))
+        self.visitedRightArrow_3 = self.findAndSetIcon(QPushButton, "visitedRightArrow_3", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_3(self))
+        self.visitedRightArrow_3.hide()
 
 
     def toggleMicrophoneVisibility(self):
@@ -409,7 +412,8 @@ class WebBrowser(QMainWindow):
     
 
     def onUrlChanged(self, url):
-        self.searchHistory.todaySet.add(url.toString())
+        if (url.toString() != "https://www.google.com/"):
+            self.searchHistory.Set_1.add(url.toString())
         changedDomain = getDomainName(url.toString().lower())
         self.currentWebpage = url
         if not self.previousWebpages or self.previousWebpages[-1] != url:
@@ -542,9 +546,12 @@ class WebBrowser(QMainWindow):
 
     def onActionLogBtnClicked(self):
         self.pages.setCurrentWidget(self.activityLogPage)
-        self.searchHistory.displayVisited(self)
         print("Action Log button clicked")
-        print(self.searchHistory.todaySet)
+        print(self.searchHistory.Set_1)
+        print(self.searchHistory.Set_2)
+        print(self.searchHistory.Set_3)
+        self.searchHistory.displayVisited(self)
+
 
     def onFavouritesBtnClicked(self):
         self.pages.setCurrentWidget(self.favouritesPage)
