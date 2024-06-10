@@ -103,25 +103,33 @@ class Favourites:
     def clickLikedRightArrow(self, browser):
         if self.likedRightShift == 0: browser.likedLeftArrow.show()
         self.likedRightShift += 1
-        for i in range (1,13): browser.clearIcon(QPushButton, f"liked{i}")
+        for i in range (1,13): 
+            browser.clearIcon(QPushButton, f"liked{i}")
+            browser.findChild(QPushButton, f"liked{i}").setToolTip(None)            
         self.displayLiked(browser)
     
     def clickLikedLeftArrow(self, browser):
         if self.likedRightShift == 1: browser.likedLeftArrow.hide()
         self.likedRightShift -= 1
-        for i in range (1,13): browser.clearIcon(QPushButton, f"liked{i}")
+        for i in range (1,13): 
+            browser.clearIcon(QPushButton, f"liked{i}")
+            browser.findChild(QPushButton, f"liked{i}").setToolTip(None)            
         self.displayLiked(browser)
     
     def clickMostUsedRightArrow(self, browser):
         if self.mostUsedRightShift == 0: browser.mostUsedLeftArrow.show()
         self.mostUsedRightShift += 1
-        for i in range (1,13): browser.clearIcon(QPushButton, f"mostVisited{i}")
+        for i in range (1,13): 
+            browser.clearIcon(QPushButton, f"mostVisited{i}")
+            browser.findChild(QPushButton, f"mostVisited{i}").setToolTip(None)            
         self.displayMostUsed(browser)
     
     def clickMostUsedLeftArrow(self, browser):
         if self.mostUsedRightShift == 1: browser.mostUsedLeftArrow.hide()
         self.mostUsedRightShift -= 1
-        for i in range (1,13): browser.clearIcon(QPushButton, f"mostVisited{i}")
+        for i in range (1,13): 
+            browser.clearIcon(QPushButton, f"mostVisited{i}")
+            browser.findChild(QPushButton, f"mostVisited{i}").setToolTip(None)            
         self.displayMostUsed(browser)
     
     
