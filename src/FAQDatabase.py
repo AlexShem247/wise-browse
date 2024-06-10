@@ -1,6 +1,19 @@
 import supabase
 
+from src.URLUtils import getDomainName
 from src.Assistant import Assistant, Model
+
+import re
+
+
+def extract_number(string):
+    # Regular expression to match any sequence of digits
+    match = re.search(r'\d+', string)
+    if match:
+        # Extract the matched digits and convert them to an integer
+        return int(match.group())
+    else:
+        return None  # Return None if no number is found
 
 
 class FAQDatabase:
@@ -17,12 +30,35 @@ class FAQDatabase:
     def getFAQ(self, domainName):
         self.current_domain_name = domainName
         self.addWebsiteToDomainTable(domainName)
-        response = self.supabase.rpc('getfaqs', {'domainname': self.current_domain_name}).execute()
+        response = self.supabase.rpc('get_questions_by_domain', {'domainname': self.current_domain_name}).execute()
         return response.data
-        
+
     def addFAQ(self, question, url):
         self.addWebsiteToDomainTable(url)
+        question = self.findIfSimilarQuestionExists(question, url)
         self.supabase.rpc('addfaq', {'domainname': self.current_domain_name, 'ques': question}).execute()
+
+    def findIfSimilarQuestionExists(self, question, url):
+        currentFAQs = self.getFAQ(url)
+        ids = [q["qid"] for q in currentFAQs]
+        databaseStr = "\n".join([f"{q['qid']}) {q['question']}" for q in currentFAQs])
+
+        if self.AI.modelType == Model.dummy:
+            return question
+        else:
+            response = self.AI.singleRequest(f"""
+            Your goal it to take the following input question and check it among the database of questions.
+            If there is one the same question (in terms of meaning, not exact words).
+            If there is a similar match, say NUMBER: "x". Otherwise say "NEW QUESTION". Do not say anything else
+            Input: "{question}"
+            Database:\n{databaseStr}""")
+            number = extract_number(response)
+            if number and number in ids:
+                # Update Existing record
+                return [q["question"] for q in currentFAQs if q["qid"] == number][0]
+            else:
+                # New Question
+                return question
 
     def determineNewWebsiteType(self, url):
         response = self.supabase.table("websitetype").select("type").execute()
