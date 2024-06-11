@@ -32,36 +32,39 @@ class SearchHistory:
         print(current_date)
         try:
             with open(self.VISITED_1, 'r') as file_1:
-                first_line_1 = file_1.readline()
+                first_line_1 = file_1.readline().strip()
                 print(first_line_1)
                 rest_of_line_1 = file_1.readlines()
                 file_1.close()
             with open(self.VISITED_2, 'r') as file_2:
-                first_line_2 = file_2.readline()
+                first_line_2 = file_2.readline().strip()
                 rest_of_line_2 = file_2.readlines()
                 file_2.close()
             with open(self.VISITED_3, 'r') as file_3:
-                first_line_3 = file_3.readline()
+                first_line_3 = file_3.readline().strip()
                 rest_of_line_3 = file_3.readlines()
                 file_3.close()
             
             if (first_line_1.strip() != str(current_date)):
                 for line in rest_of_line_1:
-                    self.Set_2.add(line)
+                    self.Set_2.add(line.strip())
                 for line in rest_of_line_2:
-                    self.Set_3.add(line)
+                    self.Set_3.add(line.strip())
                 self.date_1 = str(current_date)
                 self.date_2 = first_line_1
-                print(self.date_1, current_date)
                 self.date_3 = first_line_2
 
             else:
                 for item in rest_of_line_1:
-                    self.Set_1.add(item)
+                    self.Set_1.add(item.strip())
                 for item in rest_of_line_2:
-                    self.Set_2.add(item)
+                    self.Set_2.add(item.strip())
                 for item in rest_of_line_3:
-                    self.Set_3.add(item)
+                    self.Set_3.add(item.strip())
+                #datetime_obj_1 = datetime.strptime(first_line_1, "%Y-%m-%d")
+                #datetime_obj_2 = datetime.strptime(first_line_2, "%Y-%m-%d")
+                #datetime_obj_3 = datetime.strptime(first_line_3, "%Y-%m-%d")
+
                 self.date_1 = first_line_1
                 self.date_2 = first_line_2
                 self.date_3 = first_line_3
@@ -84,11 +87,11 @@ class SearchHistory:
 
         self.writeFile(self.VISITED_3, self.Set_3, self.date_3)
 
-    def writeFile(file_name, set, date):
+    def writeFile(self, file_name, set, date):
         with open(file_name, 'w') as file:
-            file.write(date + '\n')
+            file.write(date)
             for item in set:
-                file.write(item + '\n')
+                file.write('\n' + item)
         file.close()
 
     def displayVisited(self, browser):
@@ -99,9 +102,23 @@ class SearchHistory:
         self.displaySet_3(browser)
 
     def setHistoryDates(self, browser):
-        browser.historydate_1.setText(self.date_1)
-        browser.historydate_2.setText(self.date_2)
-        browser.historydate_3.setText(self.date_3)
+        current_date = datetime.date.today()
+        diff_1 = (current_date - datetime.datetime.strptime(self.date_1, "%Y-%m-%d").date()).days
+        diff_2 = (current_date - datetime.datetime.strptime(self.date_2, "%Y-%m-%d").date()).days
+        diff_3 = (current_date - datetime.datetime.strptime(self.date_3, "%Y-%m-%d").date()).days
+        if diff_1 == 0:
+            browser.historydate_1.setText(self.date_1 + " - " + "Today")
+        elif diff_1 == 1:
+            browser.historydate_1.setText(self.date_1 + " - " + "Yesterday")
+        else:
+            browser.historydate_1.setText(self.date_1 + " - " + str(diff_1) + " days ago")
+
+        if diff_2 == 1:
+            browser.historydate_2.setText(self.date_2 + " - " + "Yesterday")
+        else:
+            browser.historydate_2.setText(self.date_2 + " - " + str(diff_2) + " days ago")
+
+        browser.historydate_3.setText(self.date_3 + " - " + str(diff_3) + " days ago")
 
             
     def displaySet_1(self, browser):
