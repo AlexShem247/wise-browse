@@ -2176,9 +2176,6 @@ QPushButton:hover {
                    </widget>
                   </widget>
                   <widget class="QLineEdit" name="historydate_1">
-                    <property name="styleSheet">
-                        <string notr="true">border: none;</string>
-                    </property>
                    <property name="geometry">
                     <rect>
                      <x>30</x>
@@ -2187,11 +2184,11 @@ QPushButton:hover {
                      <height>25</height>
                     </rect>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
                   </widget>
                   <widget class="QLineEdit" name="historydate_2">
-                    <property name="styleSheet">
-                        <string notr="true">border: none;</string>
-                    </property>
                    <property name="geometry">
                     <rect>
                      <x>30</x>
@@ -2200,11 +2197,11 @@ QPushButton:hover {
                      <height>25</height>
                     </rect>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
                   </widget>
                   <widget class="QLineEdit" name="historydate_3">
-                    <property name="styleSheet">
-                        <string notr="true">border: none;</string>
-                    </property>
                    <property name="geometry">
                     <rect>
                      <x>30</x>
@@ -2212,6 +2209,9 @@ QPushButton:hover {
                      <width>113</width>
                      <height>25</height>
                     </rect>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
                    </property>
                   </widget>
                  </widget>
@@ -2576,6 +2576,69 @@ QPushButton:hover {
                      <set>Qt::AlignCenter</set>
                     </property>
                    </widget>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_5">
+                    <item>
+                     <spacer name="horizontalSpacer_13">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="nextBtn">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton{
+	background-color: rgb(100, 100, 100);
+ border-radius: 10px;    
+color:white;
+font-size: 14px;   
+ font-weight: bold; 
+padding: 5px
+}
+
+QPushButton:hover {
+    background-color: rgb(70, 70, 70); 
+}</string>
+                      </property>
+                      <property name="text">
+                       <string>Next Step</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_14">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout">

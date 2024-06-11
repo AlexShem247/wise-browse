@@ -97,6 +97,7 @@ class WebBrowser(QMainWindow):
     queryInput: QTextEdit
     FAQLabel: QLabel
     helpfulLabel: QLabel
+    nextBtn: QPushButton
     microphoneBtn: QPushButton
     starBtns = []
 
@@ -246,6 +247,9 @@ class WebBrowser(QMainWindow):
         # Find Labels
         self.FAQLabel = self.findChild(QLabel, "FAQLabel")
         self.helpfulLabel = self.findChild(QLabel, "helpfulLabel")
+        self.nextBtn = self.findChild(QPushButton, "nextBtn")
+        self.nextBtn.clicked.connect(self.nextStep)
+        self.nextBtn.hide()
 
         # Configure Microphone
         self.microphoneTimer = QTimer()
@@ -315,22 +319,30 @@ class WebBrowser(QMainWindow):
                                                     self.ARROW_SIZE,
                                                     lambda: self.searchHistory.clickVisitedLeftArrow(self))
         self.visitedLeftArrow.hide()
-        self.visitedRightArrow = self.findAndSetIcon(QPushButton, "visitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow(self))
+        self.visitedRightArrow = self.findAndSetIcon(QPushButton, "visitedRightArrow", self.RIGHT_ARROW_IMG,
+                                                     self.ARROW_SIZE,
+                                                     lambda: self.searchHistory.clickVisitedRightArrow(self))
         self.visitedRightArrow.hide()
-        self.visitedLeftArrow_2 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_2", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow_2(self))
+        self.visitedLeftArrow_2 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_2", self.LEFT_ARROW_IMG,
+                                                      self.ARROW_SIZE,
+                                                      lambda: self.searchHistory.clickVisitedLeftArrow_2(self))
         self.visitedLeftArrow_2.hide()
-        self.visitedRightArrow_2 = self.findAndSetIcon(QPushButton, "visitedRightArrow_2", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_2(self))
+        self.visitedRightArrow_2 = self.findAndSetIcon(QPushButton, "visitedRightArrow_2", self.RIGHT_ARROW_IMG,
+                                                       self.ARROW_SIZE,
+                                                       lambda: self.searchHistory.clickVisitedRightArrow_2(self))
         self.visitedRightArrow_2.hide()
-        self.visitedLeftArrow_3 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_3", self.LEFT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedLeftArrow_3(self))
+        self.visitedLeftArrow_3 = self.findAndSetIcon(QPushButton, "visitedLeftArrow_3", self.LEFT_ARROW_IMG,
+                                                      self.ARROW_SIZE,
+                                                      lambda: self.searchHistory.clickVisitedLeftArrow_3(self))
         self.visitedLeftArrow_3.hide()
-        self.visitedRightArrow_3 = self.findAndSetIcon(QPushButton, "visitedRightArrow_3", self.RIGHT_ARROW_IMG, self.ARROW_SIZE, lambda: self.searchHistory.clickVisitedRightArrow_3(self))
+        self.visitedRightArrow_3 = self.findAndSetIcon(QPushButton, "visitedRightArrow_3", self.RIGHT_ARROW_IMG,
+                                                       self.ARROW_SIZE,
+                                                       lambda: self.searchHistory.clickVisitedRightArrow_3(self))
         self.visitedRightArrow_3.hide()
 
         self.historydate_1 = self.findChild(QLineEdit, "historydate_1")
         self.historydate_2 = self.findChild(QLineEdit, "historydate_2")
         self.historydate_3 = self.findChild(QLineEdit, "historydate_3")
-
-
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
@@ -580,7 +592,6 @@ class WebBrowser(QMainWindow):
         print(self.searchHistory.Set_3)
         self.searchHistory.displayVisited(self)
 
-
     def onFavouritesBtnClicked(self):
         self.pages.setCurrentWidget(self.favouritesPage)
         self.favourites.displayFavourites(self)
@@ -634,9 +645,12 @@ class WebBrowser(QMainWindow):
         else:
             self.queryInput.insertPlainText("\n")
 
+    def nextStep(self):
+        print("Next Step Button is clicked")
+
     @pyqtSlot(str)
     def showText(self, text):
-        self.showRating(True)
+        self.showRating(False)
         self.deleteSpacer(1)
         self.backBtn.show()
         self.queryInput.setEnabled(True)
@@ -653,6 +667,10 @@ class WebBrowser(QMainWindow):
         font = textEdit.font()
         font.setPointSize(self.FONT_SIZE)
         textEdit.setFont(font)
+
+        self.helpfulLabel.show()
+        self.helpfulLabel.setText("Step 1")
+        self.nextBtn.show()
 
         self.FAQBtnLayout.addWidget(textEdit)
         if self.TEXT_DELAY_MS == 0:
