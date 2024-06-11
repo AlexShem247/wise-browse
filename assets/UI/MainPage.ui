@@ -2176,42 +2176,42 @@ QPushButton:hover {
                    </widget>
                   </widget>
                   <widget class="QLineEdit" name="historydate_1">
-                    <property name="styleSheet">
-                        <string notr="true">border: none;</string>
-                    </property>
                    <property name="geometry">
                     <rect>
                      <x>30</x>
                      <y>10</y>
-                     <width>113</width>
+                     <width>221</width>
                      <height>25</height>
                     </rect>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
                   </widget>
                   <widget class="QLineEdit" name="historydate_2">
-                    <property name="styleSheet">
-                        <string notr="true">border: none;</string>
-                    </property>
                    <property name="geometry">
                     <rect>
                      <x>30</x>
                      <y>180</y>
-                     <width>113</width>
+                     <width>211</width>
                      <height>25</height>
                     </rect>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
+                   </property>
                   </widget>
                   <widget class="QLineEdit" name="historydate_3">
-                    <property name="styleSheet">
-                        <string notr="true">border: none;</string>
-                    </property>
                    <property name="geometry">
                     <rect>
                      <x>30</x>
                      <y>350</y>
-                     <width>113</width>
+                     <width>241</width>
                      <height>25</height>
                     </rect>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border: none;</string>
                    </property>
                   </widget>
                  </widget>

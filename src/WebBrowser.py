@@ -659,3 +659,4 @@ class WebBrowser(QMainWindow):
 
     def closeEvent(self, event):
         self.favourites.writeFavourites()
+        self.searchHistory.writeVisited()
