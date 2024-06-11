@@ -10,3 +10,7 @@ dist/
 *.spec
 desktop.ini
 Wise Browse
+
+visited_*
+likedsites.txt
+mostusedsites.txt

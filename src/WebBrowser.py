@@ -51,7 +51,7 @@ class WebBrowser(QMainWindow):
 
     MICROPHONE_IMG = Path("assets/img/microphone.png")
     LOGO_IMG = Path("assets/img/internet.png")
-    INTERNET_IMG = Path("assets/img/Wise Browse.png")
+    INTERNET_IMG = Path("assets/img/wise_browse.png")
     HOME_IMG = Path("assets/img/home.png")
     ACTION_LOG_IMG = Path("assets/img/clipboard.png")
     SETTINGS_IMG = Path("assets/img/settings.png")

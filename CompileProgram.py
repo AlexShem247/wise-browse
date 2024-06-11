@@ -117,7 +117,7 @@ PROGRAM_NAME = "Wise Browse"
 IMG_FILES = [str(Path("assets") / "img" / f) for f in os.listdir("assets/img") if f.endswith(".png")]
 SRC_FILES = [str(Path("src") / f) for f in os.listdir("src") if f.endswith(".py")]
 
-GENERATE_OUTPUT_PY = False
+GENERATE_OUTPUT_PY = True
 
 if __name__ == "__main__":
     if GENERATE_OUTPUT_PY:
