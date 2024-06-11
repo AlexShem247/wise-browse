@@ -1422,32 +1422,6 @@ QPushButton:hover {
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
                   </property>
-                  <widget class="QLabel" name="label_3">
-                   <property name="geometry">
-                    <rect>
-                     <x>30</x>
-                     <y>20</y>
-                     <width>67</width>
-                     <height>17</height>
-                    </rect>
-                   </property>
-                   <property name="text">
-                    <string>Today</string>
-                   </property>
-                  </widget>
-                  <widget class="QLabel" name="label_4">
-                   <property name="geometry">
-                    <rect>
-                     <x>30</x>
-                     <y>180</y>
-                     <width>67</width>
-                     <height>17</height>
-                    </rect>
-                   </property>
-                   <property name="text">
-                    <string>Yesterday</string>
-                   </property>
-                  </widget>
                   <widget class="QFrame" name="visitedSites">
                    <property name="geometry">
                     <rect>
@@ -1703,7 +1677,7 @@ QPushButton:hover {
                    <property name="geometry">
                     <rect>
                      <x>50</x>
-                     <y>380</y>
+                     <y>390</y>
                      <width>790</width>
                      <height>121</height>
                     </rect>
@@ -1954,7 +1928,7 @@ QPushButton:hover {
                    <property name="geometry">
                     <rect>
                      <x>50</x>
-                     <y>210</y>
+                     <y>220</y>
                      <width>790</width>
                      <height>121</height>
                     </rect>
@@ -2201,17 +2175,43 @@ QPushButton:hover {
                     </property>
                    </widget>
                   </widget>
-                  <widget class="QLabel" name="label_5">
+                  <widget class="QLineEdit" name="historydate_1">
+                    <property name="styleSheet">
+                        <string notr="true">border: none;</string>
+                    </property>
+                   <property name="geometry">
+                    <rect>
+                     <x>30</x>
+                     <y>10</y>
+                     <width>113</width>
+                     <height>25</height>
+                    </rect>
+                   </property>
+                  </widget>
+                  <widget class="QLineEdit" name="historydate_2">
+                    <property name="styleSheet">
+                        <string notr="true">border: none;</string>
+                    </property>
+                   <property name="geometry">
+                    <rect>
+                     <x>30</x>
+                     <y>180</y>
+                     <width>113</width>
+                     <height>25</height>
+                    </rect>
+                   </property>
+                  </widget>
+                  <widget class="QLineEdit" name="historydate_3">
+                    <property name="styleSheet">
+                        <string notr="true">border: none;</string>
+                    </property>
                    <property name="geometry">
                     <rect>
                      <x>30</x>
                      <y>350</y>
-                     <width>81</width>
-                     <height>17</height>
+                     <width>113</width>
+                     <height>25</height>
                     </rect>
-                   </property>
-                   <property name="text">
-                    <string>2 days ago</string>
                    </property>
                   </widget>
                  </widget>
