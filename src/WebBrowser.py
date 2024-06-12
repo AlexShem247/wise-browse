@@ -50,7 +50,8 @@ class WebBrowser(QMainWindow):
     currentWebpage = None
 
     MICROPHONE_IMG = Path("assets/img/microphone.png")
-    INTERNET_IMG = Path("assets/img/internet.png")
+    LOGO_IMG = Path("assets/img/internet.png")
+    INTERNET_IMG = Path("assets/img/wise_browse.png")
     HOME_IMG = Path("assets/img/home.png")
     ACTION_LOG_IMG = Path("assets/img/clipboard.png")
     SETTINGS_IMG = Path("assets/img/settings.png")
@@ -58,6 +59,7 @@ class WebBrowser(QMainWindow):
     STAR_FILLED_IMG = Path("assets/img/star_filled.png")
 
     STOP_IMG = Path("assets/img/stop.png")
+    AI_IMG = Path("assets/img/AI.png")
 
     SEARCH_IMG = Path("assets/img/search.png")
     HOME_HEART_IMG = Path("assets/img/heart.png")
@@ -76,10 +78,10 @@ class WebBrowser(QMainWindow):
     MICROPHONE_SIZE = (20, 20)
     STAR_SIZE = (15, 15)
     HOME_BUTTONS_SIZE = (60, 60)
-    LOGO_SIZE = (40, 40)
+    LOGO_SIZE = (60, 60)
     TOOLBAR_ICON_SIZE = (20, 20)
     ARROW_SIZE = (50, 50)
-    MAIN_LOGO_SIZE = (100, 100)
+    MAIN_LOGO_SIZE = (200, 200)
 
     TEXT_WIDTH = 30
     FONT_SIZE = 11
@@ -233,7 +235,7 @@ class WebBrowser(QMainWindow):
         self.queryInput.installEventFilter(self.keyPressEater)
         self.microphoneBtn = self.findAndSetIcon(QPushButton, "microBtn", self.MICROPHONE_IMG, self.MICROPHONE_SIZE,
                                                  self.onMicroBtnClicked)
-        self.findAndSetIcon(QPushButton, "inputInternetBtn", self.INTERNET_IMG, self.INTERNET_SIZE,
+        self.findAndSetIcon(QPushButton, "inputInternetBtn", self.AI_IMG, self.INTERNET_SIZE,
                             lambda: self.createAPopup(*self.INPUT_INFO))
 
         # Configure stars
