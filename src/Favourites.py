@@ -13,7 +13,8 @@ class Favourites:
     mostUsedMap = dict()
     likedRightShift = 0
     mostUsedRightShift = 0
-    FAVICON_SIZE = 64
+    FAVICON_SIZE = 128
+    ICON_DISPLAY_SIZE = (80,80)
     
     def __init__(self):
         try:
@@ -63,7 +64,8 @@ class Favourites:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            button = browser.findAndSetIcon(QPushButton, f"liked{i}", path, (90,90), partial(browser.gotoURL, url))
+            buttonSize = browser.findChild(QPushButton, f"liked{i}").size()
+            button = browser.findAndSetIcon(QPushButton, f"liked{i}", path, (buttonSize.width() - 20, buttonSize.height() - 20), partial(browser.gotoURL, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
@@ -84,13 +86,13 @@ class Favourites:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            button = browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, (90,90), partial(browser.gotoURL, url))
+            buttonSize = browser.findChild(QPushButton, f"mostVisited{i}").size()
+            button = browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, (buttonSize.width() - 20, buttonSize.height() - 20), partial(browser.gotoURL, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
             button.setToolTip(text)
-                
-            browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, (90,90), partial(browser.gotoURL, url))
+
             i = i + 1
         
     def clearFavourites(self, browser):
