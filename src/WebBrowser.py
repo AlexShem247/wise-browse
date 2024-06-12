@@ -19,6 +19,7 @@ from src.Assistant import Assistant, Model
 from src.Favourites import Favourites
 from src.FeedbackPopup import FeedbackPopup
 from src.SearchHistory import SearchHistory
+from src.Conversation import Conversation
 
 import threading
 import speech_recognition as sr
@@ -36,7 +37,6 @@ def formatHtml(text):
     # Replace the pattern with the HTML <b> tag
     text = bold_pattern.sub(r'<b>\1</b>', text)
 
-    text = text.replace("\n\n", "\n")
     text = text.replace("\n", "<br>")
 
     return text
@@ -113,8 +113,10 @@ class WebBrowser(QMainWindow):
     mostUsedLeftArrow = QPushButton
 
     AI_MODEL_TYPE = Model.full
-    _, screenshotPath = tempfile.mkstemp()
+    _, screenshotPath = tempfile.mkstemp(suffix=".jpeg")
     aiAssistant = Assistant(AI_MODEL_TYPE, screenshotPath)
+    convo = Conversation("user", "asst_atrtRWtJ5LGTU0ZuX8vMnMRM", False, False,
+                         screenshotPath)
 
     database = FAQDatabase(aiAssistant)
     domain = None
@@ -138,6 +140,7 @@ class WebBrowser(QMainWindow):
     searchHistory = SearchHistory()
 
     manualSearch = False
+    currentlyOnGuideMode = False
 
     pages: QStackedWidget
     homePage: QWidget
@@ -379,9 +382,16 @@ class WebBrowser(QMainWindow):
                 count += 1
 
     def goBack(self):
-        self.queryInput.clear()
-        self.displayFAQs(self.domain, True)
-        self.FAQLayout.insertStretch(3)
+        if self.convo.prev_step_exists():
+            self.enterQuery("PREV")
+        else:
+            self.queryInput.clear()
+            self.queryInput.setEnabled(True)
+            self.displayFAQs(self.domain, True)
+            self.FAQLayout.insertStretch(3)
+            self.currentlyOnGuideMode = False
+
+            self.enterQuery("END")
 
     def showRating(self, show):
         self.helpfulLabel.setVisible(show)
@@ -468,9 +478,12 @@ class WebBrowser(QMainWindow):
         if changedDomain != self.domain:
             # Website has changed
             self.domain = changedDomain
-            self.displayFAQs(changedDomain)
-            self.showRating(False)
-            self.backBtn.hide()
+            
+            if not self.currentlyOnGuideMode:
+                self.displayFAQs(changedDomain)
+                self.showRating(False)
+                self.nextBtn.hide()
+                self.backBtn.hide()
 
         if not self.switchingPages:
             self.nextWebpages = []
@@ -499,6 +512,7 @@ class WebBrowser(QMainWindow):
     def displayFAQs(self, domain, fetch=True):
         self.clearLayout(self.FAQBtnLayout)
         self.backBtn.hide()
+        self.nextBtn.hide()
         self.showRating(False)
         self.FAQLabel.show()
         if fetch:
@@ -621,18 +635,36 @@ class WebBrowser(QMainWindow):
             self.enterBtn.hide()
 
     def runAIRequest(self, inputText):
-        result = self.aiAssistant.singleRequest(inputText)
+        humanQuestion = False
+        match inputText:
+            case "NEXT":
+                result = self.convo.next_step()
+            case "PREV":
+                result = self.convo.prev_step()
+            case "END":
+                self.convo.end()
+                return
+            case default:
+                humanQuestion = True
+                result = self.convo.request(default)
+
         self.update_result.emit(result)  # Emit signal with the result
 
-        question = self.aiAssistant.validateQuestion(inputText, self.currentWebpage)
-        if question:
-            print("Question formatted: " + question)
-            self.database.addFAQ(question, self.domain)
+        if humanQuestion:
+            question = self.aiAssistant.validateQuestion(inputText, self.currentWebpage)
+            if question:
+                print("Question formatted: " + question)
+                self.database.addFAQ(question, self.domain)
 
-    def enterQuery(self):
+    def enterQuery(self, text=None):
+        self.currentlyOnGuideMode = True
         if self.isRecording:
             self.onMicroBtnClicked()
-        inputText = self.queryInput.toPlainText()
+
+        if text:
+            inputText = text
+        else:
+            inputText = self.queryInput.toPlainText()
 
         if inputText.replace("\n", ""):
             self.webView.grab().save(self.screenshotPath, b'JPEG')
@@ -648,7 +680,7 @@ class WebBrowser(QMainWindow):
             self.queryInput.insertPlainText("\n")
 
     def nextStep(self):
-        print("Next Step Button is clicked")
+        self.enterQuery("NEXT")
 
     @pyqtSlot(str)
     def showText(self, text):
@@ -659,6 +691,9 @@ class WebBrowser(QMainWindow):
         self.enterBtn.setEnabled(True)
         self.enterBtn.setText("ASK QUESTION")
         self.thinkingTimer.stop()
+
+        if "FINISHED" in text:
+            text = "You have completed all the required steps."
 
         self.clearLayout(self.FAQBtnLayout)
         self.FAQLabel.hide()
@@ -671,8 +706,14 @@ class WebBrowser(QMainWindow):
         textEdit.setFont(font)
 
         self.helpfulLabel.show()
-        self.helpfulLabel.setText("Step 1")
-        self.nextBtn.show()
+        stepNo = text.split(".")[0]
+        if stepNo.isnumeric():
+            self.helpfulLabel.setText(f"Step {stepNo}")
+            self.nextBtn.show()
+        else:
+            self.helpfulLabel.setText("Was this helpful?")
+            self.showRating(True)
+            self.nextBtn.hide()
 
         self.FAQBtnLayout.addWidget(textEdit)
         if self.TEXT_DELAY_MS == 0:
