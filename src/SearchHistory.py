@@ -28,7 +28,7 @@ class SearchHistory:
     FAVICON_SIZE = 64
     
     def __init__(self):
-        current_date = datetime.date.today()
+        current_date = datetime.date.today().strftime("%d-%m-%Y")
         print(current_date)
         try:
             with open(self.VISITED_1, 'r') as file_1:
@@ -103,9 +103,9 @@ class SearchHistory:
 
     def setHistoryDates(self, browser):
         current_date = datetime.date.today()
-        diff_1 = (current_date - datetime.datetime.strptime(self.date_1, "%Y-%m-%d").date()).days
-        diff_2 = (current_date - datetime.datetime.strptime(self.date_2, "%Y-%m-%d").date()).days
-        diff_3 = (current_date - datetime.datetime.strptime(self.date_3, "%Y-%m-%d").date()).days
+        diff_1 = (current_date - datetime.datetime.strptime(self.date_1, "%d-%m-%Y").date()).days
+        diff_2 = (current_date - datetime.datetime.strptime(self.date_2, "%d-%m-%Y").date()).days
+        diff_3 = (current_date - datetime.datetime.strptime(self.date_3, "%d-%m-%Y").date()).days
         if diff_1 == 0:
             browser.historydate_1.setText(self.date_1 + " - " + "Today")
         elif diff_1 == 1:
@@ -223,7 +223,7 @@ class SearchHistory:
         self.Shift_1 += 1
         if ((self.Shift_1 + 1) * self.VISITED_SIZE < len(self.Set_1)): 
             browser.visitedRightArrow.show()
-        for i in range (1, self.VISITED_SIZE): 
+        for i in range (1, self.VISITED_SIZE + 1): 
             browser.clearIcon(QPushButton, f"visited_{i}")
             browser.findChild(QPushButton, f"visited_{i}").setToolTip(None)            
         self.displaySet_1(browser)
@@ -268,7 +268,7 @@ class SearchHistory:
         self.Shift_3 -= 1
         if (self.Shift_3 == 0): 
             browser.visitedLeftArrow_3.hide()
-        for i in range (self.VISITED_SIZE + 2, self.VISITED_SIZE * 3 + 1): 
+        for i in range (self.VISITED_SIZE * 2 + 1, self.VISITED_SIZE * 3 + 1): 
             browser.clearIcon(QPushButton, f"visited_{i}")
             browser.findChild(QPushButton, f"visited_{i}").setToolTip(None)            
         self.displaySet_3(browser)

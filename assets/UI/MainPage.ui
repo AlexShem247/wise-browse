@@ -2334,7 +2334,7 @@ QPushButton:hover {
                     </property>
                    </widget>
                   </widget>
-                  <widget class="QLineEdit" name="historydate_1">
+                  <widget class="QLabel" name="historydate_1">
                    <property name="geometry">
                     <rect>
                      <x>30</x>
@@ -2347,7 +2347,7 @@ QPushButton:hover {
                     <string notr="true">border: none;</string>
                    </property>
                   </widget>
-                  <widget class="QLineEdit" name="historydate_2">
+                  <widget class="QLabel" name="historydate_2">
                    <property name="geometry">
                     <rect>
                      <x>30</x>
@@ -2360,7 +2360,7 @@ QPushButton:hover {
                     <string notr="true">border: none;</string>
                    </property>
                   </widget>
-                  <widget class="QLineEdit" name="historydate_3">
+                  <widget class="QLabel" name="historydate_3">
                    <property name="geometry">
                     <rect>
                      <x>30</x>
