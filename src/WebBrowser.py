@@ -76,8 +76,9 @@ class WebBrowser(QMainWindow):
 
     INTERNET_SIZE = (30, 30)
     MICROPHONE_SIZE = (20, 20)
+    LOWER_BAR_ICON_SIZE = (50, 50)
     STAR_SIZE = (15, 15)
-    HOME_BUTTONS_SIZE = (60, 60)
+    HOME_BUTTONS_SIZE = (100, 100)
     LOGO_SIZE = (60, 60)
     TOOLBAR_ICON_SIZE = (20, 20)
     ARROW_SIZE = (50, 50)
@@ -188,10 +189,11 @@ class WebBrowser(QMainWindow):
     def initLowerBar(self):
         self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, self.LOGO_SIZE,
                             lambda: self.createAPopup(*self.GENERAL_INFO))
-        self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.MICROPHONE_SIZE, self.onHomeBtnClicked)
-        self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.MICROPHONE_SIZE,
+        self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.LOWER_BAR_ICON_SIZE, self.onHomeBtnClicked)
+        self.findAndSetIcon(QPushButton, "favouritesBtn", self.HEART_NO_FILL_IMG, self.LOWER_BAR_ICON_SIZE, self.onFavouritesBtnClicked)
+        self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onActionLogBtnClicked)
-        self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.MICROPHONE_SIZE,
+        self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onSettingsBtnClicked)
 
     def initUpperSearchBar(self):
