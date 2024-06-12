@@ -386,12 +386,13 @@ class WebBrowser(QMainWindow):
             self.enterQuery("PREV")
         else:
             self.queryInput.clear()
+            print("Enabling Input")
             self.queryInput.setEnabled(True)
             self.displayFAQs(self.domain, True)
             self.FAQLayout.insertStretch(3)
             self.currentlyOnGuideMode = False
 
-            self.enterQuery("END")
+            self.convo.end()
 
     def showRating(self, show):
         self.helpfulLabel.setVisible(show)
@@ -478,7 +479,7 @@ class WebBrowser(QMainWindow):
         if changedDomain != self.domain:
             # Website has changed
             self.domain = changedDomain
-            
+
             if not self.currentlyOnGuideMode:
                 self.displayFAQs(changedDomain)
                 self.showRating(False)
@@ -530,11 +531,9 @@ class WebBrowser(QMainWindow):
         self.queryInput.insertPlainText(question)
 
     def addInputText(self, text):
-        print(text)
         self.queryInput.clear()
         self.queryInput.insertPlainText(text)
         if (self.AudioError or self.recordingNotStopped):
-            print("Inside if")
             path = self.MICROPHONE_IMG
             self.microphoneBtn.setIcon(QIcon(path.__str__()))
             self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
@@ -556,14 +555,12 @@ class WebBrowser(QMainWindow):
             self.microphoneTimer.start(self.MICROPHONE_TIME_DELAY)
             # self.inputTimer.start(self.INPUT_TIME_DELAY)
             # self.queryInput.setPlaceholderText("Recording")
-            print("Start Recording")
 
         self.microphoneBtn.setIcon(QIcon(path.__str__()))
         self.microphoneBtn.setIconSize(QSize(*self.MICROPHONE_SIZE))
         self.isRecording = not self.isRecording
 
         if self.isRecording:
-            print("yeah")
             threading.Thread(target=self.record_audio).start()
 
     def record_audio(self):
@@ -572,12 +569,9 @@ class WebBrowser(QMainWindow):
             self.update_text_signal.emit("Recording audio...")
             if self.isRecording:
                 try:
-                    print("Starting voice recognition...")
                     audio_data = self.recognizer.listen(source, timeout=10, phrase_time_limit=5)
-                    print("Recognizer stopped listening...")
                     self.update_text_signal.emit("Converting audio to text...")
                     text = self.recognizer.recognize_google(audio_data)
-                    print("Google translation is done...")
                     if self.isRecording:
                         self.recordingNotStopped = True
                     self.update_text_signal.emit(text)
@@ -641,9 +635,6 @@ class WebBrowser(QMainWindow):
                 result = self.convo.next_step()
             case "PREV":
                 result = self.convo.prev_step()
-            case "END":
-                self.convo.end()
-                return
             case default:
                 humanQuestion = True
                 result = self.convo.request(default)
@@ -668,6 +659,7 @@ class WebBrowser(QMainWindow):
 
         if inputText.replace("\n", ""):
             self.webView.grab().save(self.screenshotPath, b'JPEG')
+            print("Disabling Input")
             self.queryInput.setEnabled(False)
             self.enterBtn.setEnabled(False)
             self.enterBtn.setText("The AI is thinking" + "." * self.currentNoDots)
@@ -687,6 +679,7 @@ class WebBrowser(QMainWindow):
         self.showRating(False)
         self.deleteSpacer(1)
         self.backBtn.show()
+        print("Enabling Input")
         self.queryInput.setEnabled(True)
         self.enterBtn.setEnabled(True)
         self.enterBtn.setText("ASK QUESTION")
@@ -697,6 +690,7 @@ class WebBrowser(QMainWindow):
 
         self.clearLayout(self.FAQBtnLayout)
         self.FAQLabel.hide()
+
         textEdit = QTextEdit()
         textEdit.moveCursor(textEdit.textCursor().Start)
         textEdit.setReadOnly(True)
