@@ -110,9 +110,10 @@ class Conversation:
     def __erase_files(self):
         for file in self.file_ids:
             self.client.files.delete(file)
+        self.file_ids = []
 
     def __erase_history(self):
-        pass
+        self.content_history = []
 
     def __to_content(self, message, file_id):
         content = []
