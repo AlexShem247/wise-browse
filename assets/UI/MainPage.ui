@@ -4111,7 +4111,7 @@ QPushButton:hover {
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout_16">
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_29">
+                      <layout class="QHBoxLayout" name="actionLogUpBtnLayout">
                        <item>
                         <spacer name="horizontalSpacer_40">
                          <property name="orientation">
@@ -4148,106 +4148,271 @@ QPushButton:hover {
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_39">
+                      <layout class="QHBoxLayout" name="layout1">
                        <item>
-                        <widget class="QPushButton" name="pushButton_3">
-                         <property name="text">
-                          <string>Site1</string>
+                        <widget class="QFrame" name="frame_20">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_37">
+                      <layout class="QHBoxLayout" name="layout2">
                        <item>
-                        <widget class="QLabel" name="label">
-                         <property name="text">
-                          <string>Action1</string>
+                        <widget class="QFrame" name="frame_11">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_38">
+                      <layout class="QHBoxLayout" name="layout3">
                        <item>
-                        <widget class="QPushButton" name="pushButton_4">
-                         <property name="text">
-                          <string>Site2</string>
+                        <widget class="QFrame" name="frame_12">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_36">
+                      <layout class="QHBoxLayout" name="layout4">
                        <item>
-                        <widget class="QLabel" name="label_2">
-                         <property name="text">
-                          <string>Action2</string>
+                        <widget class="QFrame" name="frame_13">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_35">
+                      <layout class="QHBoxLayout" name="layout5">
                        <item>
-                        <widget class="QPushButton" name="pushButton_5">
-                         <property name="text">
-                          <string>Site3</string>
+                        <widget class="QFrame" name="frame_14">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_34">
+                      <layout class="QHBoxLayout" name="layout6">
                        <item>
-                        <widget class="QLabel" name="label_12">
-                         <property name="text">
-                          <string>Action3</string>
+                        <widget class="QFrame" name="frame_15">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_33">
+                      <layout class="QHBoxLayout" name="layout7">
                        <item>
-                        <widget class="QPushButton" name="pushButton_6">
-                         <property name="text">
-                          <string>Site4</string>
+                        <widget class="QFrame" name="frame_16">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_32">
+                      <layout class="QHBoxLayout" name="layout8">
                        <item>
-                        <widget class="QLabel" name="label_13">
-                         <property name="text">
-                          <string>Action4</string>
+                        <widget class="QFrame" name="frame_17">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_31">
+                      <layout class="QHBoxLayout" name="layout9">
                        <item>
-                        <widget class="QPushButton" name="pushButton_7">
-                         <property name="text">
-                          <string>Site5</string>
+                        <widget class="QFrame" name="frame_18">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
                          </property>
                         </widget>
                        </item>
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_30">
+                      <layout class="QHBoxLayout" name="layout10">
+                       <item>
+                        <widget class="QFrame" name="frame_19">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="layout11">
+                       <item>
+                        <widget class="QFrame" name="frame_21">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: white;
+border-radius: 20px; </string>
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="actionLogDownBtnLayout">
                        <item>
                         <spacer name="horizontalSpacer_47">
                          <property name="orientation">

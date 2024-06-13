@@ -624,6 +624,7 @@ class WebBrowser(QMainWindow):
     
     def onActionLogBtnClicked(self):
         self.pages.setCurrentWidget(self.actionLogPage)
+        self.actionLog.displayActionLog(self)
         print("Action Log button clicked")
         self.actionLog.addAction("Clicked Action Log button")
         self.actionLog.addSite("Action Log")
@@ -661,6 +662,10 @@ class WebBrowser(QMainWindow):
     
     def historyTwoDaysAgoSiteClicked(self, url):
         self.actionLog.addAction(f"Site from two days ago's history ({self.stripURL(url)}) clicked")
+        self.gotoURL(url)
+        
+    def actionLogSiteClicked(self, url):
+        self.actionLog.addAction(f"Site from action log ({self.stripURL(url)}) clicked")
         self.gotoURL(url)
 
     def gotoURL(self, url):
@@ -782,5 +787,4 @@ class WebBrowser(QMainWindow):
     def closeEvent(self, event):
         self.favourites.writeFavourites()
         self.searchHistory.writeVisited()
-        self.actionLog.displayActionLog()
         self.convo.end()
