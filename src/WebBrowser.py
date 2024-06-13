@@ -343,9 +343,9 @@ class WebBrowser(QMainWindow):
                                                        lambda: self.searchHistory.clickVisitedRightArrow_3(self))
         self.visitedRightArrow_3.hide()
 
-        self.historydate_1 = self.findChild(QLineEdit, "historydate_1")
-        self.historydate_2 = self.findChild(QLineEdit, "historydate_2")
-        self.historydate_3 = self.findChild(QLineEdit, "historydate_3")
+        self.historydate_1 = self.findChild(QLabel, "historydate_1")
+        self.historydate_2 = self.findChild(QLabel, "historydate_2")
+        self.historydate_3 = self.findChild(QLabel, "historydate_3")
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
