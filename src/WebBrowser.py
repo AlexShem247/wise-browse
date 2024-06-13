@@ -182,8 +182,7 @@ class WebBrowser(QMainWindow):
         # self.initSettingsPage()
 
     def initLowerBar(self):
-        self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, self.LOGO_SIZE,
-                            lambda: self.createAPopup(*self.GENERAL_INFO))
+
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.LOWER_BAR_ICON_SIZE, self.onHomeBtnClicked)
         self.findAndSetIcon(QPushButton, "favouritesBtn", self.HEART_NO_FILL_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onFavouritesBtnClicked)
@@ -315,7 +314,7 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "mostVisitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE,
                             lambda: self.favourites.clickMostUsedRightArrow(self))
 
-        self.findAndSetIcon(QLabel, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE)
+        self.findAndSetIcon(QPushButton, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE, lambda: self.createAPopup(*self.GENERAL_INFO))
 
     def initActionLogPage(self):
         self.visitedLeftArrow = self.findAndSetIcon(QPushButton, "visitedLeftArrow", self.LEFT_ARROW_IMG,

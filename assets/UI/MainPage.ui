@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>791</height>
+    <height>876</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -221,7 +221,7 @@ QPushButton:hover {
             <item>
              <widget class="QStackedWidget" name="pages">
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="homePage">
                <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -240,22 +240,47 @@ QPushButton:hover {
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_5">
                      <item>
-                      <layout class="QVBoxLayout" name="homeFrameLayout" stretch="1,0,1,0,1">
+                      <layout class="QVBoxLayout" name="homeFrameLayout" stretch="0,0,1,0,1">
                        <item>
-                        <widget class="QLabel" name="browserLogoIcon">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignHCenter|Qt::AlignTop</set>
-                         </property>
-                        </widget>
+                        <layout class="QHBoxLayout" name="horizontalLayout_7">
+                         <item>
+                          <widget class="QPushButton" name="browserLogoIcon">
+                           <property name="minimumSize">
+                            <size>
+                             <width>250</width>
+                             <height>250</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>250</width>
+                             <height>250</height>
+                            </size>
+                           </property>
+                           <property name="autoFillBackground">
+                            <bool>false</bool>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">QPushButton {
+    border: none;
+    border-radius: 125px; 
+    background-color: transparent;
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(220, 190, 190);
+}</string>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
                        </item>
                        <item>
                         <spacer name="verticalSpacer_2">
@@ -3303,83 +3328,83 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(220, 190, 190);
 }</string>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                   </widget>
-                  </widget>
-                  <widget class="QLabel" name="historydate_1">
-                   <property name="geometry">
-                    <rect>
-                     <x>30</x>
-                     <y>10</y>
-                     <width>221</width>
-                     <height>25</height>
-                    </rect>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">border: none;</string>
-                   </property>
-                  </widget>
-                  <widget class="QLabel" name="historydate_2">
-                   <property name="geometry">
-                    <rect>
-                     <x>30</x>
-                     <y>180</y>
-                     <width>211</width>
-                     <height>25</height>
-                    </rect>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">border: none;</string>
-                   </property>
-                  </widget>
-                  <widget class="QLabel" name="historydate_3">
-                   <property name="geometry">
-                    <rect>
-                     <x>30</x>
-                     <y>350</y>
-                     <width>241</width>
-                     <height>25</height>
-                    </rect>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">border: none;</string>
-                   </property>
-                  </widget>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
                  </widget>
                 </widget>
-                <widget class="QWidget" name="settingsPage">
-                 <widget class="QFrame" name="settingsFrame">
-                  <property name="geometry">
-                   <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>941</width>
-                    <height>551</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color: white;</string>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <widget class="QTextEdit" name="textEdit">
-                   <property name="geometry">
-                    <rect>
-                     <x>410</x>
-                     <y>190</y>
-                     <width>104</width>
-                     <height>87</height>
-                    </rect>
-                   </property>
-                   <property name="html">
-                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                <widget class="QLabel" name="historydate_1">
+                 <property name="geometry">
+                  <rect>
+                   <x>30</x>
+                   <y>10</y>
+                   <width>221</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="historydate_2">
+                 <property name="geometry">
+                  <rect>
+                   <x>30</x>
+                   <y>180</y>
+                   <width>211</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                </widget>
+                <widget class="QLabel" name="historydate_3">
+                 <property name="geometry">
+                  <rect>
+                   <x>30</x>
+                   <y>350</y>
+                   <width>241</width>
+                   <height>25</height>
+                  </rect>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">border: none;</string>
+                 </property>
+                </widget>
+               </widget>
+              </widget>
+              <widget class="QWidget" name="settingsPage">
+               <widget class="QFrame" name="settingsFrame">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>941</width>
+                  <height>551</height>
+                 </rect>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: white;</string>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <widget class="QTextEdit" name="textEdit">
+                 <property name="geometry">
+                  <rect>
+                   <x>410</x>
+                   <y>190</y>
+                   <width>104</width>
+                   <height>87</height>
+                  </rect>
+                 </property>
+                 <property name="html">
+                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
@@ -4061,11 +4086,11 @@ QPushButton:hover {
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Expanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>20</width>
+          <width>40</width>
           <height>20</height>
          </size>
         </property>
@@ -4160,11 +4185,11 @@ font-family: sans-serif;</string>
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Expanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>30</width>
+          <width>40</width>
           <height>20</height>
          </size>
         </property>
@@ -4244,11 +4269,11 @@ font-family: sans-serif;</string>
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Expanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>30</width>
+          <width>40</width>
           <height>20</height>
          </size>
         </property>
@@ -4343,11 +4368,11 @@ font-family: sans-serif;</string>
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Expanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>30</width>
+          <width>40</width>
           <height>20</height>
          </size>
         </property>
@@ -4437,79 +4462,16 @@ font-family: sans-serif;</string>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="menuInternetBtn">
-        <property name="minimumSize">
-         <size>
-          <width>80</width>
-          <height>80</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>80</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-    border: none;
-    border-radius: 20px; 
-    background-color: transparent;
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(220, 190, 190);
-}</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <spacer name="horizontalSpacer_12">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Expanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>510</width>
+          <width>40</width>
           <height>20</height>
          </size>
         </property>
