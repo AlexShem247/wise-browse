@@ -14,7 +14,6 @@ class Favourites:
     likedRightShift = 0
     mostUsedRightShift = 0
     FAVICON_SIZE = 128
-    ICON_DISPLAY_SIZE = (80,80)
     
     def __init__(self):
         try:
@@ -53,8 +52,8 @@ class Favourites:
     def displayLiked(self, browser):
         base = 2*self.likedRightShift
         i = 1
-        print(self.likedSet)
-        print(list(self.likedSet)[base:base + 12])
+        buttonSize = browser.findChild(QPushButton, f"liked{i}").size()
+        size = (buttonSize.width() - 20, buttonSize.height() - 20)
         for item in list(self.likedSet)[base:base + 12]:
             url = item
             domain = url.removeprefix("https://").split('/', 1)[0]
@@ -64,8 +63,7 @@ class Favourites:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            buttonSize = browser.findChild(QPushButton, f"liked{i}").size()
-            button = browser.findAndSetIcon(QPushButton, f"liked{i}", path, (buttonSize.width() - 20, buttonSize.height() - 20), partial(browser.gotoURL, url))
+            button = browser.findAndSetIcon(QPushButton, f"liked{i}", path, size, partial(browser.gotoURL, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
@@ -77,6 +75,8 @@ class Favourites:
         base = 2*self.mostUsedRightShift
         i = 1
         self.mostUsedMap = OrderedDict(sorted(self.mostUsedMap.items(), key=lambda item: item[1], reverse=True))
+        buttonSize = browser.findChild(QPushButton, f"mostVisited{i}").size()
+        size = (buttonSize.width() - 20, buttonSize.height() - 20)
         for key, value in islice(self.mostUsedMap.items(), base, base + 12):
             url = key
             domain = url.removeprefix("https://").split('/', 1)[0]
@@ -86,8 +86,7 @@ class Favourites:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            buttonSize = browser.findChild(QPushButton, f"mostVisited{i}").size()
-            button = browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, (buttonSize.width() - 20, buttonSize.height() - 20), partial(browser.gotoURL, url))
+            button = browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, size, partial(browser.gotoURL, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"

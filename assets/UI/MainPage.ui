@@ -221,7 +221,7 @@ QPushButton:hover {
             <item>
              <widget class="QStackedWidget" name="pages">
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
               <widget class="QWidget" name="homePage">
                <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -263,7 +263,7 @@ QPushButton:hover {
                            <property name="styleSheet">
                             <string notr="true">QPushButton {
     border: none;
-    border-radius: 125px; 
+    border-radius: 100px; 
     background-color: transparent;
 }
 
@@ -875,7 +875,7 @@ QPushButton:hover {
                               </property>
                               <property name="sizeHint" stdset="0">
                                <size>
-                                <width>40</width>
+                                <width>20</width>
                                 <height>20</height>
                                </size>
                               </property>
@@ -1559,7 +1559,7 @@ QPushButton:hover {
                               </property>
                               <property name="sizeHint" stdset="0">
                                <size>
-                                <width>40</width>
+                                <width>20</width>
                                 <height>20</height>
                                </size>
                               </property>
@@ -1786,7 +1786,7 @@ QPushButton:hover {
                               </property>
                               <property name="sizeHint" stdset="0">
                                <size>
-                                <width>40</width>
+                                <width>20</width>
                                 <height>20</height>
                                </size>
                               </property>
@@ -2470,7 +2470,7 @@ QPushButton:hover {
                               </property>
                               <property name="sizeHint" stdset="0">
                                <size>
-                                <width>40</width>
+                                <width>20</width>
                                 <height>20</height>
                                </size>
                               </property>
@@ -2563,229 +2563,123 @@ QPushButton:hover {
                </layout>
               </widget>
               <widget class="QWidget" name="activityLogPage">
-               <widget class="QFrame" name="actionLogFrame">
-                <property name="geometry">
-                 <rect>
-                  <x>0</x>
-                  <y>0</y>
-                  <width>941</width>
-                  <height>551</height>
-                 </rect>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: white;</string>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <widget class="QFrame" name="visitedSites">
-                 <property name="geometry">
-                  <rect>
-                   <x>50</x>
-                   <y>50</y>
-                   <width>790</width>
-                   <height>121</height>
-                  </rect>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(165, 165, 165);
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QFrame" name="frame_5">
+                  <property name="styleSheet">
+                   <string notr="true">background-color:white;</string>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_15">
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_13">
+                     <item>
+                      <spacer name="verticalSpacer_13">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>10</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_8">
+                       <item>
+                        <widget class="QLabel" name="historydate_1">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">font-size: 22px;   
+ font-weight: bold;
+font-family: sans-serif;</string>
+                         </property>
+                         <property name="text">
+                          <string>Today</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_15">
+                       <item>
+                        <spacer name="horizontalSpacer_2">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QFrame" name="frame_6">
+                         <property name="minimumSize">
+                          <size>
+                           <width>790</width>
+                           <height>120</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(165, 165, 165);
 border-radius: 20px; </string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <property name="html" stdset="0">
-                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:9pt;&quot;&gt;favourites&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                 <widget class="QPushButton" name="visited_1">
-                  <property name="geometry">
-                   <rect>
-                    <x>70</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_2">
-                  <property name="geometry">
-                   <rect>
-                    <x>180</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_3">
-                  <property name="geometry">
-                   <rect>
-                    <x>290</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_4">
-                  <property name="geometry">
-                   <rect>
-                    <x>400</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_5">
-                  <property name="geometry">
-                   <rect>
-                    <x>510</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_6">
-                  <property name="geometry">
-                   <rect>
-                    <x>620</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visitedLeftArrow">
-                  <property name="geometry">
-                   <rect>
-                    <x>10</x>
-                    <y>30</y>
-                    <width>50</width>
-                    <height>50</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                         </property>
+                         <property name="frameShape">
+                          <enum>QFrame::StyledPanel</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_17">
+                          <item>
+                           <layout class="QHBoxLayout" name="horizontalLayout_16">
+                            <item>
+                             <widget class="QPushButton" name="visitedLeftArrow">
+                              <property name="minimumSize">
+                               <size>
+                                <width>50</width>
+                                <height>50</height>
+                               </size>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>100</width>
+                                <height>100</height>
+                               </size>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true">QPushButton {
     border: none;
     border-radius: 10px; 
     background-color: transparent;
@@ -2798,22 +2692,348 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(220, 190, 190);
 }</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visitedRightArrow">
-                  <property name="geometry">
-                   <rect>
-                    <x>730</x>
-                    <y>30</y>
-                    <width>50</width>
-                    <height>50</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                              </property>
+                              <property name="text">
+                               <string/>
+                              </property>
+                             </widget>
+                            </item>
+                            <item>
+                             <spacer name="horizontalSpacer_39">
+                              <property name="orientation">
+                               <enum>Qt::Horizontal</enum>
+                              </property>
+                              <property name="sizeType">
+                               <enum>QSizePolicy::Fixed</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>20</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_18">
+                              <item>
+                               <widget class="QPushButton" name="visited_1">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>200</width>
+                                  <height>200</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_43">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>10</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="visited_2">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>200</width>
+                                  <height>200</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_46">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>10</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="visited_3">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>200</width>
+                                  <height>200</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_45">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>10</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="visited_4">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>200</width>
+                                  <height>200</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_42">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>10</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="visited_5">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>200</width>
+                                  <height>200</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_41">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>10</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="visited_6">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>200</width>
+                                  <height>200</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </item>
+                            <item>
+                             <spacer name="horizontalSpacer_38">
+                              <property name="orientation">
+                               <enum>Qt::Horizontal</enum>
+                              </property>
+                              <property name="sizeType">
+                               <enum>QSizePolicy::Fixed</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>20</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
+                             <widget class="QPushButton" name="visitedRightArrow">
+                              <property name="minimumSize">
+                               <size>
+                                <width>50</width>
+                                <height>50</height>
+                               </size>
+                              </property>
+                              <property name="maximumSize">
+                               <size>
+                                <width>100</width>
+                                <height>100</height>
+                               </size>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true">QPushButton {
     border: none;
     border-radius: 10px; 
     background-color: transparent;
@@ -2826,217 +3046,133 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(220, 190, 190);
 }</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </widget>
-                <widget class="QFrame" name="visitedSites_3">
-                 <property name="geometry">
-                  <rect>
-                   <x>50</x>
-                   <y>390</y>
-                   <width>790</width>
-                   <height>121</height>
-                  </rect>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(165, 165, 165);
+                              </property>
+                              <property name="text">
+                               <string/>
+                              </property>
+                             </widget>
+                            </item>
+                           </layout>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_10">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_13">
+                       <item>
+                        <widget class="QLabel" name="historydate_2">
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">font-size: 22px;   
+ font-weight: bold;
+font-family: sans-serif;</string>
+                         </property>
+                         <property name="text">
+                          <string>Yesterday</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_12">
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_19">
+                         <item>
+                          <spacer name="horizontalSpacer_48">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeType">
+                            <enum>QSizePolicy::Fixed</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                         <item>
+                          <widget class="QFrame" name="frame_9">
+                           <property name="minimumSize">
+                            <size>
+                             <width>790</width>
+                             <height>120</height>
+                            </size>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">background-color: rgb(165, 165, 165);
 border-radius: 20px; </string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <property name="html" stdset="0">
-                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:9pt;&quot;&gt;favourites&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                 <widget class="QPushButton" name="visited_13">
-                  <property name="geometry">
-                   <rect>
-                    <x>70</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_14">
-                  <property name="geometry">
-                   <rect>
-                    <x>180</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_15">
-                  <property name="geometry">
-                   <rect>
-                    <x>290</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_16">
-                  <property name="geometry">
-                   <rect>
-                    <x>400</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_17">
-                  <property name="geometry">
-                   <rect>
-                    <x>510</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_18">
-                  <property name="geometry">
-                   <rect>
-                    <x>620</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visitedLeftArrow_3">
-                  <property name="geometry">
-                   <rect>
-                    <x>10</x>
-                    <y>30</y>
-                    <width>50</width>
-                    <height>50</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                           </property>
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QHBoxLayout" name="horizontalLayout_20">
+                            <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_21">
+                              <item>
+                               <widget class="QPushButton" name="visitedLeftArrow_2">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>50</width>
+                                  <height>50</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
     border: none;
     border-radius: 10px; 
     background-color: transparent;
@@ -3049,22 +3185,348 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(220, 190, 190);
 }</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visitedRightArrow_3">
-                  <property name="geometry">
-                   <rect>
-                    <x>730</x>
-                    <y>30</y>
-                    <width>50</width>
-                    <height>50</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_49">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>20</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <layout class="QHBoxLayout" name="horizontalLayout_22">
+                                <item>
+                                 <widget class="QPushButton" name="visited_7">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_51">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_8">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_52">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_9">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_53">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_10">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_54">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_11">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_55">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_12">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_57">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>20</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="visitedRightArrow_2">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>50</width>
+                                  <height>50</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
     border: none;
     border-radius: 10px; 
     background-color: transparent;
@@ -3077,217 +3539,141 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(220, 190, 190);
 }</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </widget>
-                <widget class="QFrame" name="visitedSites_2">
-                 <property name="geometry">
-                  <rect>
-                   <x>50</x>
-                   <y>220</y>
-                   <width>790</width>
-                   <height>121</height>
-                  </rect>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgb(165, 165, 165);
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <spacer name="horizontalSpacer_58">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeType">
+                            <enum>QSizePolicy::Fixed</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_11">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_11">
+                       <item>
+                        <widget class="QLabel" name="historydate_3">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">font-size: 22px;   
+ font-weight: bold;
+font-family: sans-serif;</string>
+                         </property>
+                         <property name="text">
+                          <string>2 Days Ago</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_9">
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_23">
+                         <item>
+                          <spacer name="horizontalSpacer_59">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeType">
+                            <enum>QSizePolicy::Fixed</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                         <item>
+                          <widget class="QFrame" name="frame_10">
+                           <property name="minimumSize">
+                            <size>
+                             <width>790</width>
+                             <height>120</height>
+                            </size>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">background-color: rgb(165, 165, 165);
 border-radius: 20px; </string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <property name="html" stdset="0">
-                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:9pt;&quot;&gt;favourites&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                 <widget class="QPushButton" name="visited_7">
-                  <property name="geometry">
-                   <rect>
-                    <x>70</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_8">
-                  <property name="geometry">
-                   <rect>
-                    <x>180</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_9">
-                  <property name="geometry">
-                   <rect>
-                    <x>290</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_10">
-                  <property name="geometry">
-                   <rect>
-                    <x>400</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_11">
-                  <property name="geometry">
-                   <rect>
-                    <x>510</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visited_12">
-                  <property name="geometry">
-                   <rect>
-                    <x>620</x>
-                    <y>10</y>
-                    <width>100</width>
-                    <height>100</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: solid;
-    border-radius: 20px; 
-    background-color: rgb(215, 215, 215);
-}
-
-QPushButton::icon {
-    padding: 10px; 
-}
-
-QPushButton:hover {
-    background-color: rgb(154, 153, 150);
-}</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visitedLeftArrow_2">
-                  <property name="geometry">
-                   <rect>
-                    <x>10</x>
-                    <y>30</y>
-                    <width>50</width>
-                    <height>50</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                           </property>
+                           <property name="frameShape">
+                            <enum>QFrame::StyledPanel</enum>
+                           </property>
+                           <property name="frameShadow">
+                            <enum>QFrame::Raised</enum>
+                           </property>
+                           <layout class="QHBoxLayout" name="horizontalLayout_24">
+                            <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_25">
+                              <item>
+                               <widget class="QPushButton" name="visitedLeftArrow_3">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>50</width>
+                                  <height>50</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
     border: none;
     border-radius: 10px; 
     background-color: transparent;
@@ -3300,22 +3686,348 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(220, 190, 190);
 }</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                 <widget class="QPushButton" name="visitedRightArrow_2">
-                  <property name="geometry">
-                   <rect>
-                    <x>730</x>
-                    <y>30</y>
-                    <width>50</width>
-                    <height>50</height>
-                   </rect>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_60">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>20</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <layout class="QHBoxLayout" name="horizontalLayout_26">
+                                <item>
+                                 <widget class="QPushButton" name="visited_13">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_62">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_14">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_63">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_15">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_64">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_16">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_65">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_17">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <spacer name="horizontalSpacer_66">
+                                  <property name="orientation">
+                                   <enum>Qt::Horizontal</enum>
+                                  </property>
+                                  <property name="sizeType">
+                                   <enum>QSizePolicy::Fixed</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                   <size>
+                                    <width>10</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                 </spacer>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="visited_18">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>100</width>
+                                    <height>100</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>200</width>
+                                    <height>200</height>
+                                   </size>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    border: solid;
+    border-radius: 20px; 
+    background-color: rgb(215, 215, 215);
+}
+
+QPushButton::icon {
+    padding: 10px; 
+}
+
+QPushButton:hover {
+    background-color: rgb(154, 153, 150);
+}</string>
+                                  </property>
+                                  <property name="text">
+                                   <string/>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </item>
+                              <item>
+                               <spacer name="horizontalSpacer_68">
+                                <property name="orientation">
+                                 <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                 <enum>QSizePolicy::Fixed</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                 <size>
+                                  <width>20</width>
+                                  <height>20</height>
+                                 </size>
+                                </property>
+                               </spacer>
+                              </item>
+                              <item>
+                               <widget class="QPushButton" name="visitedRightArrow_3">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>50</width>
+                                  <height>50</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>100</width>
+                                  <height>100</height>
+                                 </size>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
     border: none;
     border-radius: 10px; 
     background-color: transparent;
@@ -3328,52 +4040,59 @@ QPushButton::icon {
 QPushButton:hover {
     background-color: rgb(220, 190, 190);
 }</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </item>
+                           </layout>
+                          </widget>
+                         </item>
+                         <item>
+                          <spacer name="horizontalSpacer_69">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeType">
+                            <enum>QSizePolicy::Fixed</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_12">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>10</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
                  </widget>
-                </widget>
-                <widget class="QLabel" name="historydate_1">
-                 <property name="geometry">
-                  <rect>
-                   <x>30</x>
-                   <y>10</y>
-                   <width>221</width>
-                   <height>25</height>
-                  </rect>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border: none;</string>
-                 </property>
-                </widget>
-                <widget class="QLabel" name="historydate_2">
-                 <property name="geometry">
-                  <rect>
-                   <x>30</x>
-                   <y>180</y>
-                   <width>211</width>
-                   <height>25</height>
-                  </rect>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border: none;</string>
-                 </property>
-                </widget>
-                <widget class="QLabel" name="historydate_3">
-                 <property name="geometry">
-                  <rect>
-                   <x>30</x>
-                   <y>350</y>
-                   <width>241</width>
-                   <height>25</height>
-                  </rect>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border: none;</string>
-                 </property>
-                </widget>
-               </widget>
+                </item>
+               </layout>
               </widget>
               <widget class="QWidget" name="settingsPage">
                <widget class="QFrame" name="settingsFrame">
