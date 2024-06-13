@@ -38,7 +38,7 @@ class WebBrowser(QMainWindow):
     INTERNET_IMG = Path("assets/img/wise_browse.png")
     HOME_IMG = Path("assets/img/home.png")
     HISTORY_IMG = Path("assets/img/clipboard.png")
-    SETTINGS_IMG = Path("assets/img/settings.png")
+    ACTION_LOG_IMG = Path("assets/img/actionLog.png")
     STAR_EMPTY_IMG = Path("assets/img/star_empty.png")
     STAR_FILLED_IMG = Path("assets/img/star_filled.png")
 
@@ -48,7 +48,7 @@ class WebBrowser(QMainWindow):
     SEARCH_IMG = Path("assets/img/search.png")
     HOME_HEART_IMG = Path("assets/img/heart.png")
     HOME_HISTORY_IMG = Path("assets/img/history.png")
-    HOME_SETTINGS_IMG = Path("assets/img/setting.png")
+    HOME_ACTION_LOG_IMG = Path("assets/img/homeActionLog.png")
     REDO_IMG = Path("assets/img/redo.png")
     REFRESH_IMG = Path("assets/img/refresh.png")
     UNDO_IMG = Path("assets/img/undo.png")
@@ -92,7 +92,7 @@ class WebBrowser(QMainWindow):
     webSearchInput: QTextEdit
     homeFavouritesBtn = QPushButton
     homeHistoryBtn = QPushButton
-    homeSettingsBtn = QPushButton
+    homeActionLogBtn = QPushButton
 
     likedLeftArrow = QPushButton
     mostUsedLeftArrow = QPushButton
@@ -143,7 +143,6 @@ class WebBrowser(QMainWindow):
     homePage: QWidget
     favouritesPage: QWidget
     historyPage: QWidget
-    settingsPage: QWidget
     actionLogPage: QWidget
     web: QWidget
     webView: WebWidget
@@ -182,7 +181,7 @@ class WebBrowser(QMainWindow):
         self.initFavouritesPage()
         self.initHistoryPage()
         self.initActionLogPage()
-        # self.initSettingsPage()
+        # self.initActionLogPage()
 
     def initLowerBar(self):
 
@@ -191,8 +190,8 @@ class WebBrowser(QMainWindow):
                             self.onFavouritesBtnClicked)
         self.findAndSetIcon(QPushButton, "historyBtn", self.HISTORY_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onHistoryBtnClicked)
-        self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.LOWER_BAR_ICON_SIZE,
-                            self.onSettingsBtnClicked)
+        self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.LOWER_BAR_ICON_SIZE,
+                            self.onActionLogBtnClicked)
 
     def initUpperSearchBar(self):
         self.previousPageBtn = self.findAndSetIcon(QPushButton, "previousPageBtn", self.UNDO_IMG,
@@ -286,7 +285,7 @@ class WebBrowser(QMainWindow):
         self.homePage = self.findChild(QWidget, "homePage")
         self.favouritesPage = self.findChild(QWidget, "favouritesPage")
         self.historyPage = self.findChild(QWidget, "historyPage")
-        self.settingsPage = self.findChild(QWidget, "settingsPage")
+        self.actionLogPage = self.findChild(QWidget, "actionLogPage")
         self.web = self.findChild(QWidget, "web")
         self.pages.setCurrentWidget(self.homePage)
 
@@ -300,8 +299,8 @@ class WebBrowser(QMainWindow):
                             self.onFavouritesBtnClicked)
         self.findAndSetIcon(QPushButton, "homeHistoryBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE,
                             self.onHistoryBtnClicked)
-        self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
-                            self.onSettingsBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_ACTION_LOG_IMG, (80,80),
+                            self.onActionLogBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
 
     def initFavouritesPage(self):
@@ -606,12 +605,6 @@ class WebBrowser(QMainWindow):
         self.actionLog.addAction("Clicked Home button")
         self.actionLog.addSite("Home")
 
-    def onSettingsBtnClicked(self):
-        self.pages.setCurrentWidget(self.settingsPage)
-        print("Settings button clicked")
-        self.actionLog.addAction("Clicked Settings button")
-        self.actionLog.addSite("Settings")
-
     def onHistoryBtnClicked(self):
         self.pages.setCurrentWidget(self.historyPage)
         print("History button clicked")
@@ -628,6 +621,12 @@ class WebBrowser(QMainWindow):
         print("Favourites button clicked")
         self.actionLog.addAction("Clicked Favourites button")
         self.actionLog.addSite("Favourites")
+    
+    def onActionLogBtnClicked(self):
+        self.pages.setCurrentWidget(self.actionLogPage)
+        print("Action Log button clicked")
+        self.actionLog.addAction("Clicked Action Log button")
+        self.actionLog.addSite("Action Log")
 
     def search(self):
         inputText = self.webSearchInput.toPlainText()
