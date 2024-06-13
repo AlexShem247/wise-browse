@@ -63,7 +63,7 @@ class Favourites:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            button = browser.findAndSetIcon(QPushButton, f"liked{i}", path, size, partial(browser.gotoURL, url))
+            button = browser.findAndSetIcon(QPushButton, f"liked{i}", path, size, partial(browser.favouritedSiteClicked, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
@@ -86,7 +86,7 @@ class Favourites:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            button = browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, size, partial(browser.gotoURL, url))
+            button = browser.findAndSetIcon(QPushButton, f"mostVisited{i}", path, size, partial(browser.mostUsedSiteClicked, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"

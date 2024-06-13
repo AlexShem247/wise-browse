@@ -20,6 +20,7 @@ from src.FeedbackPopup import FeedbackPopup
 from src.SearchHistory import SearchHistory
 from src.Conversation import Conversation
 from src.WebWidget import WebWidget
+from src.ActionLog import ActionLog
 
 import threading
 import speech_recognition as sr
@@ -36,7 +37,7 @@ class WebBrowser(QMainWindow):
     LOGO_IMG = Path("assets/img/internet.png")
     INTERNET_IMG = Path("assets/img/wise_browse.png")
     HOME_IMG = Path("assets/img/home.png")
-    ACTION_LOG_IMG = Path("assets/img/clipboard.png")
+    HISTORY_IMG = Path("assets/img/clipboard.png")
     SETTINGS_IMG = Path("assets/img/settings.png")
     STAR_EMPTY_IMG = Path("assets/img/star_empty.png")
     STAR_FILLED_IMG = Path("assets/img/star_filled.png")
@@ -90,7 +91,7 @@ class WebBrowser(QMainWindow):
     homeFrame: QFrame
     webSearchInput: QTextEdit
     homeFavouritesBtn = QPushButton
-    homeActionLogBtn = QPushButton
+    homeHistoryBtn = QPushButton
     homeSettingsBtn = QPushButton
 
     likedLeftArrow = QPushButton
@@ -132,8 +133,8 @@ class WebBrowser(QMainWindow):
     switchingPages = False
 
     favourites = Favourites()
-
     searchHistory = SearchHistory()
+    actionLog = ActionLog()
 
     manualSearch = False
     currentlyOnGuideMode = False
@@ -141,8 +142,9 @@ class WebBrowser(QMainWindow):
     pages: QStackedWidget
     homePage: QWidget
     favouritesPage: QWidget
-    actionLogPage: QWidget
+    historyPage: QWidget
     settingsPage: QWidget
+    actionLogPage: QWidget
     web: QWidget
     webView: WebWidget
 
@@ -178,6 +180,7 @@ class WebBrowser(QMainWindow):
         self.initPages()
         self.initHomePage()
         self.initFavouritesPage()
+        self.initHistoryPage()
         self.initActionLogPage()
         # self.initSettingsPage()
 
@@ -186,8 +189,8 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.LOWER_BAR_ICON_SIZE, self.onHomeBtnClicked)
         self.findAndSetIcon(QPushButton, "favouritesBtn", self.HEART_NO_FILL_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onFavouritesBtnClicked)
-        self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.LOWER_BAR_ICON_SIZE,
-                            self.onActionLogBtnClicked)
+        self.findAndSetIcon(QPushButton, "historyBtn", self.HISTORY_IMG, self.LOWER_BAR_ICON_SIZE,
+                            self.onHistoryBtnClicked)
         self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onSettingsBtnClicked)
 
@@ -282,7 +285,7 @@ class WebBrowser(QMainWindow):
         self.pages = self.findChild(QStackedWidget, "pages")
         self.homePage = self.findChild(QWidget, "homePage")
         self.favouritesPage = self.findChild(QWidget, "favouritesPage")
-        self.actionLogPage = self.findChild(QWidget, "actionLogPage")
+        self.historyPage = self.findChild(QWidget, "historyPage")
         self.settingsPage = self.findChild(QWidget, "settingsPage")
         self.web = self.findChild(QWidget, "web")
         self.pages.setCurrentWidget(self.homePage)
@@ -295,8 +298,8 @@ class WebBrowser(QMainWindow):
         self.webSearchInput.installEventFilter(self.searchKeyPressEater)
         self.findAndSetIcon(QPushButton, "homeFavouritesBtn", self.HOME_HEART_IMG, self.HOME_BUTTONS_SIZE,
                             self.onFavouritesBtnClicked)
-        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE,
-                            self.onActionLogBtnClicked)
+        self.findAndSetIcon(QPushButton, "homeHistoryBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE,
+                            self.onHistoryBtnClicked)
         self.findAndSetIcon(QPushButton, "homeSettingsBtn", self.HOME_SETTINGS_IMG, self.HOME_BUTTONS_SIZE,
                             self.onSettingsBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
@@ -316,7 +319,7 @@ class WebBrowser(QMainWindow):
 
         self.findAndSetIcon(QPushButton, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE, lambda: self.createAPopup(*self.GENERAL_INFO))
 
-    def initActionLogPage(self):
+    def initHistoryPage(self):
         self.visitedLeftArrow = self.findAndSetIcon(QPushButton, "visitedLeftArrow", self.LEFT_ARROW_IMG,
                                                     self.ARROW_SIZE,
                                                     lambda: self.searchHistory.clickVisitedLeftArrow(self))
@@ -345,6 +348,9 @@ class WebBrowser(QMainWindow):
         self.historydate_1 = self.findChild(QLabel, "historydate_1")
         self.historydate_2 = self.findChild(QLabel, "historydate_2")
         self.historydate_3 = self.findChild(QLabel, "historydate_3")
+        
+    def initActionLogPage(self):
+        self.actionLog.addSite("Home")
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
@@ -380,8 +386,10 @@ class WebBrowser(QMainWindow):
 
     def goBack(self):
         if self.convo.prev_step_exists():
+            self.actionLog.addAction("Clicked AI Go Back (to previous step) button")
             self.enterQuery("PREV")
         else:
+            self.actionLog.addAction("Clicked AI Go Back (to FAQs) button")
             self.queryInput.clear()
             print("Enabling Input")
             self.queryInput.setEnabled(True)
@@ -397,6 +405,7 @@ class WebBrowser(QMainWindow):
             btn.setVisible(show)
 
     def starBtnPressed(self, val):
+        self.actionLog.addAction("Rated AI response")
         self.popUp = FeedbackPopup(val, self.NO_STARS)
         self.popUp.show()
 
@@ -437,30 +446,38 @@ class WebBrowser(QMainWindow):
         self.previousWebpages.append(self.previousWebpages.pop())
         self.previousPageBtn.setEnabled(True)
         self.nextPageBtn.setEnabled(len(self.nextWebpages) > 1)
-        self.webView.load(self.nextWebpages.pop())
+        newPage = self.nextWebpages.pop()
+        self.webView.load(newPage)
+        self.actionLog.addAction("Clicked Next Page button")
 
     def previousPage(self):
         self.switchingPages = True
         self.nextWebpages.append(self.previousWebpages.pop())
         self.nextPageBtn.setEnabled(True)
         self.previousPageBtn.setEnabled(len(self.previousWebpages) > 1)
-        self.webView.load(self.previousWebpages[-1])
+        newPage = self.previousWebpages[-1]
+        self.webView.load(newPage)
+        self.actionLog.addAction("Clicked Previous Page button")
 
     def favouritePage(self, url):
         self.favourites.addLikedSite(url)
         self.clearIcon(QPushButton, "favSiteBtn")
         self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_FILL_IMG, self.TOOLBAR_ICON_SIZE,
                             lambda: self.unfavouritePage(self.currentWebpage))
+        self.actionLog.addAction(f"Favourited '{url.toString()}'")
 
     def unfavouritePage(self, url):
         self.favourites.removeLikedSite(url)
         self.clearIcon(QPushButton, "favSiteBtn")
         self.findAndSetIcon(QPushButton, "favSiteBtn", self.HEART_NO_FILL_IMG, self.TOOLBAR_ICON_SIZE,
                             lambda: self.favouritePage(self.currentWebpage))
+        self.actionLog.addAction(f"Unfavourited '{url.toString()}'")
 
     def onUrlChanged(self, url):
         if (url.toString() != "https://www.google.com/"):
             self.searchHistory.Set_1.add(url.toString())
+            if (self.actionLog.headIsSite()): self.actionLog.addAction("Clicked link") 
+            self.actionLog.addSite(url.toString())
         changedDomain = getDomainName(url.toString().lower())
         self.currentWebpage = url
         if not self.previousWebpages or self.previousWebpages[-1] != url:
@@ -586,23 +603,31 @@ class WebBrowser(QMainWindow):
         self.pages.setCurrentWidget(self.homePage)
         print("Home button clicked")
         self.webView.load(self.HOME_PAGE)
+        self.actionLog.addAction("Clicked Home button")
+        self.actionLog.addSite("Home")
 
     def onSettingsBtnClicked(self):
         self.pages.setCurrentWidget(self.settingsPage)
         print("Settings button clicked")
+        self.actionLog.addAction("Clicked Settings button")
+        self.actionLog.addSite("Settings")
 
-    def onActionLogBtnClicked(self):
-        self.pages.setCurrentWidget(self.activityLogPage)
-        print("Action Log button clicked")
+    def onHistoryBtnClicked(self):
+        self.pages.setCurrentWidget(self.historyPage)
+        print("History button clicked")
         print(self.searchHistory.Set_1)
         print(self.searchHistory.Set_2)
         print(self.searchHistory.Set_3)
         self.searchHistory.displayVisited(self)
+        self.actionLog.addAction("Clicked History button")
+        self.actionLog.addSite("History")
 
     def onFavouritesBtnClicked(self):
         self.pages.setCurrentWidget(self.favouritesPage)
         self.favourites.displayFavourites(self)
         print("Favourites button clicked")
+        self.actionLog.addAction("Clicked Favourites button")
+        self.actionLog.addSite("Favourites")
 
     def search(self):
         inputText = self.webSearchInput.toPlainText()
@@ -610,11 +635,36 @@ class WebBrowser(QMainWindow):
             self.webView.load(QUrl("https://www.google.co.uk/search?q=" + inputText))
             self.pages.setCurrentWidget(self.web)
             print(f"Searching Web: '{inputText}'")
+            self.actionLog.addAction(f"Searched for '{inputText}'")
         else:
             self.queryInput.insertPlainText("\n")
+    
+    def stripURL(self, url):
+        site = url.removeprefix("https://").split('/', 1)[0]
+        if site.startswith("www."): site = site[4:]
+        return site
+            
+    def favouritedSiteClicked(self, url):
+        self.actionLog.addAction(f"Favourited site ({self.stripURL(url)}) clicked")
+        self.gotoURL(url)
+        
+    def mostUsedSiteClicked(self, url):
+        self.actionLog.addAction(f"Most Used site ({self.stripURL(url)}) clicked")
+        self.gotoURL(url)
+        
+    def historyTodaySiteClicked(self, url):
+        self.actionLog.addAction(f"Site from today's history ({self.stripURL(url)}) clicked")
+        self.gotoURL(url)
+        
+    def historyYesterdaySiteClicked(self, url):
+        self.actionLog.addAction(f"Site from yesterday's history ({self.stripURL(url)}) clicked")
+        self.gotoURL(url)
+    
+    def historyTwoDaysAgoSiteClicked(self, url):
+        self.actionLog.addAction(f"Site from two days ago's history ({self.stripURL(url)}) clicked")
+        self.gotoURL(url)
 
     def gotoURL(self, url):
-        print(url)
         self.webView.load(QUrl(url))
         self.pages.setCurrentWidget(self.web)
         print(f"Go to: '{url}'")
@@ -665,11 +715,13 @@ class WebBrowser(QMainWindow):
             thread.start()
             # Connect the signal to the slot for updating the UI
             self.update_result.connect(self.showText)
+            if (inputText != "PREV" and inputText != "NEXT"): self.actionLog.addAction(f"Asked AI \"{inputText}\"")
         else:
             self.queryInput.insertPlainText("\n")
 
     def nextStep(self):
         self.enterQuery("NEXT")
+        self.actionLog.addAction(f"Clicked AI Next Step button")
 
     @pyqtSlot(str)
     def showText(self, text):
@@ -731,4 +783,5 @@ class WebBrowser(QMainWindow):
     def closeEvent(self, event):
         self.favourites.writeFavourites()
         self.searchHistory.writeVisited()
+        self.actionLog.displayActionLog()
         self.convo.end()
