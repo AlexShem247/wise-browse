@@ -70,7 +70,7 @@ class FAQDatabase:
                 f"Looking at the current website: {url}. \
                 What category would you say this website is, given the following categories:\
                 {list(existingTypes)}. If you do not think that any of them are suitable, you can give your own. \
-                Give your answer in the following format only as a single word: \"Category\"").strip('"')
+                Give your answer in the following format only as a single word: \"Category\"", imageLess=True).strip('"')
 
     def addWebsiteToDomainTable(self, domain):
         result = self.supabase.table("domains").select("dID").eq("domain", domain).execute().data

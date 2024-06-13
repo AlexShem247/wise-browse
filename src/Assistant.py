@@ -48,8 +48,8 @@ class Assistant:
         )
         return response.choices[0].message.content
 
-    def singleRequest(self, message):
-        if self.modelType == Model.full:
+    def singleRequest(self, message, imageLess=False):
+        if self.modelType == Model.full and not imageLess:
             return self.singleImageRequest(message)
 
         elif self.modelType == Model.dummy:
