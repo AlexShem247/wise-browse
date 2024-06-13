@@ -8,11 +8,10 @@ from functools import partial
 from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QIcon, QPixmap, QFont
-from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
     QMessageBox, QFrame, QLineEdit, QStackedWidget, QWidget, QToolTip, QHBoxLayout
 
-from src.URLUtils import getDomainName, isUrl
+from src.URLUtils import getDomainName, isUrl, formatHtml
 from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
@@ -20,26 +19,10 @@ from src.Favourites import Favourites
 from src.FeedbackPopup import FeedbackPopup
 from src.SearchHistory import SearchHistory
 from src.Conversation import Conversation
+from src.WebWidget import WebWidget
 
 import threading
 import speech_recognition as sr
-
-
-def formatHtml(text):
-    # Regular expression to find lines starting with ###
-    pattern = re.compile(r'^(###\s*)(.*)', re.MULTILINE)
-
-    # Replace the pattern with the HTML <h2> tag
-    text = pattern.sub(r'<h2>\2</h2>', text)
-
-    # Regular expression to find text enclosed in **
-    bold_pattern = re.compile(r'\*\*(.*?)\*\*')
-    # Replace the pattern with the HTML <b> tag
-    text = bold_pattern.sub(r'<b>\1</b>', text)
-
-    text = text.replace("\n", "<br>")
-
-    return text
 
 
 class WebBrowser(QMainWindow):
@@ -79,7 +62,7 @@ class WebBrowser(QMainWindow):
     LOWER_BAR_ICON_SIZE = (50, 50)
     STAR_SIZE = (15, 15)
     HOME_BUTTONS_SIZE = (100, 100)
-    LOGO_SIZE = (60, 60)
+    LOGO_SIZE = (80, 80)
     TOOLBAR_ICON_SIZE = (20, 20)
     ARROW_SIZE = (50, 50)
     MAIN_LOGO_SIZE = (200, 200)
@@ -123,8 +106,20 @@ class WebBrowser(QMainWindow):
     domain = None
     currentQs = []
 
-    INPUT_INFO = ("Inputting Information", "Someone write something here.")
-    GENERAL_INFO = (WINDOW_TITLE, "Someone write something here.")
+    INPUT_INFO = ("Inputting Information",
+                  "To ask a question, type it in the box and press 'ASK QUESTION'.\n\nAlternatively, press the "
+                  "microphone (🎙️) button and say your question out loud.\n\nOur cutting-edge AI technology will be "
+                  "able to automatically pick up your voice and enter it in the search query.")
+
+    GENERAL_INFO = ("A Browse for the Web Illiterate",
+                    "Wise Browse is a simply to use web browser featuring a web minimal interface with a helpful "
+                    "menubar on the side, featuring an AI assistant that can read the current website and answer any "
+                    "questions to help guide the user.\n\nUsing modern artificial intelligence, the Wise Browse "
+                    "assistant answers questions, returning a easy-to-follow, step-by-step instructions. The user can "
+                    "then go at their own pace, though the instructions, with each instruction adapting to the web "
+                    "action of the user.\n\nFor each website, the Wise Browse menu displays Frequently Asked "
+                    "Questions from other users. This helps make our users feel like they are not the only ones "
+                    "getting stuck or asking questions and helps bring a sense of being in a Wise Browse community.")
 
     isRecording = False
     MICROPHONE_TIME_DELAY = 1000
@@ -149,7 +144,7 @@ class WebBrowser(QMainWindow):
     actionLogPage: QWidget
     settingsPage: QWidget
     web: QWidget
-    webView: QWebEngineView
+    webView: WebWidget
 
     previousPageBtn = None
     nextPageBtn = None
@@ -190,7 +185,8 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "menuInternetBtn", self.INTERNET_IMG, self.LOGO_SIZE,
                             lambda: self.createAPopup(*self.GENERAL_INFO))
         self.findAndSetIcon(QPushButton, "homeBtn", self.HOME_IMG, self.LOWER_BAR_ICON_SIZE, self.onHomeBtnClicked)
-        self.findAndSetIcon(QPushButton, "favouritesBtn", self.HEART_NO_FILL_IMG, self.LOWER_BAR_ICON_SIZE, self.onFavouritesBtnClicked)
+        self.findAndSetIcon(QPushButton, "favouritesBtn", self.HEART_NO_FILL_IMG, self.LOWER_BAR_ICON_SIZE,
+                            self.onFavouritesBtnClicked)
         self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onActionLogBtnClicked)
         self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.LOWER_BAR_ICON_SIZE,
@@ -277,7 +273,7 @@ class WebBrowser(QMainWindow):
     def initWeb(self):
         # Add WebView
         webLayout = self.findChild(QVBoxLayout, "google")
-        self.webView = QWebEngineView()
+        self.webView = WebWidget()
         self.webView.urlChanged.connect(self.onUrlChanged)
         self.webView.load(self.HOME_PAGE)
         self.webView.setStyleSheet("background-color: white")
