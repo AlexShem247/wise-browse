@@ -25,7 +25,7 @@ class SearchHistory:
     date_3 = ""
 
     VISITED_SIZE = 6 
-    FAVICON_SIZE = 64
+    FAVICON_SIZE = 128
     
     def __init__(self):
         current_date = datetime.date.today().strftime("%d-%m-%Y")
@@ -143,6 +143,9 @@ class SearchHistory:
         base = self.Shift_1 * self.VISITED_SIZE
         i = 1
         
+        buttonSize = browser.findChild(QPushButton, f"visited_{i}").size()
+        size = (buttonSize.width() - 20, buttonSize.height() - 20)
+        
         for item in list(self.Set_1)[base:base + self.VISITED_SIZE]:
             url = item
             domain = url.removeprefix("https://").split('/', 1)[0]
@@ -152,7 +155,7 @@ class SearchHistory:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            button = browser.findAndSetIcon(QPushButton, f"visited_{i}", path, (90,90), partial(browser.gotoURL, url))
+            button = browser.findAndSetIcon(QPushButton, f"visited_{i}", path, size, partial(browser.gotoURL, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
@@ -174,6 +177,8 @@ class SearchHistory:
         base = self.Shift_2 * self.VISITED_SIZE
         i = self.VISITED_SIZE + 1
     
+        buttonSize = browser.findChild(QPushButton, f"visited_{i}").size()
+        size = (buttonSize.width() - 20, buttonSize.height() - 20)
         for item in list(self.Set_2)[base:base + self.VISITED_SIZE]:
             url = item
             domain = url.removeprefix("https://").split('/', 1)[0]
@@ -183,7 +188,7 @@ class SearchHistory:
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
             
-            button = browser.findAndSetIcon(QPushButton, f"visited_{i}", path, (90,90), partial(browser.gotoURL, url))
+            button = browser.findAndSetIcon(QPushButton, f"visited_{i}", path, size, partial(browser.gotoURL, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
@@ -204,6 +209,10 @@ class SearchHistory:
 
         base = self.Shift_3 * self.VISITED_SIZE
         i = self.VISITED_SIZE * 2 + 1
+        
+        buttonSize = browser.findChild(QPushButton, f"visited_{i}").size()
+        size = (buttonSize.width() - 20, buttonSize.height() - 20)
+        
         for item in list(self.Set_3)[base:base + self.VISITED_SIZE]:
             url = item
             domain = url.removeprefix("https://").split('/', 1)[0]
@@ -212,8 +221,8 @@ class SearchHistory:
             if not os.path.exists(path):
                 faviconUrl = f"https://www.google.com/s2/favicons?domain={domain}&sz={self.FAVICON_SIZE}"
                 urllib.request.urlretrieve(faviconUrl, path)
-            
-            button = browser.findAndSetIcon(QPushButton, f"visited_{i}", path, (90,90), partial(browser.gotoURL, url))
+
+            button = browser.findAndSetIcon(QPushButton, f"visited_{i}", path, size, partial(browser.gotoURL, url))
             if domain.startswith("www."): domain = domain[4:]
             text = f"<b><span style='font-family: Arial; font-size: 60px;'>{domain}</span></b><br>" \
                 f"<span style='font-family: Arial; font-size: 30px;'>{url}</span>"
