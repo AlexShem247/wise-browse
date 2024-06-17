@@ -1,8 +1,9 @@
-PyQt5
+PyQt5~=5.15.6
 PyQtWebEngine
-supabase
-openai
-tldextract
+supabase~=2.5.0
+openai~=1.30.5
+tldextract~=5.1.2
 SpeechRecognition
 pyinstaller
 PyAudio
+pyttsx3

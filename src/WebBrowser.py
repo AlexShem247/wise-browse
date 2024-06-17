@@ -4,6 +4,7 @@ import tempfile
 import textwrap
 from pathlib import Path
 from functools import partial
+import pyttsx3
 
 from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal, pyqtSlot
@@ -16,7 +17,7 @@ from src.FAQDatabase import FAQDatabase
 from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
 from src.Assistant import Assistant, Model
 from src.Favourites import Favourites
-from src.FeedbackPopup import FeedbackPopup
+from src.FeedbackPopup import FeedbackPopup, FeatureDialog
 from src.SearchHistory import SearchHistory
 from src.Conversation import Conversation
 from src.WebWidget import WebWidget
@@ -24,6 +25,17 @@ from src.ActionLog import ActionLog
 
 import threading
 import speech_recognition as sr
+
+
+def text_to_speech(text):
+    # Initialise the text-to-speech engine
+    engine = pyttsx3.init()
+
+    # Pass the text to the engine
+    engine.say(text)
+
+    # Run the engine to say the text
+    engine.runAndWait()
 
 
 class WebBrowser(QMainWindow):
@@ -54,6 +66,7 @@ class WebBrowser(QMainWindow):
     UNDO_IMG = Path("assets/img/undo.png")
     HEART_NO_FILL_IMG = Path("assets/img/heartNoFill.png")
     HEART_FILL_IMG = Path("assets/img/heartFill.png")
+    SETTINGS_IMG = Path("assets/img/settings.png")
 
     LEFT_ARROW_IMG = Path("assets/img/leftArrow.png")
     RIGHT_ARROW_IMG = Path("assets/img/rightArrow.png")
@@ -105,6 +118,7 @@ class WebBrowser(QMainWindow):
 
     database = FAQDatabase(aiAssistant)
     domain = None
+    textToSpeech = False
     currentQs = []
 
     INPUT_INFO = ("Inputting Information",
@@ -193,6 +207,9 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "actionLogBtn", self.ACTION_LOG_IMG, self.LOWER_BAR_ICON_SIZE,
                             self.onActionLogBtnClicked)
 
+        self.findAndSetIcon(QPushButton, "settingsBtn", self.SETTINGS_IMG, self.LOWER_BAR_ICON_SIZE,
+                            self.onShowSettings)
+
     def initUpperSearchBar(self):
         self.previousPageBtn = self.findAndSetIcon(QPushButton, "previousPageBtn", self.UNDO_IMG,
                                                    self.TOOLBAR_ICON_SIZE, self.previousPage)
@@ -271,6 +288,11 @@ class WebBrowser(QMainWindow):
         self.currentNoDots = (self.currentNoDots + 1) % (self.NO_DOTS + 1)
         self.enterBtn.setText("The AI is thinking" + "." * self.currentNoDots)
 
+    def onShowSettings(self):
+        dialog = FeatureDialog(self)
+        dialog.exec_()
+        print(f"Text to speech is {'ON' if self.textToSpeech else 'OFF'}")
+
     def initWeb(self):
         # Add WebView
         webLayout = self.findChild(QVBoxLayout, "google")
@@ -299,7 +321,7 @@ class WebBrowser(QMainWindow):
                             self.onFavouritesBtnClicked)
         self.findAndSetIcon(QPushButton, "homeHistoryBtn", self.HOME_HISTORY_IMG, self.HOME_BUTTONS_SIZE,
                             self.onHistoryBtnClicked)
-        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_ACTION_LOG_IMG, (80,80),
+        self.findAndSetIcon(QPushButton, "homeActionLogBtn", self.HOME_ACTION_LOG_IMG, (80, 80),
                             self.onActionLogBtnClicked)
         self.findAndSetIcon(QLabel, "searchIcon", self.SEARCH_IMG, self.INTERNET_SIZE)
 
@@ -316,7 +338,8 @@ class WebBrowser(QMainWindow):
         self.findAndSetIcon(QPushButton, "mostVisitedRightArrow", self.RIGHT_ARROW_IMG, self.ARROW_SIZE,
                             lambda: self.favourites.clickMostUsedRightArrow(self))
 
-        self.findAndSetIcon(QPushButton, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE, lambda: self.createAPopup(*self.GENERAL_INFO))
+        self.findAndSetIcon(QPushButton, "browserLogoIcon", self.INTERNET_IMG, self.MAIN_LOGO_SIZE,
+                            lambda: self.createAPopup(*self.GENERAL_INFO))
 
     def initHistoryPage(self):
         self.visitedLeftArrow = self.findAndSetIcon(QPushButton, "visitedLeftArrow", self.LEFT_ARROW_IMG,
@@ -347,7 +370,7 @@ class WebBrowser(QMainWindow):
         self.historydate_1 = self.findChild(QLabel, "historydate_1")
         self.historydate_2 = self.findChild(QLabel, "historydate_2")
         self.historydate_3 = self.findChild(QLabel, "historydate_3")
-        
+
     def initActionLogPage(self):
         self.actionLog.addSite("Home")
 
@@ -475,7 +498,7 @@ class WebBrowser(QMainWindow):
     def onUrlChanged(self, url):
         if (url.toString() != "https://www.google.com/"):
             self.searchHistory.Set_1.add(url.toString())
-            if (self.actionLog.headIsSite()): self.actionLog.addAction("Clicked link") 
+            if (self.actionLog.headIsSite()): self.actionLog.addAction("Clicked link")
             self.actionLog.addSite(url.toString())
         changedDomain = getDomainName(url.toString().lower())
         self.currentWebpage = url
@@ -621,7 +644,7 @@ class WebBrowser(QMainWindow):
         print("Favourites button clicked")
         self.actionLog.addAction("Clicked Favourites button")
         self.actionLog.addSite("Favourites")
-    
+
     def onActionLogBtnClicked(self):
         self.pages.setCurrentWidget(self.actionLogPage)
         self.actionLog.displayActionLog(self)
@@ -638,32 +661,32 @@ class WebBrowser(QMainWindow):
             self.actionLog.addAction(f"Searched for '{inputText}'")
         else:
             self.queryInput.insertPlainText("\n")
-    
+
     def stripURL(self, url):
         site = url.removeprefix("https://").split('/', 1)[0]
         if site.startswith("www."): site = site[4:]
         return site
-            
+
     def favouritedSiteClicked(self, url):
         self.actionLog.addAction(f"Favourited site ({self.stripURL(url)}) clicked")
         self.gotoURL(url)
-        
+
     def mostUsedSiteClicked(self, url):
         self.actionLog.addAction(f"Most Used site ({self.stripURL(url)}) clicked")
         self.gotoURL(url)
-        
+
     def historyTodaySiteClicked(self, url):
         self.actionLog.addAction(f"Site from today's history ({self.stripURL(url)}) clicked")
         self.gotoURL(url)
-        
+
     def historyYesterdaySiteClicked(self, url):
         self.actionLog.addAction(f"Site from yesterday's history ({self.stripURL(url)}) clicked")
         self.gotoURL(url)
-    
+
     def historyTwoDaysAgoSiteClicked(self, url):
         self.actionLog.addAction(f"Site from two days ago's history ({self.stripURL(url)}) clicked")
         self.gotoURL(url)
-        
+
     def actionLogSiteClicked(self, url):
         self.actionLog.addAction(f"Site from action log ({self.stripURL(url)}) clicked")
         self.gotoURL(url)
@@ -764,6 +787,11 @@ class WebBrowser(QMainWindow):
 
         self.FAQBtnLayout.addWidget(textEdit)
         if self.TEXT_DELAY_MS == 0:
+            if self.textToSpeech:
+                try:
+                    text_to_speech(text)
+                except Exception:
+                    print("Failed to do text to speech")
             textEdit.setHtml(formatHtml(text))
         else:
             self.slowlyTypeText(textEdit, text)

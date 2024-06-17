@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QTextEdit, QMessageBox
+from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QTextEdit, QMessageBox,
+                             QMainWindow, QDialog, QCheckBox)
 
 
 class FeedbackPopup(QWidget):
@@ -39,3 +40,36 @@ class FeedbackPopup(QWidget):
         QMessageBox.information(self, "Feedback Sent",
                                 f"Thank you for your feedback!\n\nRating: {self.rating}\nFeedback: {feedback_text}")
         self.close()
+
+
+class FeatureDialog(QDialog):
+    def __init__(self, main_window):
+        super().__init__()
+        self.main_window = main_window
+        self.setWindowTitle("Settings")
+        self.setGeometry(100, 100, 200, 100)
+
+        # Layout and widgets
+        layout = QVBoxLayout()
+
+        self.label = QLabel("Turn on text to speech")
+        self.checkbox = QCheckBox("Enable text to speech")
+
+        # Set initial checkbox state based on main_window's textToSpeech attribute
+        self.checkbox.setChecked(self.main_window.textToSpeech)
+
+        # Connect the checkbox state change to a method
+        self.checkbox.stateChanged.connect(self.toggle_feature)
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.checkbox)
+
+        self.setLayout(layout)
+
+    def toggle_feature(self, state):
+        if state == 2:  # Checked
+            self.main_window.textToSpeech = True
+            self.label.setText("Text to speech is ON")
+        else:  # Unchecked
+            self.main_window.textToSpeech = False
+            self.label.setText("Text to speech is OFF")

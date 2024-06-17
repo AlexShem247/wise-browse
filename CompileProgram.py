@@ -115,7 +115,8 @@ IF_MAIN = 'if __name__ == "__main__":'
 PROGRAM_NAME = "Wise Browse"
 
 IMG_FILES = [str(Path("assets") / "img" / f) for f in os.listdir("assets/img") if f.endswith(".png")]
-SRC_FILES = [str(Path("src") / f) for f in os.listdir("src") if f.endswith(".py")]
+SRC_FILES = sorted([str(Path("src") / f) for f in os.listdir("src") if f.endswith(".py")])
+SRC_FILES.append(SRC_FILES.pop(-2))
 
 GENERATE_OUTPUT_PY = True
 
