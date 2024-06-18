@@ -1,9 +1,10 @@
-import sys
+import os
 import os
 import platform
-from PyQt5.QtWidgets import QApplication, QMainWindow, QProgressDialog
+
+from PyQt5.QtCore import QStandardPaths, Qt, QProcess
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage
-from PyQt5.QtCore import QUrl, QStandardPaths, Qt, QProcess
+from PyQt5.QtWidgets import QProgressDialog
 
 
 class WebWidget(QWebEngineView):

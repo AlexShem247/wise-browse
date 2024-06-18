@@ -26,16 +26,15 @@ from src.ActionLog import ActionLog
 import threading
 import speech_recognition as sr
 
+engine = pyttsx3.init()
+
 
 def text_to_speech(text):
-    # Initialise the text-to-speech engine
-    engine = pyttsx3.init()
-
-    # Pass the text to the engine
-    engine.say(text)
-
-    # Run the engine to say the text
-    engine.runAndWait()
+    try:
+        engine.say(text)
+        engine.runAndWait()
+    except Exception:
+        pass
 
 
 class WebBrowser(QMainWindow):
@@ -789,7 +788,7 @@ class WebBrowser(QMainWindow):
         if self.TEXT_DELAY_MS == 0:
             if self.textToSpeech:
                 try:
-                    text_to_speech(text)
+                    threading.Thread(target=text_to_speech, args=(text,)).start()
                 except Exception:
                     print("Failed to do text to speech")
             textEdit.setHtml(formatHtml(text))
