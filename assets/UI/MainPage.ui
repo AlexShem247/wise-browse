@@ -4126,9 +4126,9 @@ QPushButton:hover {
                         </spacer>
                        </item>
                        <item>
-                        <widget class="QPushButton" name="pushButton">
+                        <widget class="QPushButton" name="previous">
                          <property name="text">
-                          <string>PushButton</string>
+                          <string></string>
                          </property>
                         </widget>
                        </item>
@@ -4427,9 +4427,9 @@ border-radius: 20px; </string>
                         </spacer>
                        </item>
                        <item>
-                        <widget class="QPushButton" name="pushButton_2">
+                        <widget class="QPushButton" name="next">
                          <property name="text">
-                          <string>PushButton</string>
+                          <string></string>
                          </property>
                         </widget>
                        </item>
