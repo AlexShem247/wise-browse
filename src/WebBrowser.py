@@ -67,6 +67,8 @@ class WebBrowser(QMainWindow):
     HEART_FILL_IMG = Path("assets/img/heartFill.png")
     SETTINGS_IMG = Path("assets/img/settings.png")
 
+    UP_ARROW_IMG = Path("assets/img/upArrow.png")
+    DOWN_ARROW_IMG = Path("assets/img/downArrow.png")
     LEFT_ARROW_IMG = Path("assets/img/leftArrow.png")
     RIGHT_ARROW_IMG = Path("assets/img/rightArrow.png")
 
@@ -378,6 +380,11 @@ class WebBrowser(QMainWindow):
 
     def initActionLogPage(self):
         self.actionLog.addSite("Home")
+        self.upArrow = self.findAndSetIcon(QPushButton, "previous", self.UP_ARROW_IMG, self.ARROW_SIZE, lambda: self.actionLog.clickedPrevious(self))
+        #self.upArrow.hide()
+        self.downArrow = self.findAndSetIcon(QPushButton, "next", self.DOWN_ARROW_IMG, self.ARROW_SIZE, lambda: self.actionLog.clickedNext(self))
+        #self.downArrow.hide()
+
 
     def toggleMicrophoneVisibility(self):
         if self.microphoneBtn.icon().isNull():
@@ -503,7 +510,10 @@ class WebBrowser(QMainWindow):
         if (url.toString() != "https://www.google.com/"):
             self.searchHistory.Set_1.add(url.toString())
             if (self.actionLog.headIsSite()): self.actionLog.addAction("Clicked link")
-            self.actionLog.addSite(url.toString())
+            if (len(url.toString()) < 70):
+                self.actionLog.addSite(url.toString())
+            else:
+                self.actionLog.addSite(url.toString()[:70])
         changedDomain = getDomainName(url.toString().lower())
         self.currentWebpage = url
         if not self.previousWebpages or self.previousWebpages[-1] != url:

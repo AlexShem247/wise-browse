@@ -7,19 +7,30 @@ class ActionLogType(Enum):
 
 class ActionLog:
     actionLogList = []
+    base = 0
+
 
     def addAction(self, actionText):
         print("ACTION: " + actionText)
-        self.actionLogList.insert(0, (ActionLogType.ACTION, actionText))
+        self.actionLogList.append((ActionLogType.ACTION, actionText))
     
     def addSite(self, siteText):
         print("SITE  : " + siteText)
-        self.actionLogList.insert(0, (ActionLogType.SITE, siteText))
+        self.actionLogList.append((ActionLogType.SITE, siteText))
         
     def displayActionLog(self, webBrowser):
-        base = 0
+        if ((self.base + 11) >= len(self.actionLogList)): 
+            webBrowser.downArrow.hide()
+        else:
+            webBrowser.downArrow.show()
+
+        if (self.base > 0): 
+            webBrowser.upArrow.show()
+        else:
+            webBrowser.upArrow.hide()
+
         i = 1
-        for item in list(self.actionLogList)[base:base + 11]:
+        for item in list(self.actionLogList)[self.base:self.base + 11]:
             print(i)
             layout = webBrowser.findChild(QHBoxLayout, f"layout{i}")
             webBrowser.clearLayout(layout)
@@ -68,3 +79,21 @@ class ActionLog:
     
     def headIsSite(self):
         return self.actionLogList[0][0] == ActionLogType.SITE
+    
+    def clickedPrevious(self, browser):
+        self.base -= 1
+        if (self.base == 0): 
+            browser.upArrow.hide()
+        #for i in range (self.VISITED_SIZE + 1, self.VISITED_SIZE * 2 + 1): 
+            #browser.clearIcon(QPushButton, f"visited_{i}")
+           # browser.findChild(QPushButton, f"visited_{i}").setToolTip(None)            
+        self.displayActionLog(browser)
+
+    def clickedNext(self, browser):
+        self.base += 1
+        if (self.base + 11 >= len(self.actionLogList)): 
+            browser.upArrow.hide()
+        #for i in range (self.VISITED_SIZE + 1, self.VISITED_SIZE * 2 + 1): 
+            #browser.clearIcon(QPushButton, f"visited_{i}")
+           # browser.findChild(QPushButton, f"visited_{i}").setToolTip(None)            
+        self.displayActionLog(browser)
