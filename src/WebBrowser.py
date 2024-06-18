@@ -1,11 +1,10 @@
-import tempfile
+import platform
 import tempfile
 import textwrap
 import threading
 from functools import partial
 from pathlib import Path
 
-import pyttsx3
 import speech_recognition as sr
 from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal, pyqtSlot
@@ -24,15 +23,18 @@ from src.SearchHistory import SearchHistory
 from src.URLUtils import getDomainName, isUrl, formatHtml
 from src.WebWidget import WebWidget
 
-engine = pyttsx3.init()
+if platform.system() == "Windows":
+    import pyttsx3
+    engine = pyttsx3.init()
 
 
 def text_to_speech(text):
-    try:
-        engine.say(text)
-        engine.runAndWait()
-    except Exception:
-        pass
+    if platform.system() == "Windows":
+        try:
+            engine.say(text)
+            engine.runAndWait()
+        except Exception:
+            pass
 
 
 class WebBrowser(QMainWindow):
@@ -416,7 +418,6 @@ class WebBrowser(QMainWindow):
         else:
             self.actionLog.addAction("Clicked AI Go Back (to FAQs) button")
             self.queryInput.clear()
-            print("Enabling Input")
             self.queryInput.setEnabled(True)
             self.displayFAQs(self.domain, True)
             self.FAQLayout.insertStretch(3)
@@ -543,7 +544,8 @@ class WebBrowser(QMainWindow):
 
     def fetchFAQs(self):
         try:
-            self.displayFAQs(self.domain)
+            if not self.currentlyOnGuideMode:
+                self.displayFAQs(self.domain)
         except Exception:
             pass
 
@@ -742,7 +744,6 @@ class WebBrowser(QMainWindow):
 
         if inputText.replace("\n", ""):
             self.webView.grab().save(self.screenshotPath, b'JPEG')
-            print("Disabling Input")
             self.queryInput.setEnabled(False)
             self.enterBtn.setEnabled(False)
             self.enterBtn.setText("The AI is thinking" + "." * self.currentNoDots)
@@ -764,7 +765,6 @@ class WebBrowser(QMainWindow):
         self.showRating(False)
         self.deleteSpacer(1)
         self.backBtn.show()
-        print("Enabling Input")
         self.queryInput.setEnabled(True)
         self.enterBtn.setEnabled(True)
         self.enterBtn.setText("ASK QUESTION")

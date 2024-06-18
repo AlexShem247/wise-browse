@@ -1,5 +1,4 @@
 import os
-import os
 import platform
 
 from PyQt5.QtCore import QStandardPaths, Qt, QProcess
