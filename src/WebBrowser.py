@@ -1,30 +1,28 @@
-import os
-import re
+import tempfile
 import tempfile
 import textwrap
-from pathlib import Path
+import threading
 from functools import partial
-import pyttsx3
+from pathlib import Path
 
+import pyttsx3
+import speech_recognition as sr
 from PyQt5 import uic
 from PyQt5.QtCore import QSize, QUrl, Qt, QTimer, pyqtSignal, pyqtSlot
-from PyQt5.QtGui import QIcon, QPixmap, QFont
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QSizePolicy, \
-    QMessageBox, QFrame, QLineEdit, QStackedWidget, QWidget, QToolTip, QHBoxLayout
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QLabel, QTextEdit, QSpacerItem, QMessageBox, QFrame, \
+    QLineEdit, QStackedWidget, QWidget
 
-from src.URLUtils import getDomainName, isUrl, formatHtml
-from src.FAQDatabase import FAQDatabase
-from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
+from src.ActionLog import ActionLog
 from src.Assistant import Assistant, Model
+from src.Conversation import Conversation
+from src.EventFilters import QueryInputKeyEaster, ButtonHoverHandler, SearchInputKeyEater
+from src.FAQDatabase import FAQDatabase
 from src.Favourites import Favourites
 from src.FeedbackPopup import FeedbackPopup, FeatureDialog
 from src.SearchHistory import SearchHistory
-from src.Conversation import Conversation
+from src.URLUtils import getDomainName, isUrl, formatHtml
 from src.WebWidget import WebWidget
-from src.ActionLog import ActionLog
-
-import threading
-import speech_recognition as sr
 
 engine = pyttsx3.init()
 
@@ -121,6 +119,7 @@ class WebBrowser(QMainWindow):
     domain = None
     textToSpeech = False
     currentQs = []
+    refreshFAQRate = 3000
 
     INPUT_INFO = ("Inputting Information",
                   "To ask a question, type it in the box and press 'ASK QUESTION'.\n\nAlternatively, press the "
@@ -284,6 +283,11 @@ class WebBrowser(QMainWindow):
         self.showRating(False)
 
         self.update_text_signal.connect(self.addInputText)
+
+        if self.refreshFAQRate is not None:
+            self.timer = QTimer(self)
+            self.timer.timeout.connect(self.fetchFAQs)
+            self.timer.start(self.refreshFAQRate)
 
     def toggleEnterBtnText(self):
         self.currentNoDots = (self.currentNoDots + 1) % (self.NO_DOTS + 1)
@@ -546,6 +550,12 @@ class WebBrowser(QMainWindow):
                                 lambda: self.favouritePage(self.currentWebpage))
 
         self.manualSearch = False
+
+    def fetchFAQs(self):
+        try:
+            self.displayFAQs(self.domain)
+        except Exception:
+            pass
 
     @staticmethod
     def clearLayout(layout):
