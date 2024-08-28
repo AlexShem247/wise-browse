@@ -12,9 +12,9 @@ class Model(Enum):
 
 class Assistant:
     client = OpenAI(
-        api_key='sk-proj-Hk7lQnG5hrFLSmZyrG8oT3BlbkFJLCWjue2TvpUOVDfEq13n',
-        organization='org-FICIIuzL80yQVyXuJMAQB090',
-        project='proj_lI6Wlpb9Cl2kgL2L9OON5c59'
+        api_key='',
+        organization='',
+        project=''
     )
 
     def __init__(self, modelType, screenshotPath):
